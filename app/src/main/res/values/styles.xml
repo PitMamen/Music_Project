@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="android:Theme.Material.Light.DarkActionBar">
+        <item name="android:colorPrimary">@color/color_primary</item>
+        <item name="android:colorPrimaryDark">@color/color_dark_primary</item>
+        <item name="android:colorAccent">@color/color_dark_primary</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:statusBarColor">@color/statusBar_color</item>
+    </style>
+
+    <style name="AppTheme.TextStyle">
+        <item name="@android:textColor">@color/text_color_black</item>
+        <item name="@android:textSize">20sp</item>
+    </style>
+
+</resources>
