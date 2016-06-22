@@ -14,7 +14,7 @@
         android:padding="20dp">
 
         <TextView
-            android:id="@+id/tv_track"
+            android:id="@+id/tv_tracks"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -36,7 +36,7 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/tv_singer"
+            android:id="@+id/tv_artist"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

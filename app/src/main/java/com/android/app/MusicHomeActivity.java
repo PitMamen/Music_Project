@@ -1,7 +1,10 @@
 package com.android.app;
 
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dlighttech.music.adapter.HomeAdapter;
 import com.dlighttech.music.model.ContentItem;
@@ -10,15 +13,25 @@ import com.dlighttech.music.model.MusicInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MusicHomeActivity extends BaseActivity {
+public class MusicHomeActivity extends BaseActivity implements View.OnClickListener{
 
     private ListView mListView;
     private List<ContentItem> mData;
     private HomeAdapter mAdapter;
+    private TextView tvTracks,tvAlbums,tvArtist;
 
     @Override
     public void onCreateView() {
         setContentView(R.layout.music_home_page_layout);
+
+        tvTracks = (TextView) findViewById(R.id.tv_tracks);
+        tvAlbums = (TextView) findViewById(R.id.tv_album);
+        tvArtist = (TextView) findViewById(R.id.tv_artist);
+
+        tvTracks.setOnClickListener(this);
+        tvAlbums.setOnClickListener(this);
+        tvArtist.setOnClickListener(this);
+
 
         mListView = (ListView) findViewById(R.id.home_list_view);
         mAdapter = new HomeAdapter(this, mData);
@@ -63,5 +76,9 @@ public class MusicHomeActivity extends BaseActivity {
         Log.d("TAG", text);
     }
 
-
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        Toast.makeText(MusicHomeActivity.this,"哈哈",Toast.LENGTH_LONG).show();
+    }
 }

@@ -31,8 +31,6 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     private ProgressBar mProgressBar;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,14 +42,13 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         initActionBar();
     }
 
+
     /**
      * 初始化自定义actionBar
      */
     private void initActionBar() {
         mActionBar = (LinearLayout) findViewById(R.id.action_bar_layout);
-
         if (mActionBar == null) {
-
             throw new RuntimeException("action bar layout need load!");
         }
         mSearchView = (SearchView) mActionBar.findViewById(R.id.searchView);
@@ -62,6 +59,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         tvHomeTitle = (TextView) mActionBar.findViewById(R.id.tv_home_title);
         tvTitle = (TextView) mActionBar.findViewById(R.id.tv_title);
 
+        mBottomtitl = (LinearLayout) findViewById(R.id.bottom_title_bar);
 
         mProgressBar = (ProgressBar) mBottomtitl.findViewById(R.id.pro_music_schedule);
         mImageViewIcon= (ImageView) mBottomtitl.findViewById(R.id.iv_music_icon);
