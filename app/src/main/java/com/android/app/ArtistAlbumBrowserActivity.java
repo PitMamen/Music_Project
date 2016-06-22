@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.music;
-
-import com.android.music.MusicUtils.ServiceToken;
-import com.android.music.QueryBrowserActivity.QueryListAdapter.QueryHandler;
+package com.android.app;
 
 import android.app.ExpandableListActivity;
 import android.app.SearchManager;
@@ -40,28 +37,25 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.SimpleCursorTreeAdapter;
 import android.widget.TextView;
-import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 
-import java.text.Collator;
+import com.android.app.MusicUtils.ServiceToken;
 
 
 public class ArtistAlbumBrowserActivity extends ExpandableListActivity

@@ -1,11 +1,10 @@
 apply plugin: 'com.android.application'
-
 android {
     compileSdkVersion 23
     buildToolsVersion "24.0.0 rc3"
 
     defaultConfig {
-        applicationId "com.android.music"
+        applicationId "com.android.app"
         minSdkVersion 21
         targetSdkVersion 23
     }
@@ -16,4 +15,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'com.android.support:support-v4:24.0.0'
 }

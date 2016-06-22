@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package com.android.music;
-
-import com.android.music.MusicUtils.ServiceToken;
+package com.android.app;
 
 import android.app.ListActivity;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ContentUris;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,6 +31,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+
+import com.android.app.MusicUtils.ServiceToken;
 
 import java.util.ArrayList;
 

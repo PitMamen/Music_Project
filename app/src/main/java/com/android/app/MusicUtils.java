@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.music;
+package com.android.app;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -57,6 +57,8 @@ import android.view.Window;
 import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.music.IMediaPlaybackService;
 
 import java.io.File;
 import java.io.FileDescriptor;

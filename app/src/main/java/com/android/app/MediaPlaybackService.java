@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.music;
+package com.android.app;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -53,6 +53,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.RemoteViews;
 import android.widget.Toast;
+
+import com.android.music.IMediaPlaybackService;
 
 import java.io.FileDescriptor;
 import java.io.IOException;

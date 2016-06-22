@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.music;
+package com.android.app;
 
 import android.app.ListActivity;
 import android.content.ContentResolver;
@@ -27,8 +27,6 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-
-import java.lang.Integer;
 
 public class VideoBrowserActivity extends ListActivity implements MusicUtils.Defs
 {

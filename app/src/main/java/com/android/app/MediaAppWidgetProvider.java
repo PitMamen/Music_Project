@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.music;
+package com.android.app;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.music;
+package com.android.app;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -23,7 +23,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 
-import com.android.music.MusicUtils.ServiceToken;
+import com.android.app.MusicUtils.ServiceToken;
+import com.android.music.IMediaPlaybackService;
 
 public class MusicBrowserActivity extends Activity
     implements MusicUtils.Defs {

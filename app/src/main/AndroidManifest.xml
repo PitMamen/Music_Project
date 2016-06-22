@@ -14,13 +14,13 @@
      limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.android.music">
+    package="com.android.app">
 
     <uses-sdk
         android:minSdkVersion="21"
         android:targetSdkVersion="23" />
 
-    <original-package android:name="com.android.music" />
+    <original-package android:name="com.android.app" />
 
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -29,26 +29,24 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
-    <uses-permission  android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowTaskReparenting="true"
-        android:theme="@style/AppTheme"
         android:icon="@drawable/app_music"
         android:label="@string/musicbrowserlabel"
-        android:taskAffinity="android.task.music">
+        android:taskAffinity="android.task.music"
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="android.app.default_searchable"
-            android:value="com.android.music.QueryBrowserActivity" />
+            android:value="com.android.app.QueryBrowserActivity" />
 
         <activity
-            android:name=".MusicBrowserActivity"
+            android:name="com.android.app.MusicBrowserActivity"
             android:exported="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"></activity>
 
-        </activity>
-
-        <receiver android:name=".MediaButtonIntentReceiver">
+        <receiver android:name="com.android.app.MediaButtonIntentReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
@@ -68,7 +66,7 @@
              appropriate.
         -->
         <activity
-            android:name=".MediaPlaybackActivity"
+            android:name="com.android.app.MediaPlaybackActivity"
             android:clearTaskOnLaunch="true"
             android:excludeFromRecents="true"
             android:exported="true"
@@ -96,7 +94,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AudioPreview"
+            android:name="com.android.app.AudioPreview"
             android:excludeFromRecents="true"
             android:exported="true"
             android:taskAffinity=""
@@ -141,7 +139,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ArtistAlbumBrowserActivity"
+            android:name="com.android.app.ArtistAlbumBrowserActivity"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.PICK" />
@@ -152,7 +150,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AlbumBrowserActivity"
+            android:name="com.android.app.AlbumBrowserActivity"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.PICK" />
@@ -174,7 +172,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TrackBrowserActivity"
+            android:name="com.android.app.TrackBrowserActivity"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.EDIT" />
@@ -186,7 +184,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".QueryBrowserActivity"
+            android:name="com.android.app.QueryBrowserActivity"
             android:exported="true"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -201,7 +199,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".PlaylistBrowserActivity"
+            android:name="com.android.app.PlaylistBrowserActivity"
             android:exported="true"
             android:label="@string/musicbrowserlabel">
             <intent-filter>
@@ -225,7 +223,7 @@
             android:exported="true"
             android:icon="@drawable/ic_launcher_shortcut_music_playlist"
             android:label="@string/musicshortcutlabel"
-            android:targetActivity=".PlaylistBrowserActivity">
+            android:targetActivity="com.android.app.PlaylistBrowserActivity">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
 
@@ -234,7 +232,7 @@
         </activity-alias>
 
         <activity
-            android:name=".VideoBrowserActivity"
+            android:name="com.android.app.VideoBrowserActivity"
             android:exported="false"
             android:icon="@drawable/app_video"
             android:label="@string/videobrowserlabel"
@@ -255,7 +253,7 @@
             -->
         </activity>
         <activity
-            android:name=".MediaPickerActivity"
+            android:name="com.android.app.MediaPickerActivity"
             android:exported="false"
             android:label="@string/mediapickerlabel">
 
@@ -282,7 +280,7 @@
             -->
         </activity>
         <activity
-            android:name=".MusicPicker"
+            android:name="com.android.app.MusicPicker"
             android:exported="true"
             android:label="@string/music_picker_title">
 
@@ -315,31 +313,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CreatePlaylist"
+            android:name="com.android.app.CreatePlaylist"
             android:exported="false"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name=".RenamePlaylist"
+            android:name="com.android.app.RenamePlaylist"
             android:exported="false"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name=".WeekSelector"
+            android:name="com.android.app.WeekSelector"
             android:exported="false"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name=".DeleteItems"
+            android:name="com.android.app.DeleteItems"
             android:exported="false"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name=".ScanningProgress"
+            android:name="com.android.app.ScanningProgress"
             android:exported="false"
             android:theme="@android:style/Theme.Dialog" />
 
         <service
-            android:name=".MediaPlaybackService"
+            android:name="com.android.app.MediaPlaybackService"
             android:exported="false" />
 
-        <receiver android:name=".MediaAppWidgetProvider">
+        <receiver android:name="com.android.app.MediaAppWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -350,9 +348,8 @@
         </receiver>
 
         <activity
-            android:name=".MusicHomeActivity"
+            android:name="com.android.app.MusicHomeActivity"
             android:theme="@style/AppTheme">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.MUSIC_PLAYER" />
@@ -362,6 +359,7 @@
                 <category android:name="android.intent.category.APP_MUSIC" />
             </intent-filter>
         </activity>
+        <activity android:name="com.android.app.BaseActivity"></activity>
     </application>
 
 </manifest>
