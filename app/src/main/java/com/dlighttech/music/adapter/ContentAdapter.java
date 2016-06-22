@@ -9,7 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.music.R;
+import com.android.app.R;
 import com.dlighttech.music.model.ContentItem;
 
 import java.util.List;
@@ -130,7 +130,7 @@ public class ContentAdapter extends BaseAdapter {
     }
 
     /**
-     * 右侧图片点击事件
+     * 左侧图片点击事件
      */
 
     public interface OnThumbClicked {
