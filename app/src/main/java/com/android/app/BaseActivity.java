@@ -8,6 +8,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import android.widget.ProgressBar;
+
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -20,10 +23,14 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 
     private SearchView mSearchView;
     private EditText mSearchEditText;
-    private TextView tvHomeTitle, tvTitle;
+    private TextView tvHomeTitle, tvTitle,tvMusicName,tvMusicAuthor;
     private RelativeLayout mTitleLayout, mSearchButtonLayout;
     private ImageButton mSearchButton, mReturnButton;
-    private LinearLayout mActionBar;
+    private LinearLayout mActionBar,mBottomtitl;
+    private ImageView mImageViewIcon,mImageViewPause,mImageViewplay;
+    private ProgressBar mProgressBar;
+
+
 
 
     @Override
@@ -42,7 +49,9 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
      */
     private void initActionBar() {
         mActionBar = (LinearLayout) findViewById(R.id.action_bar_layout);
+
         if (mActionBar == null) {
+
             throw new RuntimeException("action bar layout need load!");
         }
         mSearchView = (SearchView) mActionBar.findViewById(R.id.searchView);
@@ -52,6 +61,15 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         mReturnButton = (ImageButton) mActionBar.findViewById(R.id.btn_return);
         tvHomeTitle = (TextView) mActionBar.findViewById(R.id.tv_home_title);
         tvTitle = (TextView) mActionBar.findViewById(R.id.tv_title);
+
+
+        mProgressBar = (ProgressBar) mBottomtitl.findViewById(R.id.pro_music_schedule);
+        mImageViewIcon= (ImageView) mBottomtitl.findViewById(R.id.iv_music_icon);
+        tvMusicName = (TextView) mBottomtitl.findViewById(R.id.tv_music_name);
+        tvMusicAuthor = (TextView) findViewById(R.id.tv_music_author);
+        mImageViewPause= (ImageView) findViewById(R.id.iv_music_pause);
+        mImageViewplay = (ImageView) mBottomtitl.findViewById(R.id.iv_music_paly);
+
 
         mSearchView.setOnQueryTextListener(this);
         mSearchButton.setOnClickListener(this);
