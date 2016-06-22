@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * Created by dengyong on 2016/6/21.
- * <p>
+ * <p/>
  * 继承相应的接口实现对应的点击事件
  */
 
@@ -130,9 +130,8 @@ public class ContentAdapter extends BaseAdapter {
     }
 
     /**
-     *  左侧图片点击事件
+     * 左侧图片点击事件
      */
-
     public interface OnThumbClicked {
         void onThumbClicked();
     }
