@@ -77,8 +77,8 @@ public class ContentAdapter extends BaseAdapter {
 
         ContentItem contentItem = contentItems.get(position);
 
-        holder.thumb.setImageBitmap(contentItem.getThumb());
-        holder.operator.setImageBitmap(contentItem.getOperator());
+        holder.thumb.setImageResource(contentItem.getThumb());
+        holder.operator.setImageResource(contentItem.getOperator());
         holder.title.setText(contentItem.getTitle());
         holder.content.setText(contentItem.getContent());
 

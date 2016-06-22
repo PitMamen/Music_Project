@@ -9,44 +9,45 @@ import android.graphics.Bitmap;
 
 
 public class ContentItem {
-    private Bitmap thumb;
-    private Bitmap operator;
+    private int thumb;
+    private int operator;
     private String title;
     private String content;
 
     /**
-     * @param thumb    左侧缩略图（Bitmap）
-     * @param operator 右侧操作图（Bitmap）
+     * @param thumb    左侧缩略图（资源id）
+     * @param operator 右侧操作图（资源id）
      * @param title    上部文字
      * @param content  下部文字
      */
-    public ContentItem(Bitmap thumb, Bitmap operator, String title, String content) {
+
+    public ContentItem(int thumb, int operator, String title, String content) {
         this.thumb = thumb;
         this.operator = operator;
         this.title = title;
         this.content = content;
     }
 
-    public ContentItem(Bitmap thumb, Bitmap operator, String title) {
+    public ContentItem(int thumb, int operator, String title) {
         this.thumb = thumb;
         this.operator = operator;
         this.title = title;
     }
 
-    public Bitmap getThumb() {
+    public int getThumb() {
 
         return thumb;
     }
 
-    public void setThumb(Bitmap imageView) {
+    public void setThumb(int imageView) {
         this.thumb = imageView;
     }
 
-    public Bitmap getOperator() {
+    public int getOperator() {
         return operator;
     }
 
-    public void setOperator(Bitmap operator) {
+    public void setOperator(int operator) {
         this.operator = operator;
     }
 
