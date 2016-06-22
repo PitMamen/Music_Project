@@ -5,6 +5,7 @@
 # IntelliJ project files
 *.iml
 .gradle
+.idea
 local.properties
 build
-.idea
+
