@@ -70,7 +70,6 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         mImageViewPause= (ImageView) findViewById(R.id.iv_music_pause);
         mImageViewplay = (ImageView) mBottomtitl.findViewById(R.id.iv_music_paly);
 
-                ///dsadasdasdasd
         mSearchView.setOnQueryTextListener(this);
         mSearchButton.setOnClickListener(this);
         mReturnButton.setOnClickListener(this);
