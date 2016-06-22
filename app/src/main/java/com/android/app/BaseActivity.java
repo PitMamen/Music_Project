@@ -8,7 +8,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
 import android.widget.ProgressBar;
+
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -30,6 +32,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +49,9 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
      */
     private void initActionBar() {
         mActionBar = (LinearLayout) findViewById(R.id.action_bar_layout);
-        mBottomtitl = (LinearLayout) findViewById(R.id.bottom_title_bar);
-        if (mActionBar == null||mBottomtitl==null) {
+
+        if (mActionBar == null) {
+
             throw new RuntimeException("action bar layout need load!");
         }
         mSearchView = (SearchView) mActionBar.findViewById(R.id.searchView);

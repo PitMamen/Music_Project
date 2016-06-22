@@ -13,6 +13,7 @@
         <item name="@android:textColor">@color/text_color_black</item>
         <item name="@android:textSize">20sp</item>
     </style>
+
     <!--底部音乐播放进度条style-->
     <style name="StyleProgressBarMini" parent="@android:style/Widget.ProgressBar.Horizontal">
         <item name="android:maxHeight">50dip</item>
@@ -23,4 +24,5 @@
         </item>
         <item name="android:progressDrawable">@drawable/shape_progressbar_mini</item>
     </style>
+
 </resources>
