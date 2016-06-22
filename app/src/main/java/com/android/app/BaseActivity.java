@@ -40,8 +40,25 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         onCreateView();
         // 初始化actionBar
         initActionBar();
+
+        initbottomBar();
         // 初始化数据需要子类重写
         onCreateData();
+    }
+
+   // 初始化bottomBar
+    private void initbottomBar() {
+        mBottomtitl= (LinearLayout) findViewById(R.id.bottom_title_bar);
+        if (mBottomtitl==null){
+            throw new RuntimeException("action bar layout need load!");
+        }
+        mProgressBar = (ProgressBar) mBottomtitl.findViewById(R.id.pro_music_schedule);
+        mImageViewIcon= (ImageView) mBottomtitl.findViewById(R.id.iv_music_icon);
+        tvMusicName = (TextView) mBottomtitl.findViewById(R.id.tv_music_name);
+        tvMusicAuthor = (TextView) findViewById(R.id.tv_music_author);
+        mImageViewPause= (ImageView) findViewById(R.id.iv_music_pause);
+        mImageViewplay = (ImageView) mBottomtitl.findViewById(R.id.iv_music_paly);
+
     }
 
     /**
@@ -49,6 +66,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
      */
     private void initActionBar() {
         mActionBar = (LinearLayout) findViewById(R.id.action_bar_layout);
+
 
         if (mActionBar == null) {
 
@@ -63,12 +81,6 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         tvTitle = (TextView) mActionBar.findViewById(R.id.tv_title);
 
 
-        mProgressBar = (ProgressBar) mBottomtitl.findViewById(R.id.pro_music_schedule);
-        mImageViewIcon= (ImageView) mBottomtitl.findViewById(R.id.iv_music_icon);
-        tvMusicName = (TextView) mBottomtitl.findViewById(R.id.tv_music_name);
-        tvMusicAuthor = (TextView) findViewById(R.id.tv_music_author);
-        mImageViewPause= (ImageView) findViewById(R.id.iv_music_pause);
-        mImageViewplay = (ImageView) mBottomtitl.findViewById(R.id.iv_music_paly);
 
         mSearchView.setOnQueryTextListener(this);
         mSearchButton.setOnClickListener(this);
