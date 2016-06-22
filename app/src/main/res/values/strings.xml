@@ -310,5 +310,10 @@
 
     <!-- Menu text for the item controlling the audio effects panel [CHAR LIMIT=15] -->
     <string name="effectspanel">Sound effects</string>
+
+
+    <!--add by zhujiang-->
+    <string name="singer">歌手</string>
+
 </resources>
 

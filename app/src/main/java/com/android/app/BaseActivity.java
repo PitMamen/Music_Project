@@ -23,35 +23,18 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     private TextView tvHomeTitle, tvTitle;
     private RelativeLayout mTitleLayout, mSearchButtonLayout;
     private ImageButton mSearchButton, mReturnButton;
-    private View mView;
-    private int layoutResId;
     private LinearLayout mActionBar;
 
-    /**
-     * 根据提供的是布局资源id还是view来选择加载布局
-     *
-     * @param contentView
-     * @param resId
-     */
-    public BaseActivity(View contentView, int resId) {
-        this.mView = contentView;
-        this.layoutResId = resId;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mView != null) {
-            setContentView(mView);
-        } else {
-            setContentView(layoutResId);
-        }
+        // 初始化View需要子类重写,包括设置contentView
+        onCreateView();
         // 初始化actionBar
         initActionBar();
         // 初始化数据需要子类重写
         onCreateData();
-        // 初始化View需要子类重写
-        onCreateView();
     }
 
     /**
@@ -62,14 +45,13 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         if (mActionBar == null) {
             throw new RuntimeException("action bar layout need load!");
         }
-
-        mSearchView = (SearchView) findViewById(R.id.searchView);
-        mTitleLayout = (RelativeLayout) findViewById(R.id.title_layout);
-        mSearchButtonLayout = (RelativeLayout) findViewById(R.id.search_btn_layout);
-        mSearchButton = (ImageButton) findViewById(R.id.btn_search);
-        mReturnButton = (ImageButton) findViewById(R.id.btn_return);
-        tvHomeTitle = (TextView) findViewById(R.id.tv_home_title);
-        tvTitle = (TextView) findViewById(R.id.tv_title);
+        mSearchView = (SearchView) mActionBar.findViewById(R.id.searchView);
+        mTitleLayout = (RelativeLayout) mActionBar.findViewById(R.id.title_layout);
+        mSearchButtonLayout = (RelativeLayout) mActionBar.findViewById(R.id.search_btn_layout);
+        mSearchButton = (ImageButton) mActionBar.findViewById(R.id.btn_search);
+        mReturnButton = (ImageButton) mActionBar.findViewById(R.id.btn_return);
+        tvHomeTitle = (TextView) mActionBar.findViewById(R.id.tv_home_title);
+        tvTitle = (TextView) mActionBar.findViewById(R.id.tv_title);
 
         mSearchView.setOnQueryTextListener(this);
         mSearchButton.setOnClickListener(this);
@@ -175,13 +157,6 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
             closeSearchView();
         }
     }
-
-//    private void coloseInputSoft() {
-//        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//        if (imm.isActive()) {
-//            imm.hideSoftInputFromWindow(mSearchEditText.getApplicationWindowToken(), 0);
-//        }
-//    }
 
 
     public abstract void onCreateView();

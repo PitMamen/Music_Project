@@ -42,11 +42,11 @@
             android:value="com.android.app.QueryBrowserActivity" />
 
         <activity
-            android:name="com.android.app.MusicBrowserActivity"
+            android:name=".MusicBrowserActivity"
             android:exported="true"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
 
-        <receiver android:name="com.android.app.MediaButtonIntentReceiver">
+        <receiver android:name=".MediaButtonIntentReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
@@ -66,7 +66,7 @@
              appropriate.
         -->
         <activity
-            android:name="com.android.app.MediaPlaybackActivity"
+            android:name=".MediaPlaybackActivity"
             android:clearTaskOnLaunch="true"
             android:excludeFromRecents="true"
             android:exported="true"
@@ -94,7 +94,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.android.app.AudioPreview"
+            android:name=".AudioPreview"
             android:excludeFromRecents="true"
             android:exported="true"
             android:taskAffinity=""
@@ -139,7 +139,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.android.app.ArtistAlbumBrowserActivity"
+            android:name=".ArtistAlbumBrowserActivity"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.PICK" />
@@ -150,7 +150,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.android.app.AlbumBrowserActivity"
+            android:name=".AlbumBrowserActivity"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.PICK" />
@@ -172,7 +172,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.android.app.TrackBrowserActivity"
+            android:name=".TrackBrowserActivity"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.EDIT" />
@@ -184,7 +184,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.android.app.QueryBrowserActivity"
+            android:name=".QueryBrowserActivity"
             android:exported="true"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -199,7 +199,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name="com.android.app.PlaylistBrowserActivity"
+            android:name=".PlaylistBrowserActivity"
             android:exported="true"
             android:label="@string/musicbrowserlabel">
             <intent-filter>
@@ -223,7 +223,7 @@
             android:exported="true"
             android:icon="@drawable/ic_launcher_shortcut_music_playlist"
             android:label="@string/musicshortcutlabel"
-            android:targetActivity="com.android.app.PlaylistBrowserActivity">
+            android:targetActivity=".PlaylistBrowserActivity">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
 
@@ -232,7 +232,7 @@
         </activity-alias>
 
         <activity
-            android:name="com.android.app.VideoBrowserActivity"
+            android:name=".VideoBrowserActivity"
             android:exported="false"
             android:icon="@drawable/app_video"
             android:label="@string/videobrowserlabel"
@@ -253,7 +253,7 @@
             -->
         </activity>
         <activity
-            android:name="com.android.app.MediaPickerActivity"
+            android:name=".MediaPickerActivity"
             android:exported="false"
             android:label="@string/mediapickerlabel">
 
@@ -280,7 +280,7 @@
             -->
         </activity>
         <activity
-            android:name="com.android.app.MusicPicker"
+            android:name=".MusicPicker"
             android:exported="true"
             android:label="@string/music_picker_title">
 
@@ -313,31 +313,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.android.app.CreatePlaylist"
+            android:name=".CreatePlaylist"
             android:exported="false"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name="com.android.app.RenamePlaylist"
+            android:name=".RenamePlaylist"
             android:exported="false"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name="com.android.app.WeekSelector"
+            android:name=".WeekSelector"
             android:exported="false"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name="com.android.app.DeleteItems"
+            android:name=".DeleteItems"
             android:exported="false"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name="com.android.app.ScanningProgress"
+            android:name=".ScanningProgress"
             android:exported="false"
             android:theme="@android:style/Theme.Dialog" />
 
         <service
-            android:name="com.android.app.MediaPlaybackService"
+            android:name=".MediaPlaybackService"
             android:exported="false" />
 
-        <receiver android:name="com.android.app.MediaAppWidgetProvider">
+        <receiver android:name=".MediaAppWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -348,7 +348,7 @@
         </receiver>
 
         <activity
-            android:name="com.android.app.MusicHomeActivity"
+            android:name=".MusicHomeActivity"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -359,7 +359,9 @@
                 <category android:name="android.intent.category.APP_MUSIC" />
             </intent-filter>
         </activity>
-        <activity android:name="com.android.app.BaseActivity"></activity>
+        <activity android:name=".DirFileActivity">
+
+        </activity>
     </application>
 
 </manifest>
