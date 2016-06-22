@@ -1,11 +1,11 @@
 package com.android.app;
 
-import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.ListView;
 
 import com.dlighttech.music.adapter.HomeAdapter;
 import com.dlighttech.music.model.ContentItem;
+import com.dlighttech.music.model.MusicInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,21 +27,13 @@ public class MusicHomeActivity extends BaseActivity {
         new android.os.Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-//                ArrayList<ContentItem> items=FileUtils.getFileList(MusicHomeActivity.this,FileUtils.Music);
-//                for (ContentItem item:items) {
-//                }
-                // 获取所有歌曲id
-                long[] ids= MusicUtils.getAllSongs(MusicHomeActivity.this);
-                for (int i=0;i<ids.length;i++){
-                    // 获取歌曲的专辑图片
-                    Bitmap b =MusicUtils.getArtwork(MusicHomeActivity.this,ids[i],0);
-
-                    Log.d("TAG",ids[i]+"====="+b);
-
+                ArrayList<MusicInfo> infos=MusicUtils.getMusicInfo(MusicHomeActivity.this);
+                for (MusicInfo info : infos) {
+                    Log.d("TAG",info.toString());
                 }
                 mAdapter.updateItem();
             }
-        },2000);
+        }, 2000);
     }
 
     @Override
