@@ -48,8 +48,22 @@
     </LinearLayout>
 
 
-  <include layout="@layout/bottom_title_player_layout"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:layout_marginTop="20dp">
 
+        <ListView
+            android:id="@+id/home_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:dividerHeight="1dp"/>
+    </LinearLayout>
+
+
+  <include layout="@layout/bottom_title_player_layout"/>
 
 
 

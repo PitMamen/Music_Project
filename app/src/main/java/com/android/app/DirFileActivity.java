@@ -5,7 +5,7 @@ public class DirFileActivity extends BaseActivity {
 
     @Override
     public void onCreateView() {
-
+        setContentView(R.layout.activity_dir_file);
     }
 
     @Override

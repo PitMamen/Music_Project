@@ -36,6 +36,8 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 初始化数据需要子类重写
+        onCreateData();
         // 初始化View需要子类重写,包括设置contentView
         onCreateView();
         // 初始化actionBar

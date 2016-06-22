@@ -1,5 +1,7 @@
 package com.dlighttech.music.model;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by dengyong on 2016/6/21.
  * 内容列表类
@@ -24,6 +26,12 @@ public class ContentItem {
         this.operator = operator;
         this.title = title;
         this.content = content;
+    }
+
+    public ContentItem(int thumb, int operator, String title) {
+        this.thumb = thumb;
+        this.operator = operator;
+        this.title = title;
     }
 
     public int getThumb() {
