@@ -20,12 +20,17 @@ public class ContentItem {
      * @param title    上部文字
      * @param content  下部文字
      */
-
     public ContentItem(Bitmap thumb, Bitmap operator, String title, String content) {
         this.thumb = thumb;
         this.operator = operator;
         this.title = title;
         this.content = content;
+    }
+
+    public ContentItem(Bitmap thumb, Bitmap operator, String title) {
+        this.thumb = thumb;
+        this.operator = operator;
+        this.title = title;
     }
 
     public Bitmap getThumb() {
