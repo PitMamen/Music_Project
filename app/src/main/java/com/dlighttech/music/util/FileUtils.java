@@ -585,6 +585,24 @@ public class FileUtils {
         return pathList;
     }
 
+    /**
+     * 获取文件父目录
+     *
+     * @param srcFile
+     * @return
+     */
+    public static String getFileParent(File srcFile) {
+        String rootPath = "/";
+        if (srcFile == null) {
+            return rootPath;
+        }
+        if (!srcFile.exists()) {
+            srcFile.mkdirs();
+        }
+        return srcFile.getParent();
+    }
+
+
 //    public static void openFile(Context context, FileSystemObject fso,
 //                                String mimeType) {
 //        if (TextUtils.isEmpty(mimeType) || fso == null)

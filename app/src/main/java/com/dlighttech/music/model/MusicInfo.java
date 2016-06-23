@@ -1,11 +1,15 @@
 package com.dlighttech.music.model;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 
 /**
  * Created by zhujiang on 16-6-22.
  */
-public class MusicInfo {
+public class MusicInfo implements Serializable , Parcelable{
     // 歌曲id
     private int musicId;
     // 歌手
@@ -46,6 +50,30 @@ public class MusicInfo {
         this.musicPath = musicPath;
         this.musicSize = musicSize;
     }
+
+    protected MusicInfo(Parcel in) {
+        musicId = in.readInt();
+        singer = in.readString();
+        musicName = in.readString();
+        currTime = in.readLong();
+        totalTime = in.readLong();
+        musicAlbumsImage = in.readParcelable(Bitmap.class.getClassLoader());
+        musicAlbumsName = in.readString();
+        musicPath = in.readString();
+        musicSize = in.readLong();
+    }
+
+    public static final Creator<MusicInfo> CREATOR = new Creator<MusicInfo>() {
+        @Override
+        public MusicInfo createFromParcel(Parcel in) {
+            return new MusicInfo(in);
+        }
+
+        @Override
+        public MusicInfo[] newArray(int size) {
+            return new MusicInfo[size];
+        }
+    };
 
     public int getMusicId() {
         return musicId;
@@ -142,6 +170,24 @@ public class MusicInfo {
                 ", musicPath='" + musicPath + '\'' +
                 ", musicSize=" + musicSize +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(musicId);
+        dest.writeString(singer);
+        dest.writeString(musicName);
+        dest.writeLong(currTime);
+        dest.writeLong(totalTime);
+        dest.writeParcelable(musicAlbumsImage, flags);
+        dest.writeString(musicAlbumsName);
+        dest.writeString(musicPath);
+        dest.writeLong(musicSize);
     }
 
     public enum MusicState {

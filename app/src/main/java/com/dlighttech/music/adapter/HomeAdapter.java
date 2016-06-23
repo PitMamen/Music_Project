@@ -86,12 +86,14 @@ public class HomeAdapter extends BaseAdapter {
     }
 
     /**
-     * 刷新itemview
+     * 刷新完成，更新itemview
      */
     public void updateItem() {
         imageViews.get(0).setVisibility(View.VISIBLE);
         mProgress.setVisibility(View.GONE);
     }
+
+
 
 //    private void startRotateAnimation(ImageView ivRight) {
 //        loadAnimation = new RotateAnimation(0f, 359f

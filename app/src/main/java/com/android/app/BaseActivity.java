@@ -23,11 +23,11 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 
     private SearchView mSearchView;
     private EditText mSearchEditText;
-    private TextView tvHomeTitle, tvTitle,tvMusicName,tvMusicAuthor;
+    private TextView tvHomeTitle, tvTitle, tvMusicName, tvMusicAuthor;
     private RelativeLayout mTitleLayout, mSearchButtonLayout;
     private ImageButton mSearchButton, mReturnButton;
-    private LinearLayout mActionBar,mBottomtitl;
-    private ImageView mImageViewIcon,mImageViewPause,mImageViewplay;
+    private LinearLayout mActionBar, mBottomtitl;
+    private ImageView mImageViewIcon, mImageViewPause, mImageViewplay;
     private ProgressBar mProgressBar;
 
 
@@ -44,21 +44,20 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         initbottomBar();
     }
 
-   // 初始化bottomBar
+    // 初始化bottomBar
     private void initbottomBar() {
-        mBottomtitl= (LinearLayout) findViewById(R.id.bottom_title_bar);
-        if (mBottomtitl==null){
-            throw new RuntimeException("action bar layout need load!");
+        mBottomtitl = (LinearLayout) findViewById(R.id.bottom_title_bar);
+        if (mBottomtitl == null) {
+            throw new RuntimeException("bottom bar layout need load!");
         }
         mProgressBar = (ProgressBar) mBottomtitl.findViewById(R.id.pro_music_schedule);
-        mImageViewIcon= (ImageView) mBottomtitl.findViewById(R.id.iv_music_icon);
+        mImageViewIcon = (ImageView) mBottomtitl.findViewById(R.id.iv_music_icon);
         tvMusicName = (TextView) mBottomtitl.findViewById(R.id.tv_music_name);
         tvMusicAuthor = (TextView) findViewById(R.id.tv_music_author);
-        mImageViewPause= (ImageView) findViewById(R.id.iv_music_pause);
+        mImageViewPause = (ImageView) findViewById(R.id.iv_music_pause);
         mImageViewplay = (ImageView) mBottomtitl.findViewById(R.id.iv_music_paly);
 
     }
-
 
     /**
      * 初始化自定义actionBar
@@ -120,7 +119,12 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         mSearchEditText.setHintTextColor(getResources().getColor(R.color.text_color_white));
     }
 
+    protected void setTitleText(String text){
+        tvTitle.setText(text);
+    }
+
     private void openSearchView() {
+        tvTitle.setVisibility(View.GONE);
         mSearchView.setVisibility(View.VISIBLE);
         mSearchView.setIconified(false); // 显示searchView中的editText
         mSearchView.onActionViewExpanded(); // 如果内容为空则显示x按钮，否则不显示
@@ -129,6 +133,9 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     }
 
     private void closeSearchView() {
+        if (this instanceof MusicHomeActivity == false) {
+            tvTitle.setVisibility(View.VISIBLE);
+        }
         mSearchView.setIconified(true);
         mSearchView.setVisibility(View.GONE);
         mTitleLayout.setVisibility(View.VISIBLE);
@@ -158,8 +165,6 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         } else {
             finish();
         }
-
-
     }
 
     @Override
