@@ -104,9 +104,12 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
     };
 
     @Override
-    public void onCreateView() {
+    public void onInitView() {
         setContentView(R.layout.music_home_page_layout);
+    }
 
+    @Override
+    public void onCreateView() {
         tvTracks = (TextView) findViewById(R.id.tv_tracks);
         tvAlbums = (TextView) findViewById(R.id.tv_album);
         tvArtist = (TextView) findViewById(R.id.tv_artist);

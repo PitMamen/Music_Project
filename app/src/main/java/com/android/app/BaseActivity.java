@@ -34,15 +34,17 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 设置contentView
+        onInitView();
         // 初始化数据需要子类重写
         onCreateData();
-        // 初始化View需要子类重写,包括设置contentView
-        onCreateView();
         // 初始化actionBar
         initActionBar();
-
         initbottomBar();
+        // 初始化View需要子类重写,
+        onCreateView();
     }
+
 
     // 初始化bottomBar
     private void initbottomBar() {
@@ -119,7 +121,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         mSearchEditText.setHintTextColor(getResources().getColor(R.color.text_color_white));
     }
 
-    protected void setTitleText(String text){
+    protected void setTitleText(String text) {
         tvTitle.setText(text);
     }
 
@@ -190,6 +192,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 
     public abstract void onCreateView();
 
+    public abstract void onInitView();
 
     public abstract void onCreateData();
 
