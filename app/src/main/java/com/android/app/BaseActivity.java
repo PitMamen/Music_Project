@@ -23,14 +23,12 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 
     private SearchView mSearchView;
     private EditText mSearchEditText;
-    private TextView tvHomeTitle, tvTitle,tvMusicName,tvMusicAuthor;
+    private TextView tvHomeTitle, tvTitle, tvMusicName, tvMusicAuthor;
     private RelativeLayout mTitleLayout, mSearchButtonLayout;
     private ImageButton mSearchButton, mReturnButton;
-    private LinearLayout mActionBar,mBottomtitl;
-    private ImageView mImageViewIcon,mImageViewPause,mImageViewplay;
+    private LinearLayout mActionBar, mBottomtitl;
+    private ImageView mImageViewIcon, mImageViewPause, mImageViewplay;
     private ProgressBar mProgressBar;
-
-
 
 
     @Override
@@ -44,21 +42,19 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         initActionBar();
 
         initbottomBar();
-        // 初始化数据需要子类重写
-        onCreateData();
     }
 
-   // 初始化bottomBar
-    private void initbottomBar() {
-        mBottomtitl= (LinearLayout) findViewById(R.id.bottom_title_bar);
-        if (mBottomtitl==null){
+    // 初始化bottomBar
+    public void initbottomBar() {
+        mBottomtitl = (LinearLayout) findViewById(R.id.bottom_title_bar);
+        if (mBottomtitl == null) {
             throw new RuntimeException("action bar layout need load!");
         }
         mProgressBar = (ProgressBar) mBottomtitl.findViewById(R.id.pro_music_schedule);
-        mImageViewIcon= (ImageView) mBottomtitl.findViewById(R.id.iv_music_icon);
+        mImageViewIcon = (ImageView) mBottomtitl.findViewById(R.id.iv_music_icon);
         tvMusicName = (TextView) mBottomtitl.findViewById(R.id.tv_music_name);
         tvMusicAuthor = (TextView) findViewById(R.id.tv_music_author);
-        mImageViewPause= (ImageView) findViewById(R.id.iv_music_pause);
+        mImageViewPause = (ImageView) findViewById(R.id.iv_music_pause);
         mImageViewplay = (ImageView) mBottomtitl.findViewById(R.id.iv_music_paly);
 
     }
@@ -81,7 +77,6 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         mReturnButton = (ImageButton) mActionBar.findViewById(R.id.btn_return);
         tvHomeTitle = (TextView) mActionBar.findViewById(R.id.tv_home_title);
         tvTitle = (TextView) mActionBar.findViewById(R.id.tv_title);
-
 
 
         mSearchView.setOnQueryTextListener(this);
@@ -191,6 +186,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 
 
     public abstract void onCreateView();
+
 
     public abstract void onCreateData();
 
