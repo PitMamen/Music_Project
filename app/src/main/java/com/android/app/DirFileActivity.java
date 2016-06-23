@@ -1,5 +1,7 @@
 package com.android.app;
 
+import android.widget.ListView;
+
 import com.dlighttech.music.model.ContentItem;
 import com.dlighttech.music.model.MusicInfo;
 import com.dlighttech.music.util.FileUtils;
@@ -10,13 +12,24 @@ import java.util.ArrayList;
 public class DirFileActivity extends BaseActivity {
 
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
+    private ListView mListView;
 
     @Override
     public void onCreateView() {
-        setContentView(R.layout.activity_dir_file);
+
 
         super.setTitleText("文件夹"); // 设置title
 
+
+    }
+
+    @Override
+    public void onInitView() {
+        setContentView(R.layout.activity_dir_file);
+    }
+
+    @Override
+    public void onCreateData() {
         ArrayList<MusicInfo> musicInfos = getIntent().getParcelableArrayListExtra("musicInfos");
         for (MusicInfo info : musicInfos) {
             // 获取文件的目录集合
@@ -28,11 +41,6 @@ public class DirFileActivity extends BaseActivity {
                     , dirPath);
             mItems.add(item);
         }
-    }
-
-    @Override
-    public void onCreateData() {
-
     }
 
     @Override
