@@ -178,10 +178,10 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
             }
         } else if (position == 1) {
             // 播放列表
-//            Intent intent = new Intent(MusicHomeActivity.this,);
-            
-
-
+            Intent intent = new Intent(MusicHomeActivity.this, PlayListActivity.class);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
     }
 }

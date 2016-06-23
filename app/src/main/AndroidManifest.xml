@@ -365,10 +365,11 @@
         </activity>
         <activity
             android:name=".DirFileActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".MusicListActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity android:name=".PlayListActivity"></activity>
     </application>
 
 </manifest>
