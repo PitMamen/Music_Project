@@ -1,6 +1,6 @@
 package com.dlighttech.music.model;
 
-import android.graphics.Bitmap;
+import java.io.Serializable;
 
 /**
  * Created by dengyong on 2016/6/21.
@@ -8,7 +8,7 @@ import android.graphics.Bitmap;
  */
 
 
-public class ContentItem {
+public class ContentItem implements Serializable{
     private int thumb;
     private int operator;
     private String title;

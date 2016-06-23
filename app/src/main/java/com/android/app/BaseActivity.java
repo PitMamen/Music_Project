@@ -189,15 +189,15 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         }
     }
 
-
+    // 创建子类的view
     public abstract void onCreateView();
-
+    // 初始化contentView
     public abstract void onInitView();
-
+    // 初始化数据
     public abstract void onCreateData();
-
+    // serachView文本发生改变将触发
     public abstract void onSearchTextChanged(String text);
-
+    // searchView提交时触发
     public abstract void onSearchSubmit(String text);
 
 

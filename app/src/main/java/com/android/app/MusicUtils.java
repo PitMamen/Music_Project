@@ -1439,6 +1439,7 @@ public class MusicUtils {
             }
         } catch (Exception e) {
             listener.onMusicLoadFail();
+            e.printStackTrace();
         }
     }
 

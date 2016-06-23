@@ -1,7 +1,9 @@
 package com.android.app;
 
+import android.content.Intent;
 import android.widget.ListView;
 
+import com.dlighttech.music.adapter.ContentAdapter;
 import com.dlighttech.music.model.ContentItem;
 import com.dlighttech.music.model.MusicInfo;
 import com.dlighttech.music.util.FileUtils;
@@ -9,18 +11,23 @@ import com.dlighttech.music.util.FileUtils;
 import java.io.File;
 import java.util.ArrayList;
 
-public class DirFileActivity extends BaseActivity {
+public class DirFileActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked {
 
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
+    /**
+     * 当前音乐文件的父目录
+     */
+    private ArrayList<String> mDirs = new ArrayList<String>();
     private ListView mListView;
+    private ContentAdapter mAdapter;
+    private ArrayList<MusicInfo> mMusicInfos;
 
     @Override
     public void onCreateView() {
-
-
         super.setTitleText("文件夹"); // 设置title
-
-
+        mListView = (ListView) findViewById(R.id.lv_music_dir);
+        mAdapter = new ContentAdapter(DirFileActivity.this, mItems);
+        mListView.setAdapter(mAdapter);
     }
 
     @Override
@@ -30,18 +37,33 @@ public class DirFileActivity extends BaseActivity {
 
     @Override
     public void onCreateData() {
-        ArrayList<MusicInfo> musicInfos = getIntent().getParcelableArrayListExtra("musicInfos");
-        for (MusicInfo info : musicInfos) {
+        mMusicInfos = getIntent().getParcelableArrayListExtra("musicInfos");
+        for (int i = 0; i < mMusicInfos.size(); i++) {
+
+            MusicInfo info = mMusicInfos.get(i);
             // 获取文件的目录集合
             File singFile = new File(info.getMusicPath());
             String dirPath = FileUtils.getFileParent(singFile);
-            ContentItem item = new ContentItem(R.drawable.app_music
-                    , R.drawable.ic_menu_shuffle
-                    , new File(dirPath).getName()
-                    , dirPath);
-            mItems.add(item);
+
+            if (!mDirs.contains(dirPath)) {
+                ContentItem item = new ContentItem(R.drawable.app_music
+                        , R.drawable.ic_menu_shuffle
+                        , new File(dirPath).getName()
+                        , dirPath);
+                mItems.add(item);
+            }
+            mDirs.add(dirPath);
+
         }
     }
+
+
+//    private List removeDuplicate(List list) {
+//        HashSet h = new HashSet(list);
+//        list.clear();
+//        list.addAll(h);
+//        return list;
+//    }
 
     @Override
     public void onSearchTextChanged(String text) {
@@ -51,5 +73,16 @@ public class DirFileActivity extends BaseActivity {
     @Override
     public void onSearchSubmit(String text) {
 
+    }
+
+    @Override
+    public void onConvertViewClicked(int position) {
+        ContentItem item = mItems.get(position);
+        Intent intent = new Intent(DirFileActivity.this, MusicListActivity.class);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("item", item);
+        intent.putParcelableArrayListExtra("musicInfos", mMusicInfos);
+        startActivity(intent);
     }
 }

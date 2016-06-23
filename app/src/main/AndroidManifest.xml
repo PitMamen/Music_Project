@@ -29,7 +29,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="21"/>
 
     <application
         android:allowTaskReparenting="true"
@@ -349,8 +349,8 @@
 
         <activity
             android:name=".MusicHomeActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.MUSIC_PLAYER" />
@@ -360,9 +360,8 @@
                 <category android:name="android.intent.category.APP_MUSIC" />
             </intent-filter>
         </activity>
-        <activity android:name=".DirFileActivity">
-
-        </activity>
+        <activity android:name=".DirFileActivity"></activity>
+        <activity android:name=".MusicListActivity"></activity>
     </application>
 
 </manifest>

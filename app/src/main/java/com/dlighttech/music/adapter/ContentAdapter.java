@@ -82,11 +82,10 @@ public class ContentAdapter extends BaseAdapter {
         holder.title.setText(contentItem.getTitle());
         holder.content.setText(contentItem.getContent());
 
-        MyListener listener = new MyListener();
+        MyListener listener = new MyListener(position);
         convertView.setOnClickListener(listener);
         holder.thumb.setOnClickListener(listener);
         holder.operator.setOnClickListener(listener);
-
 
         return convertView;
     }
@@ -99,22 +98,29 @@ public class ContentAdapter extends BaseAdapter {
     }
 
     private class MyListener implements View.OnClickListener {
+
+        private int position = 0;
+
+        public MyListener(int position) {
+            this.position = position;
+        }
+
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.operate_imageView_content:
                     if (mOnOperate != null) {
-                        mOnOperate.onOperateClicked();
+                        mOnOperate.onOperateClicked(position);
                     }
                     break;
                 case R.id.thumb_imageView_content:
                     if (mOnthumb != null) {
-                        mOnthumb.onThumbClicked();
+                        mOnthumb.onThumbClicked(position);
                     }
                     break;
                 case R.id.content_layout:
                     if (mOnConvertView != null) {
-                        mOnConvertView.onConvertViewClicked();
+                        mOnConvertView.onConvertViewClicked(position);
                     }
                     break;
                 default:
@@ -126,14 +132,14 @@ public class ContentAdapter extends BaseAdapter {
      * 列表item点击事件
      */
     public interface OnConvertViewClicked {
-        void onConvertViewClicked();
+        void onConvertViewClicked(int position);
     }
 
     /**
      * 左侧图片点击事件
      */
     public interface OnThumbClicked {
-        void onThumbClicked();
+        void onThumbClicked(int position);
     }
 
     /**
@@ -141,7 +147,7 @@ public class ContentAdapter extends BaseAdapter {
      */
 
     public interface OnOperateClicked {
-        void onOperateClicked();
+        void onOperateClicked(int position);
     }
 
 
