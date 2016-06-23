@@ -14,6 +14,7 @@
      limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.android.app">
 
     <uses-sdk
@@ -35,6 +36,7 @@
         android:allowTaskReparenting="true"
         android:icon="@drawable/app_music"
         android:label="@string/musicbrowserlabel"
+        tools:replace="android:icon, android:label"
         android:taskAffinity="android.task.music"
         android:theme="@style/AppTheme">
         <meta-data
