@@ -45,10 +45,10 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     }
 
     // 初始化bottomBar
-    public void initbottomBar() {
+    private void initbottomBar() {
         mBottomtitl = (LinearLayout) findViewById(R.id.bottom_title_bar);
         if (mBottomtitl == null) {
-            throw new RuntimeException("action bar layout need load!");
+            throw new RuntimeException("bottom bar layout need load!");
         }
         mProgressBar = (ProgressBar) mBottomtitl.findViewById(R.id.pro_music_schedule);
         mImageViewIcon = (ImageView) mBottomtitl.findViewById(R.id.iv_music_icon);
@@ -65,9 +65,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     private void initActionBar() {
         mActionBar = (LinearLayout) findViewById(R.id.action_bar_layout);
 
-
         if (mActionBar == null) {
-
             throw new RuntimeException("action bar layout need load!");
         }
         mSearchView = (SearchView) mActionBar.findViewById(R.id.searchView);
@@ -77,7 +75,6 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         mReturnButton = (ImageButton) mActionBar.findViewById(R.id.btn_return);
         tvHomeTitle = (TextView) mActionBar.findViewById(R.id.tv_home_title);
         tvTitle = (TextView) mActionBar.findViewById(R.id.tv_title);
-
 
         mSearchView.setOnQueryTextListener(this);
         mSearchButton.setOnClickListener(this);
@@ -122,7 +119,12 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         mSearchEditText.setHintTextColor(getResources().getColor(R.color.text_color_white));
     }
 
+    protected void setTitleText(String text){
+        tvTitle.setText(text);
+    }
+
     private void openSearchView() {
+        tvTitle.setVisibility(View.GONE);
         mSearchView.setVisibility(View.VISIBLE);
         mSearchView.setIconified(false); // 显示searchView中的editText
         mSearchView.onActionViewExpanded(); // 如果内容为空则显示x按钮，否则不显示
@@ -131,6 +133,9 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     }
 
     private void closeSearchView() {
+        if (this instanceof MusicHomeActivity == false) {
+            tvTitle.setVisibility(View.VISIBLE);
+        }
         mSearchView.setIconified(true);
         mSearchView.setVisibility(View.GONE);
         mTitleLayout.setVisibility(View.VISIBLE);
@@ -160,8 +165,6 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         } else {
             finish();
         }
-
-
     }
 
     @Override

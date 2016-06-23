@@ -40,6 +40,7 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
@@ -60,6 +61,7 @@ import android.widget.Toast;
 
 import com.android.music.IMediaPlaybackService;
 import com.dlighttech.music.model.MusicInfo;
+import com.dlighttech.music.util.DisplayUtils;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -1383,7 +1385,7 @@ public class MusicUtils {
 
 
     /* =======================add by zhujiang================================================ */
-    public static ArrayList<MusicInfo> getMusicInfo(Context ctx) {
+    public static void getMusicInfo(Context ctx, OnMusicLoadedListener listener) {
         ArrayList<MusicInfo> musicInfos = new ArrayList<MusicInfo>();
         try {
             ContentResolver resolver = ctx.getContentResolver();
@@ -1410,6 +1412,11 @@ public class MusicUtils {
                     int albumId = c.getInt(c
                             .getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
                     Bitmap albumImage = getArtwork(ctx, id, albumId);
+
+                    albumImage = ThumbnailUtils.extractThumbnail(albumImage
+                            , DisplayUtils.dip2px(ctx, 30)
+                            , DisplayUtils.dip2px(ctx, 30));
+
                     // 歌曲专辑名
                     String albumName = c.getString(c
                             .getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
@@ -1425,15 +1432,21 @@ public class MusicUtils {
                             , totalTime, MusicInfo.MusicState.NORMAL
                             , albumImage, albumName, path, size);
                     musicInfos.add(info);
+                    listener.onMusicLoading();
                 }
                 c.close();
-                return musicInfos;
+                listener.onMusicLoadSuccess(musicInfos);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            listener.onMusicLoadFail();
         }
-        return null;
     }
 
+    public interface OnMusicLoadedListener {
+        void onMusicLoadSuccess(ArrayList<MusicInfo> infos);
 
+        void onMusicLoading();
+
+        void onMusicLoadFail();
+    }
 }
