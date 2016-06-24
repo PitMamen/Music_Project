@@ -118,7 +118,6 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
         tvAlbums.setOnClickListener(middleLayoutListener);
         tvArtist.setOnClickListener(middleLayoutListener);
 
-
         mListView = (ListView) findViewById(R.id.home_list_view);
         mAdapter = new HomeAdapter(this, mData);
         mListView.setAdapter(mAdapter);
@@ -159,6 +158,7 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (position == 0) {
+            // 文件夹
             // 判断当前是否正在刷新中
             if (!isRefresh) {
                 Toast.makeText(MusicHomeActivity.this
@@ -176,6 +176,12 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
                 Toast.makeText(MusicHomeActivity.this
                         , "手机中没有音乐文件!", Toast.LENGTH_SHORT).show();
             }
+        } else if (position == 1) {
+            // 播放列表
+            Intent intent = new Intent(MusicHomeActivity.this, PlayListActivity.class);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
     }
 }

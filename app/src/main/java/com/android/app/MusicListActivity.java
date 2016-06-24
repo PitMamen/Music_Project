@@ -16,10 +16,12 @@ public class MusicListActivity extends BaseActivity {
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
     private ListView mListView;
     private ContentAdapter mAdapter;
+    private ContentItem item;
 
 
     @Override
     public void onCreateView() {
+        super.setTitleText(item != null ? item.getTitle() : "N/A"); // 设置title
         mListView = (ListView) findViewById(R.id.lv_sing_list);
         mAdapter = new ContentAdapter(this, mItems);
         mListView.setAdapter(mAdapter);
@@ -32,7 +34,7 @@ public class MusicListActivity extends BaseActivity {
 
     @Override
     public void onCreateData() {
-        ContentItem item = (ContentItem) getIntent().getSerializableExtra("item");
+        item = (ContentItem) getIntent().getSerializableExtra("item");
         ArrayList<MusicInfo> musicInfos = getIntent().getParcelableArrayListExtra("musicInfos");
 
         for (int i = 0; i < musicInfos.size(); i++) {

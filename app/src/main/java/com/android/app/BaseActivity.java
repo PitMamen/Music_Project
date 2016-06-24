@@ -45,7 +45,6 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         onCreateView();
     }
 
-
     // 初始化bottomBar
     private void initbottomBar() {
         mBottomtitl = (LinearLayout) findViewById(R.id.bottom_title_bar);

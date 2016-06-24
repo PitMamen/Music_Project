@@ -30,15 +30,17 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="21"/>
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="21" />
 
     <application
         android:allowTaskReparenting="true"
         android:icon="@drawable/app_music"
         android:label="@string/musicbrowserlabel"
-        tools:replace="android:icon, android:label"
         android:taskAffinity="android.task.music"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon, android:label">
         <meta-data
             android:name="android.app.default_searchable"
             android:value="com.android.app.QueryBrowserActivity" />
@@ -351,7 +353,6 @@
 
         <activity
             android:name=".MusicHomeActivity"
-            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -362,8 +363,13 @@
                 <category android:name="android.intent.category.APP_MUSIC" />
             </intent-filter>
         </activity>
-        <activity android:name=".DirFileActivity"></activity>
-        <activity android:name=".MusicListActivity"></activity>
+        <activity
+            android:name=".DirFileActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".MusicListActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity android:name=".PlayListActivity"></activity>
     </application>
 
 </manifest>
