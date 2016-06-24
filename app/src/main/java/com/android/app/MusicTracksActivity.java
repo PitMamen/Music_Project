@@ -1,5 +1,6 @@
 package com.android.app;
 
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -9,7 +10,9 @@ import com.allenliu.sidebar.SideBar;
 import com.dlighttech.music.adapter.ContentAdapter;
 import com.dlighttech.music.model.ContentItem;
 import com.dlighttech.music.model.MusicInfo;
+import com.dlighttech.music.util.FileUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +28,8 @@ public class MusicTracksActivity extends  BaseActivity {
     private SideBar sb_navigation_bar;
 
     private ContentAdapter mhomeAdapter;
-    private ArrayList<MusicInfo> mMusicinfos = new ArrayList<MusicInfo>();
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
+    private ArrayList<MusicInfo> musicinfos = new ArrayList<MusicInfo>() ;
 
 
     @Override
@@ -61,20 +64,15 @@ public class MusicTracksActivity extends  BaseActivity {
     @Override
     public void onCreateData() {
 
-        mMusicinfos = getIntent().getParcelableArrayListExtra("musicInfos");
+        ContentItem item = new ContentItem(R.drawable.app_music,R.drawable.ic_menu_eq,"sss.MP3","JJ");
 
-        // 设置音乐数据
-        for (int i = 0; i < mMusicinfos.size(); i++) {
-            MusicInfo info = mMusicinfos.get(i);
+        mItems.add(item);
 
-            ContentItem newItem = new ContentItem(R.drawable.app_music
-                    , R.drawable.ic_menu_eq
-                    , info.getMusicName()
-                    , info.getSinger());
-            mItems.add(newItem);
+
+
+
         }
 
-    }
 
     @Override
     public void onSearchTextChanged(String text) {

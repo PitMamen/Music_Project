@@ -1385,7 +1385,7 @@ public class MusicUtils {
 
 
     /* =======================add by zhujiang================================================ */
-    public static void getMusicInfo(Context ctx, OnMusicLoadedListener listener) {
+    public static ArrayList<MusicInfo> getMusicInfo(Context ctx, OnMusicLoadedListener listener) {
         ArrayList<MusicInfo> musicInfos = new ArrayList<MusicInfo>();
         try {
             ContentResolver resolver = ctx.getContentResolver();
@@ -1441,6 +1441,7 @@ public class MusicUtils {
             listener.onMusicLoadFail();
             e.printStackTrace();
         }
+        return musicInfos;
     }
 
     public interface OnMusicLoadedListener {
