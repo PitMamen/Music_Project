@@ -42,10 +42,17 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.tv_tracks: // 曲目
+               Intent intenttracks = new Intent(MusicHomeActivity.this,MusicTracksActivity.class);
+                    startActivity(intenttracks);
+
                     break;
                 case R.id.tv_album: // 专辑
+                    Intent intentalbums  =new Intent(MusicHomeActivity.this,MusicAlbumsActivity.class);
+                     startActivity(intentalbums);
                     break;
                 case R.id.tv_artist: // 歌手
+                    Intent intentsinger = new Intent(MusicHomeActivity.this,MusicSingerActivity.class);
+                    startActivity(intentsinger);
                     break;
             }
         }

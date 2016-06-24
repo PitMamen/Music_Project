@@ -164,7 +164,7 @@
                 <data android:mimeType="vnd.android.cursor.dir/album" />
             </intent-filter>
         </activity>
-        <activity
+      <!--  <activity
             android:name=".NowPlayingActivity"
             android:exported="false">
             <intent-filter>
@@ -174,7 +174,7 @@
 
                 <data android:mimeType="vnd.android.cursor.dir/nowplaying" />
             </intent-filter>
-        </activity>
+        </activity>-->
         <activity
             android:name=".TrackBrowserActivity"
             android:exported="false">
@@ -254,14 +254,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            -->
+
         </activity>
         <activity
             android:name=".MediaPickerActivity"
             android:exported="false"
             android:label="@string/mediapickerlabel">
 
-            <!--
+            <!-
             <intent-filter>
                 <action android:name="android.intent.action.PICK" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -363,9 +363,10 @@
                 <category android:name="android.intent.category.APP_MUSIC" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".DirFileActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity android:name=".DirFileActivity"></activity>
+        <activity android:name=".MusicTracksActivity"></activity>
+        <activity android:name=".MusicAlbumsActivity"></activity>
+        <activity android:name=".MusicSingerActivity"></activity>
         <activity
             android:name=".MusicListActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />

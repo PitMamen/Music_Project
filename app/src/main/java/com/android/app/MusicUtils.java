@@ -1387,7 +1387,6 @@ public class MusicUtils {
 
     /* =======================add by zhujiang================================================ */
 
-
     public static final String ACTION_MEDIA_SCANNER_SCAN_DIR =
             "android.intent.action.MEDIA_SCANNER_SCAN_DIR";
 
@@ -1421,7 +1420,7 @@ public class MusicUtils {
             return;
         File file = new File(path);
         if (file.isDirectory()) {
-            scanDirAsync(ctx,file.getAbsolutePath());
+            scanDirAsync(ctx, file.getAbsolutePath());
 
             File[] files = file.listFiles();
             for (int i = 0; i < files.length; i++) {
@@ -1446,7 +1445,9 @@ public class MusicUtils {
                 , Uri.parse("file://" + Environment.getExternalStorageDirectory())));
 
     }
+
     public static void getMusicInfo(Context ctx, OnMusicLoadedListener listener) {
+
         ArrayList<MusicInfo> musicInfos = new ArrayList<MusicInfo>();
         try {
             ContentResolver resolver = ctx.getContentResolver();

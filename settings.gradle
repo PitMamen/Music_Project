@@ -1,1 +1,1 @@
-include ':app', ':AnimSideBar';
+include 'app',':AnimSideBar';
