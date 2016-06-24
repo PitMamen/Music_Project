@@ -314,6 +314,7 @@
 
     <!--add by zhujiang-->
     <string name="singer">歌手</string>
+    <string name="create_song_list">新建歌单</string>
 
 </resources>
 

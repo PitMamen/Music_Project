@@ -26,6 +26,7 @@ public class ContentAdapter extends BaseAdapter {
     private OnConvertViewClicked mOnConvertView;
     private OnOperateClicked mOnOperate;
     private OnThumbClicked mOnthumb;
+    private boolean isHidden = false;
 
     public ContentAdapter(Context context, List<ContentItem> lists) {
         this.inflater = LayoutInflater.from(context);
@@ -40,6 +41,10 @@ public class ContentAdapter extends BaseAdapter {
         if (activity instanceof OnOperateClicked) {
             mOnOperate = (OnOperateClicked) activity;
         }
+    }
+
+    public void setIsOperationHidden(boolean isHidden) {
+        this.isHidden = isHidden;
     }
 
     @Override
@@ -75,10 +80,12 @@ public class ContentAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
+
         ContentItem contentItem = contentItems.get(position);
 
         holder.thumb.setImageResource(contentItem.getThumb());
         holder.operator.setImageResource(contentItem.getOperator());
+        holder.operator.setVisibility(isHidden ? View.GONE : View.VISIBLE);
         holder.title.setText(contentItem.getTitle());
         holder.content.setText(contentItem.getContent());
 
