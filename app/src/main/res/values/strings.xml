@@ -315,6 +315,13 @@
     <!--add by zhujiang-->
     <string name="singer">歌手</string>
     <string name="create_song_list">新建歌单</string>
+    <string name="song_info">歌曲信息</string>
+    <string name="song_name">歌曲名称：</string>
+    <string name="song_artist">艺术家：</string>
+    <string name="song_time">歌曲时间：</string>
+    <string name="song_path">歌曲路径：</string>
+    <string name="song_album">专辑名：</string>
+    <string name="song_size">歌曲大小：</string>
 
 </resources>
 

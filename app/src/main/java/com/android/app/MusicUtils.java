@@ -40,6 +40,7 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaScannerConnection;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
@@ -1385,6 +1386,66 @@ public class MusicUtils {
 
 
     /* =======================add by zhujiang================================================ */
+
+
+    public static final String ACTION_MEDIA_SCANNER_SCAN_DIR =
+            "android.intent.action.MEDIA_SCANNER_SCAN_DIR";
+
+    /**
+     * 扫描指定目录
+     *
+     * @param ctx
+     * @param dir
+     */
+    public static void scanDirAsync(Context ctx, String dir) {
+        Intent scanIntent = new Intent(ACTION_MEDIA_SCANNER_SCAN_DIR);
+        scanIntent.setData(Uri.fromFile(new File(dir)));
+        ctx.sendBroadcast(scanIntent);
+    }
+
+
+    /**
+     * 资源文件则scan到MediaStore数据库中
+     *
+     * @param ctx
+     * @param file
+     */
+    public static void scanFileAsync(Context ctx, String file) {
+        Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE
+                , Uri.parse("file://" + file));
+        ctx.sendBroadcast(scanIntent);
+    }
+
+    public static void startScan(Context ctx, String path) {
+        if (TextUtils.isEmpty(path))
+            return;
+        File file = new File(path);
+        if (file.isDirectory()) {
+            scanDirAsync(ctx,file.getAbsolutePath());
+
+            File[] files = file.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                File childF = files[i];
+                if (childF.isDirectory()) {
+                    scanDirAsync(ctx, childF.getAbsolutePath());
+                    startScan(ctx, childF.getAbsolutePath());
+                }
+            }
+        }
+    }
+
+    /**
+     * 全扫描
+     * Android 4.4 以上系统提升了权限导致此方法无效
+     * 使用ACTION_MEDIA_SCANNER_SCAN_FILE替代
+     *
+     * @param ctx
+     */
+    public static void allScan(Context ctx) {
+        ctx.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED
+                , Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+
+    }
     public static void getMusicInfo(Context ctx, OnMusicLoadedListener listener) {
         ArrayList<MusicInfo> musicInfos = new ArrayList<MusicInfo>();
         try {
@@ -1449,5 +1510,12 @@ public class MusicUtils {
         void onMusicLoading();
 
         void onMusicLoadFail();
+    }
+
+    public interface OnMediaScanListener {
+        void onScanSuccess();
+
+        void onScanFail();
+
     }
 }

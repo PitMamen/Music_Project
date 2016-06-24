@@ -112,7 +112,8 @@ public class FileUtils {
                             .getLong(cursor
                                     .getColumnIndexOrThrow(Audio.Media.DURATION)); // 时长
 
-                    ContentItem item = new ContentItem(R.drawable.app_music, R.drawable.left, name, Data);
+                    ContentItem item = new ContentItem(R.drawable.app_music
+                            , R.drawable.left, name, Data);
                     list.add(item);
                 }
 
@@ -592,12 +593,11 @@ public class FileUtils {
      * @return
      */
     public static String getFileParent(File srcFile) {
-        String rootPath = "/";
         if (srcFile == null) {
-            return rootPath;
+            return null;
         }
         if (!srcFile.exists()) {
-            srcFile.mkdirs();
+            return null;
         }
         return srcFile.getParent();
     }
