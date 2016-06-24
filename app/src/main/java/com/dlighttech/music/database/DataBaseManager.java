@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 /**
  * 用于处理歌单与歌单下歌曲信息的数据存储
- *
+ * <p/>
  * Created by zhujiang on 16-6-23.
  */
 public class DataBaseManager {
@@ -50,7 +50,8 @@ public class DataBaseManager {
                         + "(" + SongListDataBase.SONG_LIST_NAME
                         + "," + SongListDataBase.SONG_LIST_COUNT + ")"
                         + " values (?,?)";
-                Object[] bindArgs = new Object[]{songList.getName(), songList.getCount()};
+                Object[] bindArgs = new Object[]{songList.getName()
+                        , songList.getCount()};
                 database.execSQL(sql, bindArgs);
                 return true;
             } catch (SQLException e) {
@@ -119,12 +120,12 @@ public class DataBaseManager {
                             .getColumnIndexOrThrow(SongListDataBase._ID));
                     String name = c.getString(c
                             .getColumnIndexOrThrow(SongListDataBase.SONG_LIST_NAME));
-                    int count = c.getInt(c.getColumnIndexOrThrow(SongListDataBase.SONG_LIST_COUNT));
+                    String count = c.getString(c.getColumnIndexOrThrow(SongListDataBase.SONG_LIST_COUNT));
 
                     SongList list = new SongList();
                     list.setId(id);
                     list.setName(name);
-                    list.setCount(String.valueOf(count));
+                    list.setCount(count);
                     songLists.add(list);
                 }
                 return songLists;

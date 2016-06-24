@@ -41,7 +41,7 @@ public class SongListDataBase extends SQLiteOpenHelper {
         sb.append("create table " + SONG_LIST_TABLE + "(");
         sb.append(_ID + " integer primary key autoincrement");
         sb.append("," + SONG_LIST_NAME + " text");
-        sb.append("," + SONG_LIST_COUNT + " integer");
+        sb.append("," + SONG_LIST_COUNT + " text");
         sb.append(")");
         db.execSQL(sb.toString());
 
