@@ -25,9 +25,9 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     private EditText mSearchEditText;
     private TextView tvHomeTitle, tvTitle, tvMusicName, tvMusicAuthor;
     private RelativeLayout mTitleLayout, mSearchButtonLayout;
-    private ImageButton mSearchButton, mReturnButton;
+    private ImageButton  mReturnButton;
     private LinearLayout mActionBar, mBottomtitl;
-    private ImageView mImageViewIcon, mImageViewPause, mImageViewplay;
+    private ImageView mImageViewIcon, mImageViewPause, mImageViewplay,mImageViewsearch;
     private ProgressBar mProgressBar;
 
 
@@ -73,13 +73,13 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         mSearchView = (SearchView) mActionBar.findViewById(R.id.searchView);
         mTitleLayout = (RelativeLayout) mActionBar.findViewById(R.id.title_layout);
         mSearchButtonLayout = (RelativeLayout) mActionBar.findViewById(R.id.search_btn_layout);
-        mSearchButton = (ImageButton) mActionBar.findViewById(R.id.btn_search);
+        mImageViewsearch = (ImageView) mActionBar.findViewById(R.id.btn_search);
         mReturnButton = (ImageButton) mActionBar.findViewById(R.id.btn_return);
         tvHomeTitle = (TextView) mActionBar.findViewById(R.id.tv_home_title);
         tvTitle = (TextView) mActionBar.findViewById(R.id.tv_title);
 
         mSearchView.setOnQueryTextListener(this);
-        mSearchButton.setOnClickListener(this);
+        mImageViewsearch.setOnClickListener(this);
         mReturnButton.setOnClickListener(this);
         // 判断如果是首页，显示左边title，隐藏中心的textview和返回ImageButton
         // 如果不是，则显示左边返回imagebutton,中心的textview,隐藏左边的title

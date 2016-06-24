@@ -38,7 +38,9 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.tv_tracks: // 曲目
-//                Intent intent = new Intent(MusicHomeActivity.this,DirFileActivity.class);
+               Intent intent = new Intent(MusicHomeActivity.this,MusicTracksActivity.class);
+                    intent.putParcelableArrayListExtra("musicInfos", mMusicInfos);
+                    startActivity(intent);
                     break;
                 case R.id.tv_album: // 专辑
                     break;

@@ -7,8 +7,8 @@
     android:orientation="vertical"
     tools:context="com.allenliu.sidebar.SideBarDemoActivity">
 
-     <include layout="@layout/title_layout"/>
 
+    <include layout="@layout/home_title_layout"/>
 
        <RelativeLayout
            android:layout_width="wrap_content"
@@ -40,27 +40,29 @@
 
        </RelativeLayout>
 
-
-
-
-   <RelativeLayout
-        android:id="@+id/layout_navigation_search"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-       >
-
-       <ListView
-           android:id="@+id/lv_music_detail"
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:divider="#999999"
-           android:dividerHeight="2dp"
-           >
-       </ListView>
+        android:layout_height="2dp"
+        android:background="#999999"/>
 
 
-       <com.allenliu.sidebar.SideBar
-            android:id="@+id/bar"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+
+        <ListView
+            android:id="@+id/lv_music_detail"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:divider="#999999"
+            android:dividerHeight="2dp"
+            >
+        </ListView>
+        <com.allenliu.sidebar.SideBar
+            android:id="@+id/navigation_bar"
             android:layout_alignParentRight="true"
             android:textColor="@color/colorAccent"
             android:textSize="15sp"
@@ -69,9 +71,8 @@
             android:layout_width="20dp"
             android:layout_height="match_parent"
             />
+    </LinearLayout>
 
-    </RelativeLayout>
 
     <include layout="@layout/bottom_title_player_layout"/>
-
 </LinearLayout>
