@@ -364,16 +364,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".DirFileActivity"></activity>
-        <activity android:name=".MusicListActivity"></activity>
         <activity android:name=".MusicTracksActivity"></activity>
         <activity android:name=".MusicAlbumsActivity"></activity>
         <activity android:name=".MusicSingerActivity"></activity>
-
-
-
-        <activity
-            android:name=".DirFileActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".MusicListActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />
