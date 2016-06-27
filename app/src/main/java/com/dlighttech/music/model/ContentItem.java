@@ -14,12 +14,18 @@ public class ContentItem implements Serializable{
     private String title;
     private String content;
 
+    public ContentItem() {
+    }
+
     /**
      * @param thumb    左侧缩略图（资源id）
      * @param operator 右侧操作图（资源id）
      * @param title    上部文字
      * @param content  下部文字
      */
+
+
+
 
     public ContentItem(int thumb, int operator, String title, String content) {
         this.thumb = thumb;

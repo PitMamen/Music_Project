@@ -1413,6 +1413,8 @@ public class MusicUtils {
                             .getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
                     Bitmap albumImage = getArtwork(ctx, id, albumId);
 
+
+
                     albumImage = ThumbnailUtils.extractThumbnail(albumImage
                             , DisplayUtils.dip2px(ctx, 30)
                             , DisplayUtils.dip2px(ctx, 30));
@@ -1420,6 +1422,14 @@ public class MusicUtils {
                     // 歌曲专辑名
                     String albumName = c.getString(c
                             .getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
+
+
+                    //获取该专辑下共有多少首歌曲
+                    int albumMusicNumber = getAlbumCount(ctx,albumId);
+
+
+
+
                     // 文件路径
                     String path = c.getString(c
                             .getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
@@ -1442,6 +1452,28 @@ public class MusicUtils {
             e.printStackTrace();
         }
         return musicInfos;
+    }
+
+    public static int getAlbumCount(Context ctx,int albumId) {
+
+        try{
+            ContentResolver resolver = ctx.getContentResolver();
+            if (resolver != null) {
+                Cursor c = resolver.query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
+                        , new String[]{MediaStore.Audio.Albums.NUMBER_OF_SONGS}
+                        , MediaStore.Audio.Albums._ID+"=?"
+                        , new String[]{String.valueOf(albumId)}, null);
+
+                c.moveToFirst();
+                int count =c.getInt(0);
+                Log.d("TAG","albumMusicNumber"+count);
+                c.close();
+                return count;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     public interface OnMusicLoadedListener {
