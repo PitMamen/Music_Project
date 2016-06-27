@@ -117,7 +117,7 @@ public class ContentAdapter extends BaseAdapter {
             switch (v.getId()) {
                 case R.id.operate_imageView_content:
                     if (mOnOperate != null) {
-                        mOnOperate.onOperateClicked(position);
+                        mOnOperate.onOperateClicked(position,v);
                     }
                     break;
                 case R.id.thumb_imageView_content:
@@ -154,7 +154,7 @@ public class ContentAdapter extends BaseAdapter {
      */
 
     public interface OnOperateClicked {
-        void onOperateClicked(int position);
+        void onOperateClicked(int position,View v);
     }
 
 

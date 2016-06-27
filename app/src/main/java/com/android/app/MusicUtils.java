@@ -40,6 +40,7 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaScannerConnection;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
@@ -62,6 +63,7 @@ import android.widget.Toast;
 import com.android.music.IMediaPlaybackService;
 import com.dlighttech.music.model.MusicInfo;
 import com.dlighttech.music.util.DisplayUtils;
+import com.dlighttech.music.util.MimeTypeUtils;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -73,6 +75,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Formatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 public class MusicUtils {
@@ -1385,7 +1388,230 @@ public class MusicUtils {
 
 
     /* =======================add by zhujiang================================================ */
-    public static ArrayList<MusicInfo> getMusicInfo(Context ctx, OnMusicLoadedListener listener) {
+
+    public static final String ACTION_MEDIA_SCANNER_SCAN_DIR =
+            "android.intent.action.MEDIA_SCANNER_SCAN_DIR";
+
+    /**
+     * 扫描指定目录
+     *
+     * @param ctx
+     * @param dir
+     */
+    public static void scanDirAsync(Context ctx, String dir) {
+        Intent scanIntent = new Intent(ACTION_MEDIA_SCANNER_SCAN_DIR);
+        scanIntent.setData(Uri.fromFile(new File(dir)));
+        ctx.sendBroadcast(scanIntent);
+    }
+
+
+    /**
+     * 资源文件则scan到MediaStore数据库中
+     *
+     * @param ctx
+     * @param file
+     */
+    public static void scanFileAsync(Context ctx, String file) {
+        Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE
+                , Uri.parse("file://" + file));
+        ctx.sendBroadcast(scanIntent);
+    }
+
+    public static void startScan(Context ctx, String path) {
+        if (TextUtils.isEmpty(path))
+            return;
+        File file = new File(path);
+        if (file.isDirectory()) {
+            scanDirAsync(ctx, file.getAbsolutePath());
+
+            File[] files = file.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                File childF = files[i];
+                if (childF.isDirectory()) {
+                    scanDirAsync(ctx, childF.getAbsolutePath());
+                    startScan(ctx, childF.getAbsolutePath());
+                }
+            }
+        }
+    }
+
+    /**
+     * 全扫描
+     * Android 4.4 以上系统提升了权限导致此方法无效
+     * 使用ACTION_MEDIA_SCANNER_SCAN_FILE替代
+     *
+     * @param ctx
+     */
+    public static void allScan(Context ctx) {
+        ctx.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED
+                , Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+
+    }
+
+
+    /**
+     * 获取所有的音乐文件
+     *
+     * @param currPath
+     * @return
+     */
+    public static void scanAll(Context context, String currPath) {
+        Log.d("TAG", "CURR==" + currPath);
+        List<String> musicPath = new ArrayList<String>();
+        if (TextUtils.isEmpty(currPath)) {
+            currPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        }
+        File file = new File(currPath);
+        if (file.isDirectory()) {
+            File[] childFiles = file.listFiles();
+            for (int i = 0; i < childFiles.length; i++) {
+                File child = childFiles[i];
+                if (child.canRead() && child.canWrite()) {
+                    if (child.isDirectory()) {
+                        scanAll(context, child.getAbsolutePath());
+                    } else {
+                        if (isMusic(child.getAbsolutePath())) {
+                            musicPath.add(child.getAbsolutePath());
+                        }
+                    }
+                }
+            }
+        } else {
+            if (isMusic(file.getAbsolutePath())) {
+                musicPath.add(file.getAbsolutePath());
+            }
+        }
+
+        String[] paths = (String[]) musicPath.toArray(new String[musicPath.size()]);
+
+        MediaScannerConnection conn = scanFile(context, paths, getMusicMimeType()
+                , new MediaScannerConnection.OnScanCompletedListener() {
+                    @Override
+                    public void onScanCompleted(String path, Uri uri) {
+                        Log.d("TAG", "扫描over=====" + path);
+                        PATHS.add(path);
+                    }
+                });
+    }
+
+
+    private static List<String> PATHS = new ArrayList<String>();
+
+    /**
+     * 判断扫描是否完成
+     *
+     * @return
+     */
+    public static boolean isScanComplete() {
+        if (PATHS != null && PATHS.size() > 0) {
+            for (int i = 0; i < PATHS.size(); i++) {
+                if (i == PATHS.size() - 1) {
+                    PATHS.clear();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 获取音乐资源的mimeType
+     *
+     * @return
+     */
+    public static String[] getMusicMimeType() {
+        return MimeTypeUtils.AUDIO_MIMETYPE;
+    }
+
+    /**
+     * 是否为音乐
+     *
+     * @param path
+     * @return
+     */
+    public static boolean isMusic(String path) {
+        if (TextUtils.isEmpty(path)) {
+            return false;
+        }
+        if (path.endsWith(".mp3") || path.endsWith(".mp4a") || path.endsWith(".mp4p") ||
+                path.endsWith(".mp2") || path.endsWith(".mpga") || path.endsWith(".ogg")
+                || path.endsWith(".rmvb") || path.endsWith(".wma") || path.endsWith(".wav")
+                || path.endsWith(".wmv")) {
+
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * 扫描指定的文件
+     *
+     * @param context
+     * @param filePath
+     * @param sListener
+     */
+    public static MediaScannerConnection scanFile(Context context
+            , String[] filePath
+            , String[] mineType
+            , MediaScannerConnection.OnScanCompletedListener sListener) {
+        ClientProxy client = new ClientProxy(filePath, mineType, sListener);
+
+        try {
+            MediaScannerConnection connection = new MediaScannerConnection(
+                    context.getApplicationContext(), client);
+            client.mConnection = connection;
+            connection.connect();
+            return connection;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    static class ClientProxy implements MediaScannerConnection.MediaScannerConnectionClient {
+        final String[] mPaths;
+        final String[] mMimeTypes;
+        final MediaScannerConnection.OnScanCompletedListener mClient;
+        MediaScannerConnection mConnection;
+        int mNextPath;
+
+        ClientProxy(String[] paths, String[] mimeTypes,
+                    MediaScannerConnection.OnScanCompletedListener client) {
+            mPaths = paths;
+            mMimeTypes = mimeTypes;
+            mClient = client;
+        }
+
+        public void onMediaScannerConnected() {
+            scanNextPath();
+        }
+
+        public void onScanCompleted(String path, Uri uri) {
+            if (mClient != null) {
+                mClient.onScanCompleted(path, uri);
+            }
+            scanNextPath();
+        }
+
+        /**
+         * 自动扫描下一个
+         */
+        void scanNextPath() {
+            if (mNextPath >= mPaths.length) {
+                mConnection.disconnect();
+                return;
+            }
+            String mimeType = mMimeTypes != null ? mMimeTypes[mNextPath] : null;
+            mConnection.scanFile(mPaths[mNextPath], mimeType);
+            mNextPath++;
+        }
+    }
+
+
+    public static void getMusicInfo(Context ctx, OnMusicLoadedListener listener) {
+
         ArrayList<MusicInfo> musicInfos = new ArrayList<MusicInfo>();
         try {
             ContentResolver resolver = ctx.getContentResolver();
@@ -1451,7 +1677,6 @@ public class MusicUtils {
             listener.onMusicLoadFail();
             e.printStackTrace();
         }
-        return musicInfos;
     }
 
     public static int getAlbumCount(Context ctx,int albumId) {
@@ -1483,4 +1708,11 @@ public class MusicUtils {
 
         void onMusicLoadFail();
     }
+
+//    public interface OnMediaScanListener {
+//        void onScanSuccess();
+//
+//        void onScanFail();
+//
+//    }
 }

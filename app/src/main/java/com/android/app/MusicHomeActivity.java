@@ -1,6 +1,10 @@
 package com.android.app;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -38,15 +42,16 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.tv_tracks: // 曲目
-               Intent intenttracks = new Intent(MusicHomeActivity.this,MusicTracksActivity.class);
+                    Intent intenttracks = new Intent(MusicHomeActivity.this, MusicTracksActivity.class);
                     startActivity(intenttracks);
+
                     break;
                 case R.id.tv_album: // 专辑
-                    Intent intentalbums  =new Intent(MusicHomeActivity.this,MusicAlbumsActivity.class);
-                     startActivity(intentalbums);
+                    Intent intentalbums = new Intent(MusicHomeActivity.this, MusicAlbumsActivity.class);
+                    startActivity(intentalbums);
                     break;
                 case R.id.tv_artist: // 歌手
-                    Intent intentsinger = new Intent(MusicHomeActivity.this,MusicSingerActivity.class);
+                    Intent intentsinger = new Intent(MusicHomeActivity.this, MusicSingerActivity.class);
                     startActivity(intentsinger);
                     break;
             }
@@ -59,30 +64,58 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
     private Runnable mMusicLoadTask = new Runnable() {
         @Override
         public void run() {
-            MusicUtils.getMusicInfo(MusicHomeActivity.this
-                    , new MusicUtils.OnMusicLoadedListener() {
-                        @Override
-                        public void onMusicLoadSuccess(ArrayList<MusicInfo> infos) {
-                            try {
-                                Thread.sleep(2000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            // 扫描音乐资源，更新到MediaStore数据库中
+            MusicUtils.scanAll(MusicHomeActivity.this
+                    , Environment.getExternalStorageDirectory().getAbsolutePath());
+
+            // 如果扫描完成，则开始获取音乐资源
+            if (MusicUtils.isScanComplete()) {
+                // 扫描完成后，获取音乐资源
+                MusicUtils.getMusicInfo(MusicHomeActivity.this
+                        , new MusicUtils.OnMusicLoadedListener() {
+                            @Override
+                            public void onMusicLoadSuccess(ArrayList<MusicInfo> infos) {
+                                Message.obtain(mHandler, MUSIC_LOAD_COMPLETE
+                                        , infos).sendToTarget();
                             }
-                            Message.obtain(mHandler, MUSIC_LOAD_COMPLETE, infos).sendToTarget();
-                        }
 
-                        @Override
-                        public void onMusicLoading() {
-                            Message.obtain(mHandler, MUSIC_LOADING).sendToTarget();
-                        }
+                            @Override
+                            public void onMusicLoading() {
+                                Message.obtain(mHandler
+                                        , MUSIC_LOADING).sendToTarget();
+                            }
 
-                        @Override
-                        public void onMusicLoadFail() {
-                            Message.obtain(mHandler, MUSIC_LOAD_FAIL).sendToTarget();
-                        }
-                    });
+                            @Override
+                            public void onMusicLoadFail() {
+                                Message.obtain(mHandler
+                                        , MUSIC_LOAD_FAIL).sendToTarget();
+                            }
+                        });
+            } else {
+                isRefresh = false;
+            }
         }
     };
+
+    private BroadcastReceiver mMediaReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("TAG", intent.getAction());
+            if (intent.getAction().equals(Intent.ACTION_MEDIA_SCANNER_FINISHED)) {
+                Log.d("TAG", "扫描完成了");
+            } else if (intent.getAction().equals(Intent.ACTION_MEDIA_SCANNER_STARTED)) {
+                Log.d("TAG", "扫描开始了");
+            }
+        }
+    };
+
 
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -127,6 +160,16 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
         mAdapter = new HomeAdapter(this, mData);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
+
+        // 注册广播
+        IntentFilter filter = new IntentFilter();
+        filter.setPriority(1000);// 设置最高优先级
+        filter.addAction(Intent.ACTION_MEDIA_SCANNER_STARTED);
+        filter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
+        filter.addAction(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        filter.addAction(MusicUtils.ACTION_MEDIA_SCANNER_SCAN_DIR);
+        registerReceiver(mMediaReceiver, filter);
+        Log.d("TAG", "注册完成");
 
         // 开启一个线程用于加载当前手机所有文件夹下的音乐资源
         new Thread(mMusicLoadTask).start();
@@ -188,5 +231,11 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mMediaReceiver);
     }
 }
