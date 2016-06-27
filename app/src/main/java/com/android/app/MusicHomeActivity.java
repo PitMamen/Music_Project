@@ -1,15 +1,11 @@
 package com.android.app;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -105,17 +101,17 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
         }
     };
 
-    private BroadcastReceiver mMediaReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d("TAG", intent.getAction());
-            if (intent.getAction().equals(Intent.ACTION_MEDIA_SCANNER_FINISHED)) {
-                Log.d("TAG", "扫描完成了");
-            } else if (intent.getAction().equals(Intent.ACTION_MEDIA_SCANNER_STARTED)) {
-                Log.d("TAG", "扫描开始了");
-            }
-        }
-    };
+//    private BroadcastReceiver mMediaReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            Log.d("TAG", intent.getAction());
+//            if (intent.getAction().equals(Intent.ACTION_MEDIA_SCANNER_FINISHED)) {
+//                Log.d("TAG", "扫描完成了");
+//            } else if (intent.getAction().equals(Intent.ACTION_MEDIA_SCANNER_STARTED)) {
+//                Log.d("TAG", "扫描开始了");
+//            }
+//        }
+//    };
 
 
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -164,14 +160,14 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
         mListView.setOnItemClickListener(this);
 
         // 注册广播
-        IntentFilter filter = new IntentFilter();
-        filter.setPriority(1000);// 设置最高优先级
-        filter.addAction(Intent.ACTION_MEDIA_SCANNER_STARTED);
-        filter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
-        filter.addAction(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        filter.addAction(MusicUtils.ACTION_MEDIA_SCANNER_SCAN_DIR);
-        registerReceiver(mMediaReceiver, filter);
-        Log.d("TAG", "注册完成");
+//        IntentFilter filter = new IntentFilter();
+//        filter.setPriority(1000);// 设置最高优先级
+//        filter.addAction(Intent.ACTION_MEDIA_SCANNER_STARTED);
+//        filter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
+//        filter.addAction(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//        filter.addAction(MusicUtils.ACTION_MEDIA_SCANNER_SCAN_DIR);
+//        registerReceiver(mMediaReceiver, filter);
+//        Log.d("TAG", "注册完成");
 
         // 开启一个线程用于加载当前手机所有文件夹下的音乐资源
         new Thread(mMusicLoadTask).start();
@@ -238,6 +234,6 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mMediaReceiver);
+//        unregisterReceiver(mMediaReceiver);
     }
 }

@@ -8,7 +8,7 @@ import java.io.Serializable;
  */
 
 
-public class ContentItem implements Serializable{
+public class ContentItem implements Serializable {
     private int thumb;
     private int operator;
     private String title;
@@ -65,5 +65,15 @@ public class ContentItem implements Serializable{
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        return "ContentItem{" +
+                "thumb=" + thumb +
+                ", operator=" + operator +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                '}';
     }
 }

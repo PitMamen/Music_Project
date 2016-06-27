@@ -104,31 +104,28 @@ public class DataBaseManager {
         }
     }
 
-    public int updateSongOfListBySongListId(String name) {
+    /**
+     * 根据歌单id更新歌单曲目数量
+     *
+     * @param id 歌单id
+     * @return
+     */
+    public boolean updateSongOfListBySongListId(int id, int count) {
         synchronized (mDataBase) {
             SQLiteDatabase database = null;
-            Cursor c = null;
             try {
                 database = mDataBase.getReadableDatabase();
-                String sql = "select " + SongListDataBase._ID + " from "
-                        + SongListDataBase.SONG_LIST_TABLE
-                        + " where " + SongListDataBase.SONG_LIST_NAME + "=?";
-
-                c = database.rawQuery(sql, new String[]{name});
-                if (c.moveToFirst()) {
-                    int id = c.getInt(0);
-                    if (id > 0) {
-                        return id;
-                    }
-                }
-                return -1;
+                String sql = "update  " + SongListDataBase.SONG_LIST_TABLE
+                        + " set " + SongListDataBase.SONG_LIST_COUNT + "=?"
+                        + " where " + SongListDataBase._ID + "=?";
+                database.execSQL(sql, new Object[]{count, id});
+                return true;
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                if (c != null) c.close();
                 if (database != null) database.close();
             }
-            return -1;
+            return false;
         }
     }
 
@@ -160,6 +157,7 @@ public class DataBaseManager {
             }
         }
     }
+
 
     /**
      * 插入一首歌到一个歌单中
@@ -195,7 +193,35 @@ public class DataBaseManager {
     }
 
 
+    public SongList getSongListById(int id) {
+        synchronized (mDataBase) {
+            SQLiteDatabase database = null;
+            Cursor c = null;
+            try {
+                database = mDataBase.getReadableDatabase();
+                String sql = "select * from " + SongListDataBase.SONG_LIST_TABLE
+                        + " where " + SongListDataBase._ID + "=?";
+                c = database.rawQuery(sql, new String[]{String.valueOf(id)});
+                if (c.moveToFirst()) {
+                    int songlistId = c.getInt(c.getColumnIndexOrThrow(SongListDataBase._ID));
+                    String name = c.getString(c.getColumnIndexOrThrow(SongListDataBase.SONG_LIST_NAME));
+                    int count = c.getInt(c.getColumnIndexOrThrow(SongListDataBase.SONG_LIST_COUNT));
 
+                    SongList list = new SongList();
+                    list.setId(songlistId);
+                    list.setName(name);
+                    list.setCount(count);
+                    return list;
+                }
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            } finally {
+                if (c != null) c.close();
+                if (database != null) database.close();
+            }
+            return null;
+        }
+    }
 
     /**
      * 获取所有歌单
@@ -219,7 +245,7 @@ public class DataBaseManager {
                             .getColumnIndexOrThrow(SongListDataBase._ID));
                     String name = c.getString(c
                             .getColumnIndexOrThrow(SongListDataBase.SONG_LIST_NAME));
-                    String count = c.getString(c.getColumnIndexOrThrow(SongListDataBase.SONG_LIST_COUNT));
+                    int count = c.getInt(c.getColumnIndexOrThrow(SongListDataBase.SONG_LIST_COUNT));
 
                     SongList list = new SongList();
                     list.setId(id);

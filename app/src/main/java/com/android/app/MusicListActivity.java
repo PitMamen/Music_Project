@@ -3,6 +3,7 @@ package com.android.app;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.view.View;
 import android.widget.AdapterView;
@@ -60,6 +61,7 @@ public class MusicListActivity extends BaseActivity
         for (int i = 0; i < musicInfos.size(); i++) {
             MusicInfo info = musicInfos.get(i);
             String parent = FileUtils.getFileParent(new File(info.getMusicPath()));
+            if (TextUtils.isEmpty(parent)) continue;
             if (parent.equals(item.getContent())) {
                 mMusicList.add(info);
             }
@@ -184,18 +186,26 @@ public class MusicListActivity extends BaseActivity
                         int songListId = DataBaseManager.getInstance(MusicListActivity.this)
                                 .getSongListIdByName(songList);
                         if (songListId != -1 || songListId > 0) {
-                            // 然后将歌曲添加到该歌单id下
+
                             MusicInfo info = getCurrMusic();
                             Song song = new Song();
                             song.setSongListId(songListId);
                             song.setName(info.getMusicName());
                             song.setSongPath(info.getMusicPath());
                             song.setSinger(info.getSinger());
-
+                            // 然后将歌曲添加到该歌单id下
                             boolean isSuccess = DataBaseManager.getInstance(MusicListActivity.this)
                                     .insertSong(song);
 
-                            if (isSuccess) {
+                            SongList list = DataBaseManager.getInstance(MusicListActivity.this)
+                                    .getSongListById(songListId);
+
+                            int count = list.getCount();
+                            count++;
+                            boolean isUpdate = DataBaseManager.getInstance(MusicListActivity.this)
+                                    .updateSongOfListBySongListId(songListId, count);
+
+                            if (isSuccess && isUpdate) {
                                 Toast.makeText(MusicListActivity.this
                                         , info.getMusicName() + "被加入到"
                                                 + songList + "歌单中", Toast.LENGTH_SHORT).show();
@@ -226,6 +236,8 @@ public class MusicListActivity extends BaseActivity
             return;
         }
         musicFile.delete();
+        // 删除MediaStore数据库中的数据
+        MusicUtils.deleteMusic(MusicListActivity.this, info.getMusicId());
         mItems.remove(mSelectionPos);
         mAdapter.notifyDataSetChanged();
     }

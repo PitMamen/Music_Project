@@ -90,7 +90,7 @@ public class PlayListActivity extends BaseActivity {
                 // 添加一条数据到歌单表
                 SongList list = new SongList();
                 list.setName(songListName);
-                list.setCount("0首");
+                list.setCount(0);
                 boolean isInsert = DataBaseManager.getInstance(PlayListActivity.this)
                         .insertSongList(list);
                 if (isInsert) {
@@ -122,7 +122,7 @@ public class PlayListActivity extends BaseActivity {
             ContentItem item = new ContentItem(R.drawable.app_music
                     , R.drawable.left
                     , newList.get(i).getName()
-                    , newList.get(i).getCount());
+                    , newList.get(i).getCount() + "首");
             mItems.add(item);
         }
         mAdapter.notifyDataSetChanged();
@@ -142,7 +142,7 @@ public class PlayListActivity extends BaseActivity {
         if (songLists == null || songLists.size() == 0) {
             SongList list = new SongList();
             list.setName("我喜欢听");
-            list.setCount("0首");
+            list.setCount(0);
             DataBaseManager.getInstance(this).insertSongList(list);
             ContentItem item = new ContentItem(R.drawable.app_music
                     , R.drawable.left, "我喜欢听", "0首");
@@ -151,8 +151,10 @@ public class PlayListActivity extends BaseActivity {
             for (int i = 0; i < songLists.size(); i++) {
                 ContentItem item = new ContentItem(R.drawable.app_music
                         , R.drawable.left, songLists.get(i).getName()
-                        , songLists.get(i).getCount());
+                        , songLists.get(i).getCount() + "首");
                 mItems.add(item);
+
+                Log.d("TAG",item.toString());
             }
         }
     }

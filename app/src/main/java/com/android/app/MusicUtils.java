@@ -1506,7 +1506,6 @@ public class MusicUtils {
         if (PATHS != null && PATHS.size() > 0) {
             for (int i = 0; i < PATHS.size(); i++) {
                 if (i == PATHS.size() - 1) {
-                    PATHS.clear();
                     return true;
                 }
             }
@@ -1668,6 +1667,23 @@ public class MusicUtils {
             e.printStackTrace();
         }
     }
+
+
+    public static boolean deleteMusic(Context ctx, int id) {
+        try {
+            ContentResolver resolver = ctx.getContentResolver();
+            int row = resolver.delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                    , MediaStore.Audio.Media._ID + "=?", new String[]{String.valueOf(id)});
+            if (row > 0) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+
 
     public interface OnMusicLoadedListener {
         void onMusicLoadSuccess(ArrayList<MusicInfo> infos);

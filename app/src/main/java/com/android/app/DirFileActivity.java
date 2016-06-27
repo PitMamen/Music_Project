@@ -44,17 +44,18 @@ public class DirFileActivity extends BaseActivity implements ContentAdapter.OnCo
             MusicInfo info = mMusicInfos.get(i);
             // 获取文件的目录集合
             File singFile = new File(info.getMusicPath());
-            String dirPath = FileUtils.getFileParent(singFile);
+            if (singFile.exists()) {
+                String dirPath = FileUtils.getFileParent(singFile);
 
-            if (!mDirs.contains(dirPath)) {
-                ContentItem item = new ContentItem(R.drawable.app_music
-                        , R.drawable.ic_menu_shuffle
-                        , new File(dirPath).getName()
-                        , dirPath);
-                mItems.add(item);
+                if (!mDirs.contains(dirPath)) {
+                    ContentItem item = new ContentItem(R.drawable.app_music
+                            , R.drawable.ic_menu_shuffle
+                            , new File(dirPath).getName()
+                            , dirPath);
+                    mItems.add(item);
+                }
+                mDirs.add(dirPath);
             }
-            mDirs.add(dirPath);
-
         }
     }
 
