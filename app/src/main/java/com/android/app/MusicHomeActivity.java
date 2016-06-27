@@ -42,16 +42,16 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.tv_tracks: // 曲目
-               Intent intenttracks = new Intent(MusicHomeActivity.this,MusicTracksActivity.class);
+                    Intent intenttracks = new Intent(MusicHomeActivity.this, MusicTracksActivity.class);
                     startActivity(intenttracks);
 
                     break;
                 case R.id.tv_album: // 专辑
-                    Intent intentalbums  =new Intent(MusicHomeActivity.this,MusicAlbumsActivity.class);
-                     startActivity(intentalbums);
+                    Intent intentalbums = new Intent(MusicHomeActivity.this, MusicAlbumsActivity.class);
+                    startActivity(intentalbums);
                     break;
                 case R.id.tv_artist: // 歌手
-                    Intent intentsinger = new Intent(MusicHomeActivity.this,MusicSingerActivity.class);
+                    Intent intentsinger = new Intent(MusicHomeActivity.this, MusicSingerActivity.class);
                     startActivity(intentsinger);
                     break;
             }
@@ -72,31 +72,35 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
             }
 
             // 扫描音乐资源，更新到MediaStore数据库中
-            MusicUtils.startScan(MusicHomeActivity.this
+            MusicUtils.scanAll(MusicHomeActivity.this
                     , Environment.getExternalStorageDirectory().getAbsolutePath());
 
+            // 如果扫描完成，则开始获取音乐资源
+            if (MusicUtils.isScanComplete()) {
+                // 扫描完成后，获取音乐资源
+                MusicUtils.getMusicInfo(MusicHomeActivity.this
+                        , new MusicUtils.OnMusicLoadedListener() {
+                            @Override
+                            public void onMusicLoadSuccess(ArrayList<MusicInfo> infos) {
+                                Message.obtain(mHandler, MUSIC_LOAD_COMPLETE
+                                        , infos).sendToTarget();
+                            }
 
-//            // 扫描完成后，获取音乐资源
-//            MusicUtils.getMusicInfo(MusicHomeActivity.this
-//                    , new MusicUtils.OnMusicLoadedListener() {
-//                        @Override
-//                        public void onMusicLoadSuccess(ArrayList<MusicInfo> infos) {
-//                            Message.obtain(mHandler, MUSIC_LOAD_COMPLETE
-//                                    , infos).sendToTarget();
-//                        }
-//
-//                        @Override
-//                        public void onMusicLoading() {
-//                            Message.obtain(mHandler
-//                                    , MUSIC_LOADING).sendToTarget();
-//                        }
-//
-//                        @Override
-//                        public void onMusicLoadFail() {
-//                            Message.obtain(mHandler
-//                                    , MUSIC_LOAD_FAIL).sendToTarget();
-//                        }
-//                    });
+                            @Override
+                            public void onMusicLoading() {
+                                Message.obtain(mHandler
+                                        , MUSIC_LOADING).sendToTarget();
+                            }
+
+                            @Override
+                            public void onMusicLoadFail() {
+                                Message.obtain(mHandler
+                                        , MUSIC_LOAD_FAIL).sendToTarget();
+                            }
+                        });
+            } else {
+                isRefresh = false;
+            }
         }
     };
 
@@ -163,6 +167,7 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
         filter.addAction(Intent.ACTION_MEDIA_SCANNER_STARTED);
         filter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
         filter.addAction(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        filter.addAction(MusicUtils.ACTION_MEDIA_SCANNER_SCAN_DIR);
         registerReceiver(mMediaReceiver, filter);
         Log.d("TAG", "注册完成");
 
