@@ -14,78 +14,71 @@
      limitations under the License.
 -->
 
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+              >
 
-    <View 
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="#ffffffff" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ff5a5a5a"
-        android:paddingTop="1dip"
-        android:paddingBottom="4dip"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp">
 
-        <TextView android:id="@+id/currenttime"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:shadowColor="#ff000000"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="3"
-            android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:layout_width="0dip"
-            android:paddingLeft="5dip"
-            android:layout_height="wrap_content" />
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/currenttime"
             android:layout_width="wrap_content"
+            android:maxWidth="50dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="1dip"
-            android:layout_marginBottom="2dip"
-            android:gravity="center">
+            android:layout_marginRight="5dp"
+            android:text="left"
+            android:layout_gravity="center_vertical"
 
-            <com.android.app.RepeatingImageButton
-                android:id="@+id/prev" style="@android:style/MediaButton.Previous" />
+            android:textSize="14sp"/>
 
-            <ImageButton android:id="@+id/pause" style="@android:style/MediaButton.Play" />
-
-            <com.android.app.RepeatingImageButton
-                android:id="@+id/next" style="@android:style/MediaButton.Next" />
-
-        </LinearLayout>
-
-        <TextView android:id="@+id/totaltime"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:shadowColor="#ff000000"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="3"
-            android:gravity="right"
-            android:paddingRight="5dip"
-            android:layout_gravity="bottom"
+        <SeekBar
+            android:id="@android:id/progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content" />
+            android:progressBackgroundTint="@color/color_primary"
+            />
+
+        <TextView
+            android:id="@+id/totaltime"
+            android:layout_width="wrap_content"
+            android:maxWidth="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="right"
+            android:layout_gravity="center_vertical"
+            android:textSize="14sp"/>
 
     </LinearLayout>
 
-    <SeekBar android:id="@android:id/progress"
-        android:background="#ff5a5a5a"
-        style="?android:attr/progressBarStyleHorizontal"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="36dip"
-        android:paddingLeft="8dip"
-        android:paddingRight="8dip"
-        android:paddingBottom="4dip" />
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="20dp">
+
+        <com.android.app.RepeatingImageButton
+            android:id="@+id/prev"
+            style="@android:style/MediaButton.Previous"/>
+
+        <ImageButton
+            android:id="@+id/pause"
+            style="@android:style/MediaButton.Play"/>
+
+        <com.android.app.RepeatingImageButton
+            android:id="@+id/next"
+            style="@android:style/MediaButton.Next"/>
+
+    </LinearLayout>
+
 
 </merge>

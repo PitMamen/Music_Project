@@ -1,6 +1,8 @@
 package com.dlighttech.music.util;
 
 import java.util.Formatter;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -32,6 +34,13 @@ public class CommonUtils {
         } else {
             return sFormatter.format("%02d:%02d", minutes, seconds).toString();
         }
+    }
+
+    public static List removeDuplicate(List list) {
+        HashSet h = new HashSet(list);
+        list.clear();
+        list.addAll(h);
+        return list;
     }
 
 }

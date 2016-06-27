@@ -59,13 +59,6 @@ public class DirFileActivity extends BaseActivity implements ContentAdapter.OnCo
     }
 
 
-//    private List removeDuplicate(List list) {
-//        HashSet h = new HashSet(list);
-//        list.clear();
-//        list.addAll(h);
-//        return list;
-//    }
-
     @Override
     public void onSearchTextChanged(String text) {
 

@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -144,6 +145,7 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
     @Override
     public void onInitView() {
         setContentView(R.layout.music_home_page_layout);
+
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.android.app;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -8,9 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
 import android.widget.ProgressBar;
-
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -57,6 +56,15 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         tvMusicAuthor = (TextView) findViewById(R.id.tv_music_author);
         mImageViewPause = (ImageView) findViewById(R.id.iv_music_pause);
         mImageViewplay = (ImageView) mBottomtitl.findViewById(R.id.iv_music_paly);
+
+
+        mImageViewIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BaseActivity.this, MediaPlaybackActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
