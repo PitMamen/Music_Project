@@ -42,6 +42,8 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.text.Layout;
 import android.text.TextUtils.TruncateAt;
 import android.util.Log;
@@ -52,6 +54,7 @@ import android.view.MotionEvent;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -63,6 +66,10 @@ import android.widget.Toast;
 
 import com.android.app.MusicUtils.ServiceToken;
 import com.android.music.IMediaPlaybackService;
+import com.dlighttech.music.util.GetPathFromUri;
+import com.dlighttech.music.util.LrcView;
+
+import java.util.ArrayList;
 
 
 public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
@@ -86,6 +93,10 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
     private Toast mToast;
     private int mTouchSlop;
     private ServiceToken mToken;
+
+
+    private ViewPager mViewPager; // cd or lrc
+    private ImageView thumb_big;
 
     public MediaPlaybackActivity()
     {
@@ -152,7 +163,37 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
         mProgress.setMax(1000);
 
         mTouchSlop = ViewConfiguration.get(this).getScaledTouchSlop();
+
+        mViewPager = (ViewPager) findViewById(R.id.vp_play_container);
+        initViewPagerContent();
+//        mViewPager.setPageTransformer(true, new PlayPageTransformer());
+//        mPagerIndicator.create(mViewPagerContent.size());
+        mViewPager.setOnPageChangeListener(null);
+        mViewPager.setAdapter(mPagerAdapter);
     }
+
+    private PagerAdapter mPagerAdapter = new PagerAdapter() {
+        @Override
+        public int getCount() {
+            return mViewPagerContent.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object obj) {
+            return view == obj;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            container.addView(mViewPagerContent.get(position));
+            return mViewPagerContent.get(position);
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            ((ViewPager) container).removeView((View) object);
+        }
+    };
     
     int mInitialX = -1;
     int mLastX = -1;
@@ -380,6 +421,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
                 // trackball event, allow progress updates
                 if (!mFromTouch) {
                     refreshNow();
+
                     mPosOverride = -1;
                 }
             }
@@ -1040,6 +1082,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
             } else {
                 filename = uri.toString();
             }
+
             try {
                 mService.stop();
                 mService.openFile(filename);
@@ -1168,13 +1211,14 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
         if(mService == null)
             return 500;
         try {
-            long pos = mPosOverride < 0 ? mService.position() : mPosOverride;
+            final long pos = mPosOverride < 0 ? mService.position() : mPosOverride;
             long remaining = 1000 - (pos % 1000);
             if ((pos >= 0) && (mDuration > 0)) {
                 mCurrentTime.setText(MusicUtils.makeTimeString(this, pos / 1000));
                 
                 if (mService.isPlaying()) {
                     mCurrentTime.setVisibility(View.VISIBLE);
+
                 } else {
                     // blink the counter
                     int vis = mCurrentTime.getVisibility();
@@ -1183,6 +1227,12 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
                 }
 
                 mProgress.setProgress((int) (1000 * pos / mDuration));
+
+                // TODO: 2016/6/24
+                mLrcViewOnSecondPage.changeCurrent(pos);//update lrc
+
+
+
             } else {
                 mCurrentTime.setText("--:--");
                 mProgress.setProgress(1000);
@@ -1200,7 +1250,23 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case ALBUM_ART_DECODED:
-                    mAlbum.setImageBitmap((Bitmap)msg.obj);
+                    Bitmap bitmap = (Bitmap) msg.obj;
+                    mAlbum.setImageBitmap(bitmap);
+                    //set image
+                    thumb_big.setImageBitmap(bitmap);
+
+                    //设置歌词路径
+                    try {
+                        String path = GetPathFromUri.getPath(MediaPlaybackActivity.this, Uri.parse(mService.getPath()));
+                        String subPath = path.substring(0,path.length() - 3);
+                        String lrcPath = subPath + "lrc";
+                        mLrcViewOnSecondPage.setLrcPath(lrcPath);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    //====
+
                     mAlbum.getDrawable().setDither(true);
                     break;
 
@@ -1230,6 +1296,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
             }
         }
     };
+
 
     private BroadcastReceiver mStatusListener = new BroadcastReceiver() {
         @Override
@@ -1376,6 +1443,26 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
         public void quit() {
             mLooper.quit();
         }
+    }
+
+
+    private LrcView mLrcViewOnSecondPage;
+    // cd view and lrc view
+    private ArrayList<View> mViewPagerContent = new ArrayList<View>(2);
+    /**
+     * 初始化viewpager的内容
+     */
+    private void initViewPagerContent() {
+        View cd = View.inflate(this, R.layout.play_pager_item_1, null);
+        thumb_big = (ImageView) cd.findViewById(R.id.album);
+//        mSingerTextView = (TextView) cd.findViewById(R.id.play_singer);
+//        mLrcViewOnFirstPage = (LrcView) cd.findViewById(R.id.play_first_lrc);
+
+        View lrcView = View.inflate(this, R.layout.play_pager_item_2, null);
+        mLrcViewOnSecondPage = (LrcView) lrcView.findViewById(R.id.play_first_lrc_2);
+
+        mViewPagerContent.add(cd);
+        mViewPagerContent.add(lrcView);
     }
 }
 
