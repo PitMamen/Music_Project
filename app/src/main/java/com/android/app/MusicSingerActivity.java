@@ -1,5 +1,6 @@
 package com.android.app;
 
+import android.util.Log;
 import android.webkit.WebView;
 import android.widget.ListView;
 
@@ -56,6 +57,9 @@ public class MusicSingerActivity extends  BaseActivity{
         MusicUtils.getMusicInfo(this, new MusicUtils.OnMusicLoadedListener() {
             @Override
             public void onMusicLoadSuccess(ArrayList<MusicInfo> infos) {
+
+
+                
 
 
                 }
