@@ -19,18 +19,17 @@ import java.util.List;
 /**
  * Created by pengxinkai001 on 2016/6/23.
  */
-public class MusicTracksActivity extends  BaseActivity {
+public class MusicTracksActivity extends BaseActivity {
 
     private ImageButton ib_music_back;
-    private TextView tv_title,tv_paly_mode,tv_music_number;
-    private ImageView iv_music_search,iv_music_icon;
+    private TextView tv_title, tv_paly_mode, tv_music_number;
+    private ImageView iv_music_search, iv_music_icon;
     private ListView lv_music_detail;
     private SideBar sb_navigation_bar;
 
-    private ContentAdapter mhomeAdapter;
+    private ContentAdapter mAdapter;
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
-    private ArrayList<MusicInfo> musicinfos = new ArrayList<MusicInfo>() ;
-
+    private ArrayList<MusicInfo> mMusicList = new ArrayList<MusicInfo>();
 
     @Override
     public void onInitView() {
@@ -54,24 +53,54 @@ public class MusicTracksActivity extends  BaseActivity {
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
         lv_music_detail = (ListView) findViewById(R.id.lv_music_detail);
 
-        mhomeAdapter = new ContentAdapter(this,mItems);
-        lv_music_detail.setAdapter(mhomeAdapter);
+        mAdapter = new ContentAdapter(this, mItems);
+        lv_music_detail.setAdapter(mAdapter);
 
     }
-
 
 
     @Override
     public void onCreateData() {
 
-        ContentItem item = new ContentItem(R.drawable.app_music,R.drawable.ic_menu_eq,"sss.MP3","JJ");
-
-        mItems.add(item);
 
 
+        MusicUtils.getMusicInfo(this, new MusicUtils.OnMusicLoadedListener() {
+            @Override
+            public void onMusicLoadSuccess(ArrayList<MusicInfo> infos) {
+
+                for (int i = 0; i < infos.size(); i++) {
+
+                    Log.i("TAG", "infos.size=====" + infos.size());
+
+                    String musicname = infos.get(i).getMusicName();
+                    String singer = infos.get(i).getSinger();
+
+                    ContentItem items = new ContentItem(R.drawable.app_music, R.drawable.ic_menu_eq, musicname, singer);
+
+                    mItems.add(items);
 
 
-        }
+
+                }
+            }
+
+            @Override
+            public void onMusicLoading() {
+
+
+            }
+
+            @Override
+            public void onMusicLoadFail() {
+
+            }
+        });
+
+
+
+
+
+    }
 
 
     @Override

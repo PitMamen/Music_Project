@@ -80,7 +80,7 @@ import java.util.Locale;
 
 public class MusicUtils {
 
-    private static final String TAG = "MusicUtils";
+    private static final String TAG = "MusicUtils++++++++++++++++";
 
     public interface Defs {
         public final static int OPEN_URL = 0;
@@ -1638,6 +1638,8 @@ public class MusicUtils {
                             .getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
                     Bitmap albumImage = getArtwork(ctx, id, albumId);
 
+
+
                     albumImage = ThumbnailUtils.extractThumbnail(albumImage
                             , DisplayUtils.dip2px(ctx, 30)
                             , DisplayUtils.dip2px(ctx, 30));
@@ -1645,6 +1647,13 @@ public class MusicUtils {
                     // 歌曲专辑名
                     String albumName = c.getString(c
                             .getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
+
+
+                    //获取该专辑下的所有歌曲数量
+                    int albumMusicNumber = getAlbumCount(ctx,albumId);
+
+                    Log.i(TAG, "albumMusicNumber: "+albumMusicNumber);
+
                     // 文件路径
                     String path = c.getString(c
                             .getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
@@ -1655,7 +1664,7 @@ public class MusicUtils {
 
                     MusicInfo info = new MusicInfo(id, artist, musicName, currTime
                             , totalTime, MusicInfo.MusicState.NORMAL
-                            , albumImage, albumName, path, size);
+                            , albumImage, albumName,albumMusicNumber, path, size);
                     musicInfos.add(info);
                     listener.onMusicLoading();
                 }
@@ -1667,6 +1676,7 @@ public class MusicUtils {
             e.printStackTrace();
         }
     }
+
 
 
     public static boolean deleteMusic(Context ctx, int id) {
@@ -1682,6 +1692,29 @@ public class MusicUtils {
         }
         return false;
 
+    }
+
+
+
+    public static int getAlbumCount(Context ctx,int albumId) {
+
+        try{
+            ContentResolver resolver = ctx.getContentResolver();
+            if (resolver != null) {
+                Cursor c = resolver.query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
+                        , new String[]{MediaStore.Audio.Albums.NUMBER_OF_SONGS}
+                        , MediaStore.Audio.Albums._ID+"=?"
+                        , new String[]{String.valueOf(albumId)}, null);
+
+                c.moveToFirst();
+                int count =c.getInt(0);
+                c.close();
+                return count;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return 0;
     }
 
 

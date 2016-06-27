@@ -31,6 +31,10 @@ import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.media.AudioManager;
 import android.media.audiofx.AudioEffect;
 import android.net.Uri;
@@ -1253,7 +1257,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
                     Bitmap bitmap = (Bitmap) msg.obj;
                     mAlbum.setImageBitmap(bitmap);
                     //set image
-                    thumb_big.setImageBitmap(bitmap);
+                    thumb_big.setImageBitmap(createCircleBitmap(bitmap));
 
                     //设置歌词路径
                     try {
@@ -1296,6 +1300,30 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
             }
         }
     };
+
+    /**
+     * 创建圆形剪切图
+     * @param src
+     * @return
+     */
+    private Bitmap createCircleBitmap(Bitmap src) {
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setARGB(255, 241, 239, 229);
+
+        int width = src.getWidth();
+        int height = src.getHeight();
+        Bitmap target = Bitmap.createBitmap(width, height,
+                Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(target);
+
+        canvas.drawCircle(width /2, width /2,
+                width /2, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(src, 0, 0, paint);
+
+        return target;
+    }
 
 
     private BroadcastReceiver mStatusListener = new BroadcastReceiver() {

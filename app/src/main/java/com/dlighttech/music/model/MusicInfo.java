@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * Created by zhujiang on 16-6-22.
  */
-public class MusicInfo implements Serializable , Parcelable{
+public class MusicInfo implements Serializable, Parcelable {
     // 歌曲id
     private int musicId;
     // 歌手
@@ -26,6 +26,10 @@ public class MusicInfo implements Serializable , Parcelable{
     private Bitmap musicAlbumsImage;
     // 歌曲专辑名
     private String musicAlbumsName;
+    //专辑下歌曲的数目
+    private int musicAlbumsNumber;
+
+
     // 文件路径
     private String musicPath;
     // 歌曲文件大小
@@ -35,9 +39,9 @@ public class MusicInfo implements Serializable , Parcelable{
     public MusicInfo() {
     }
 
-    public MusicInfo(int id,String singer, String musicName
+    public MusicInfo(int id, String singer, String musicName
             , long currTime, long totalTime, MusicState state
-            , Bitmap musicAlbumsImage, String musicAlbumsName
+            , Bitmap musicAlbumsImage, String musicAlbumsName,int musicAlbumsNumber
             , String musicPath, long musicSize) {
         this.musicId = id;
         this.singer = singer;
@@ -47,6 +51,7 @@ public class MusicInfo implements Serializable , Parcelable{
         this.state = state;
         this.musicAlbumsImage = musicAlbumsImage;
         this.musicAlbumsName = musicAlbumsName;
+        this.musicAlbumsNumber = musicAlbumsNumber;
         this.musicPath = musicPath;
         this.musicSize = musicSize;
     }
@@ -59,6 +64,7 @@ public class MusicInfo implements Serializable , Parcelable{
         totalTime = in.readLong();
         musicAlbumsImage = in.readParcelable(Bitmap.class.getClassLoader());
         musicAlbumsName = in.readString();
+        musicAlbumsNumber =in.readInt();
         musicPath = in.readString();
         musicSize = in.readLong();
     }
@@ -139,6 +145,14 @@ public class MusicInfo implements Serializable , Parcelable{
         this.musicAlbumsName = musicAlbumsName;
     }
 
+    public int getMusicAlbumsNumber() {
+        return musicAlbumsNumber;
+    }
+
+    public void setMusicAlbumsNumber(int musicAlbumsNumber) {
+        this.musicAlbumsNumber = musicAlbumsNumber;
+    }
+
     public String getMusicPath() {
         return musicPath;
     }
@@ -166,7 +180,7 @@ public class MusicInfo implements Serializable , Parcelable{
                 ", totalTime=" + totalTime +
                 ", state=" + state +
                 ", musicAlbumsImage=" + musicAlbumsImage +
-                ", musicAlbumsName='" + musicAlbumsName + '\'' +
+                ", musicAlbumsName='" + musicAlbumsName + '\'' + "musicAlbumsNumber" + musicAlbumsNumber +
                 ", musicPath='" + musicPath + '\'' +
                 ", musicSize=" + musicSize +
                 '}';
@@ -186,6 +200,7 @@ public class MusicInfo implements Serializable , Parcelable{
         dest.writeLong(totalTime);
         dest.writeParcelable(musicAlbumsImage, flags);
         dest.writeString(musicAlbumsName);
+        dest.writeInt(musicAlbumsNumber);
         dest.writeString(musicPath);
         dest.writeLong(musicSize);
     }
