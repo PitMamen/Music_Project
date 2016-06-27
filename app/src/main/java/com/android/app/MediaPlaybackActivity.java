@@ -70,8 +70,8 @@ import android.widget.Toast;
 
 import com.android.app.MusicUtils.ServiceToken;
 import com.android.music.IMediaPlaybackService;
-import com.dlighttech.music.util.GetPathFromUri;
-import com.dlighttech.music.util.LrcView;
+import com.dlighttech.music.util.PathFromUriUtil;
+import com.dlighttech.music.ui.LrcView;
 
 import java.util.ArrayList;
 
@@ -1261,7 +1261,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
 
                     //设置歌词路径
                     try {
-                        String path = GetPathFromUri.getPath(MediaPlaybackActivity.this, Uri.parse(mService.getPath()));
+                        String path = PathFromUriUtil.getPath(MediaPlaybackActivity.this, Uri.parse(mService.getPath()));
                         String subPath = path.substring(0,path.length() - 3);
                         String lrcPath = subPath + "lrc";
                         mLrcViewOnSecondPage.setLrcPath(lrcPath);
