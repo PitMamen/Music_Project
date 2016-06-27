@@ -35,6 +35,103 @@ public class DataBaseManager {
         return dbManager;
     }
 
+
+    /**
+     * 判断是否有同名的歌单
+     *
+     * @param name
+     * @return true 存在 ，false不存在
+     */
+    public boolean isExistsName(String name) {
+        synchronized (mDataBase) {
+            SQLiteDatabase database = null;
+            Cursor c = null;
+            try {
+                database = mDataBase.getReadableDatabase();
+                String sql = "select count(*) from " + SongListDataBase.SONG_LIST_TABLE
+                        + " where " + SongListDataBase.SONG_LIST_NAME + "=?";
+
+                c = database.rawQuery(sql, new String[]{name});
+                if (c.moveToFirst()) {
+                    int count = c.getInt(0);
+                    if (count > 0) {
+                        return true;
+                    }
+                }
+                return false;
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (c != null) c.close();
+                if (database != null) database.close();
+            }
+            return false;
+        }
+
+    }
+
+    /**
+     * 根据歌单名称获取歌单id
+     *
+     * @param name
+     * @return
+     */
+    public int getSongListIdByName(String name) {
+        synchronized (mDataBase) {
+            SQLiteDatabase database = null;
+            Cursor c = null;
+            try {
+                database = mDataBase.getReadableDatabase();
+                String sql = "select " + SongListDataBase._ID + " from "
+                        + SongListDataBase.SONG_LIST_TABLE
+                        + " where " + SongListDataBase.SONG_LIST_NAME + "=?";
+
+                c = database.rawQuery(sql, new String[]{name});
+                if (c.moveToFirst()) {
+                    int id = c.getInt(0);
+                    if (id > 0) {
+                        return id;
+                    }
+                }
+                return -1;
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (c != null) c.close();
+                if (database != null) database.close();
+            }
+            return -1;
+        }
+    }
+
+    public int updateSongOfListBySongListId(String name) {
+        synchronized (mDataBase) {
+            SQLiteDatabase database = null;
+            Cursor c = null;
+            try {
+                database = mDataBase.getReadableDatabase();
+                String sql = "select " + SongListDataBase._ID + " from "
+                        + SongListDataBase.SONG_LIST_TABLE
+                        + " where " + SongListDataBase.SONG_LIST_NAME + "=?";
+
+                c = database.rawQuery(sql, new String[]{name});
+                if (c.moveToFirst()) {
+                    int id = c.getInt(0);
+                    if (id > 0) {
+                        return id;
+                    }
+                }
+                return -1;
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (c != null) c.close();
+                if (database != null) database.close();
+            }
+            return -1;
+        }
+    }
+
     /**
      * 插入一个歌单
      *
@@ -67,11 +164,10 @@ public class DataBaseManager {
     /**
      * 插入一首歌到一个歌单中
      *
-     * @param songListId
      * @param song
      * @return
      */
-    public boolean insertSong(int songListId, Song song) {
+    public boolean insertSong(Song song) {
         synchronized (mDataBase) {
             SQLiteDatabase database = null;
 
@@ -84,7 +180,7 @@ public class DataBaseManager {
                         + "," + SongListDataBase.SONG_LIST_ID
                         + ") values (?,?,?,?)";
                 Object[] bindArgs = new Object[]{song.getName(), song.getSinger()
-                        , song.getSongPath(), songListId};
+                        , song.getSongPath(), song.getSongListId()};
                 database.execSQL(sql, bindArgs);
                 return true;
             } catch (SQLException e) {
@@ -97,6 +193,9 @@ public class DataBaseManager {
             }
         }
     }
+
+
+
 
     /**
      * 获取所有歌单

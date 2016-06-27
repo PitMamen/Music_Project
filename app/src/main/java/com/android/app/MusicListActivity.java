@@ -1,6 +1,7 @@
 package com.android.app;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.format.Formatter;
 import android.view.View;
@@ -10,10 +11,14 @@ import android.widget.Button;
 import android.widget.ListPopupWindow;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dlighttech.music.adapter.ContentAdapter;
+import com.dlighttech.music.database.DataBaseManager;
 import com.dlighttech.music.model.ContentItem;
 import com.dlighttech.music.model.MusicInfo;
+import com.dlighttech.music.model.Song;
+import com.dlighttech.music.model.SongList;
 import com.dlighttech.music.util.CommonUtils;
 import com.dlighttech.music.util.DialogUtils;
 import com.dlighttech.music.util.DisplayUtils;
@@ -116,13 +121,16 @@ public class MusicListActivity extends BaseActivity
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         popupWindow.dismiss();
-
-        if (position == 0 || position == 1) {
+        if (position == 0) {
             // 新建歌单, 添加到歌单
             Intent intent = new Intent(MusicListActivity.this, PlayListActivity.class);
             intent.addCategory(Intent.CATEGORY_DEFAULT);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+
+        } else if (position == 1) {
+            // 添加到歌单
+            createAddToSongListDialog();
         } else if (position == 2) {
             // 创建歌曲详细信息显示dialog
             createSongDetailDialog();
@@ -130,6 +138,81 @@ public class MusicListActivity extends BaseActivity
             // 删除
             deleteMusic();
         }
+    }
+
+
+    private int mChoice = 0;
+
+    /**
+     * 创建一个添加到歌单的dialog
+     */
+    private void createAddToSongListDialog() {
+
+        // 获取所有歌单
+        ArrayList<SongList> songLists = DataBaseManager.getInstance(MusicListActivity.this)
+                .getAllSongList();
+
+        if (songLists == null || songLists.size() == 0) {
+            Toast.makeText(MusicListActivity.this, "歌单还没有被创建", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        final String[] items = new String[songLists.size()];
+        for (int i = 0; i < songLists.size(); i++) {
+            items[i] = songLists.get(i).getName();
+        }
+
+        final AlertDialog dialog = DialogUtils.createSingleChoiceDialog(MusicListActivity.this
+                , "歌单列表", items, mChoice
+                , new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 选择了哪一个
+                        mChoice = which;
+                    }
+                }, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 确定按钮
+                        mChoice = mChoice < 0 ? 0
+                                : mChoice >= items.length
+                                ? items.length - 1 : mChoice;
+                        String songList = items[mChoice];
+
+                        // 将当前歌曲加入到当前歌单中
+                        // 先通过歌单名称获取歌单id
+                        int songListId = DataBaseManager.getInstance(MusicListActivity.this)
+                                .getSongListIdByName(songList);
+                        if (songListId != -1 || songListId > 0) {
+                            // 然后将歌曲添加到该歌单id下
+                            MusicInfo info = getCurrMusic();
+                            Song song = new Song();
+                            song.setSongListId(songListId);
+                            song.setName(info.getMusicName());
+                            song.setSongPath(info.getMusicPath());
+                            song.setSinger(info.getSinger());
+
+                            boolean isSuccess = DataBaseManager.getInstance(MusicListActivity.this)
+                                    .insertSong(song);
+
+                            if (isSuccess) {
+                                Toast.makeText(MusicListActivity.this
+                                        , info.getMusicName() + "被加入到"
+                                                + songList + "歌单中", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                }, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 取消按钮
+                        dialog.dismiss();
+                    }
+                });
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
     }
 
     /**

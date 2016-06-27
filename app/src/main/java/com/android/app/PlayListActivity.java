@@ -77,6 +77,15 @@ public class PlayListActivity extends BaseActivity {
                             , "歌单名称不能为空！", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                // 判断当前歌单名称是否存在
+                boolean isExists = DataBaseManager.getInstance(PlayListActivity.this)
+                        .isExistsName(songListName);
+                if (isExists) {
+                    Toast.makeText(PlayListActivity.this
+                            , "歌单名称已经存在，请重新命名！", Toast.LENGTH_SHORT).show();
+                    etSong.setText(null);
+                    return;
+                }
 
                 // 添加一条数据到歌单表
                 SongList list = new SongList();
