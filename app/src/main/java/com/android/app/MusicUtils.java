@@ -80,7 +80,7 @@ import java.util.Locale;
 
 public class MusicUtils {
 
-    private static final String TAG = "MusicUtils";
+    private static final String TAG = "MusicUtils++++++++++++++++";
 
     public interface Defs {
         public final static int OPEN_URL = 0;
@@ -1650,8 +1650,10 @@ public class MusicUtils {
                             .getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
 
 
-                    //获取该专辑下共有多少首歌曲
+                    //获取该专辑下的所有歌曲数量
                     int albumMusicNumber = getAlbumCount(ctx,albumId);
+
+                    Log.i(TAG, "albumMusicNumber: "+albumMusicNumber);
 
 
 
@@ -1666,7 +1668,7 @@ public class MusicUtils {
 
                     MusicInfo info = new MusicInfo(id, artist, musicName, currTime
                             , totalTime, MusicInfo.MusicState.NORMAL
-                            , albumImage, albumName, path, size);
+                            , albumImage, albumName,albumMusicNumber, path, size);
                     musicInfos.add(info);
                     listener.onMusicLoading();
                 }
@@ -1691,7 +1693,6 @@ public class MusicUtils {
 
                 c.moveToFirst();
                 int count =c.getInt(0);
-                Log.d("TAG","albumMusicNumber"+count);
                 c.close();
                 return count;
             }

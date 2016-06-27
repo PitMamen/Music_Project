@@ -41,7 +41,7 @@ public class MusicInfo implements Serializable, Parcelable {
 
     public MusicInfo(int id, String singer, String musicName
             , long currTime, long totalTime, MusicState state
-            , Bitmap musicAlbumsImage, String musicAlbumsName
+            , Bitmap musicAlbumsImage, String musicAlbumsName,int musicAlbumsNumber
             , String musicPath, long musicSize) {
         this.musicId = id;
         this.singer = singer;
