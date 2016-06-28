@@ -1455,63 +1455,72 @@ public class MusicUtils {
      * @param currPath
      * @return
      */
-    public static void scanAll(Context context, String currPath) {
-        Log.d("TAG", "CURR==" + currPath);
-        List<String> musicPath = new ArrayList<String>();
-        if (TextUtils.isEmpty(currPath)) {
-            currPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+    public static void scanAll(Context context, String currPath
+            , final OnMediaScanListener listener) {
+        try {
+            final String[] paths = getAllMusicPath(currPath);
+            if (musicPath == null || musicPath.size() == 0) {
+                listener.onScanNoData();
+                return;
+            }
+            MediaScannerConnection conn = scanFile(context, paths
+                    , getMusicMimeType()
+                    , new MediaScannerConnection.OnScanCompletedListener() {
+                        int i = 0;
+
+                        @Override
+                        public void onScanCompleted(String path, Uri uri) {
+                            ++i;
+                            Log.d("TAG", "i=====" + i + ",path====" + path);
+                            if (this.i == musicPath.size()) {
+                                musicPath.clear();
+                                listener.onScanSuccess();
+                                Log.d("TAG", "ok");
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            listener.onScanFail(e);
         }
-        File file = new File(currPath);
-        if (file.isDirectory()) {
-            File[] childFiles = file.listFiles();
-            for (int i = 0; i < childFiles.length; i++) {
-                File child = childFiles[i];
-                if (child.canRead() && child.canWrite()) {
-                    if (child.isDirectory()) {
-                        scanAll(context, child.getAbsolutePath());
-                    } else {
-                        if (isMusic(child.getAbsolutePath())) {
-                            musicPath.add(child.getAbsolutePath());
+    }
+
+
+    private static List<String> musicPath = new ArrayList<String>();
+
+
+    public static String[] getAllMusicPath(String currPath) {
+        try {
+            if (TextUtils.isEmpty(currPath)) {
+                currPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            }
+            File file = new File(currPath);
+            if (file.isDirectory()) {
+                File[] childFiles = file.listFiles();
+                for (int i = 0; i < childFiles.length; i++) {
+                    File child = childFiles[i];
+                    if (child.canRead() && child.canWrite()) {
+                        if (child.isDirectory()) {
+                            getAllMusicPath(child.getAbsolutePath());
+                        } else {
+                            if (isMusic(child.getAbsolutePath())) {
+                                musicPath.add(child.getAbsolutePath());
+                            }
                         }
                     }
                 }
-            }
-        } else {
-            if (isMusic(file.getAbsolutePath())) {
-                musicPath.add(file.getAbsolutePath());
-            }
-        }
-
-        String[] paths = (String[]) musicPath.toArray(new String[musicPath.size()]);
-
-        MediaScannerConnection conn = scanFile(context, paths, getMusicMimeType()
-                , new MediaScannerConnection.OnScanCompletedListener() {
-                    @Override
-                    public void onScanCompleted(String path, Uri uri) {
-                        Log.d("TAG", "扫描over=====" + path);
-                        PATHS.add(path);
-                    }
-                });
-    }
-
-
-    private static List<String> PATHS = new ArrayList<String>();
-
-    /**
-     * 判断扫描是否完成
-     *
-     * @return
-     */
-    public static boolean isScanComplete() {
-        if (PATHS != null && PATHS.size() > 0) {
-            for (int i = 0; i < PATHS.size(); i++) {
-                if (i == PATHS.size() - 1) {
-                    return true;
+            } else {
+                if (isMusic(file.getAbsolutePath())) {
+                    musicPath.add(file.getAbsolutePath());
                 }
             }
+            return (String[]) musicPath.toArray(new String[musicPath.size()]);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return false;
+
+        return null;
     }
+
 
     /**
      * 获取音乐资源的mimeType
@@ -1612,10 +1621,11 @@ public class MusicUtils {
     public static void getMusicInfo(Context ctx, OnMusicLoadedListener listener) {
 
         ArrayList<MusicInfo> musicInfos = new ArrayList<MusicInfo>();
+        Cursor c = null;
         try {
             ContentResolver resolver = ctx.getContentResolver();
             if (resolver != null) {
-                Cursor c = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                c = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
                         , null, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
 
                 while (c.moveToNext()) {
@@ -1639,7 +1649,6 @@ public class MusicUtils {
                     Bitmap albumImage = getArtwork(ctx, id, albumId);
 
 
-
                     albumImage = ThumbnailUtils.extractThumbnail(albumImage
                             , DisplayUtils.dip2px(ctx, 30)
                             , DisplayUtils.dip2px(ctx, 30));
@@ -1650,9 +1659,9 @@ public class MusicUtils {
 
 
                     //获取该专辑下的所有歌曲数量
-                    int albumMusicNumber = getAlbumCount(ctx,albumId);
+                    int albumMusicNumber = getAlbumCount(ctx, albumId);
 
-                    Log.i(TAG, "albumMusicNumber: "+albumMusicNumber);
+//                    Log.i(TAG, "albumMusicNumber: " + albumMusicNumber);
 
                     // 文件路径
                     String path = c.getString(c
@@ -1664,19 +1673,19 @@ public class MusicUtils {
 
                     MusicInfo info = new MusicInfo(id, artist, musicName, currTime
                             , totalTime, MusicInfo.MusicState.NORMAL
-                            , albumImage, albumName,albumMusicNumber, path, size);
+                            , albumImage, albumName, albumMusicNumber, path, size);
                     musicInfos.add(info);
                     listener.onMusicLoading();
                 }
-                c.close();
                 listener.onMusicLoadSuccess(musicInfos);
             }
         } catch (Exception e) {
-            listener.onMusicLoadFail();
             e.printStackTrace();
+            listener.onMusicLoadFail();
+        } finally {
+            if (c != null) c.close();
         }
     }
-
 
 
     public static boolean deleteMusic(Context ctx, int id) {
@@ -1695,23 +1704,22 @@ public class MusicUtils {
     }
 
 
+    public static int getAlbumCount(Context ctx, int albumId) {
 
-    public static int getAlbumCount(Context ctx,int albumId) {
-
-        try{
+        try {
             ContentResolver resolver = ctx.getContentResolver();
             if (resolver != null) {
                 Cursor c = resolver.query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
                         , new String[]{MediaStore.Audio.Albums.NUMBER_OF_SONGS}
-                        , MediaStore.Audio.Albums._ID+"=?"
+                        , MediaStore.Audio.Albums._ID + "=?"
                         , new String[]{String.valueOf(albumId)}, null);
 
                 c.moveToFirst();
-                int count =c.getInt(0);
+                int count = c.getInt(0);
                 c.close();
                 return count;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return 0;
@@ -1726,10 +1734,12 @@ public class MusicUtils {
         void onMusicLoadFail();
     }
 
-//    public interface OnMediaScanListener {
-//        void onScanSuccess();
-//
-//        void onScanFail();
-//
-//    }
+    public interface OnMediaScanListener {
+        void onScanSuccess();
+
+        void onScanNoData();
+
+        void onScanFail(Exception e);
+
+    }
 }

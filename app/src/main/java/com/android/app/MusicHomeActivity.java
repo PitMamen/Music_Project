@@ -29,7 +29,11 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
     private static final int MUSIC_LOADING = 0;
     private static final int MUSIC_LOAD_COMPLETE = 1;
     private static final int MUSIC_LOAD_FAIL = 2;
+    private static final int MUSIC_LOAD_NO_DATA = 3;
     private boolean isRefresh;
+//    private List<String> mScanMusics = new ArrayList<String>();
+//    private int mMusicCount = 0;
+
 
     /**
      * 中间布局的三个textview点击事件
@@ -41,7 +45,6 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
                 case R.id.tv_tracks: // 曲目
                     Intent intenttracks = new Intent(MusicHomeActivity.this, MusicTracksActivity.class);
                     startActivity(intenttracks);
-
                     break;
                 case R.id.tv_album: // 专辑
                     Intent intentalbums = new Intent(MusicHomeActivity.this, MusicAlbumsActivity.class);
@@ -54,6 +57,7 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
             }
         }
     };
+
 
     /**
      * 音乐资源加载
@@ -70,34 +74,45 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
 
             // 扫描音乐资源，更新到MediaStore数据库中
             MusicUtils.scanAll(MusicHomeActivity.this
-                    , Environment.getExternalStorageDirectory().getAbsolutePath());
+                    , Environment.getExternalStorageDirectory().getAbsolutePath()
+                    , new MusicUtils.OnMediaScanListener() {
+                        @Override
+                        public void onScanSuccess() {
+                            // 如果扫描完成，则开始获取音乐资源
+                            // 扫描完成后，获取音乐资源
+                            MusicUtils.getMusicInfo(MusicHomeActivity.this
+                                    , new MusicUtils.OnMusicLoadedListener() {
+                                        @Override
+                                        public void onMusicLoadSuccess(ArrayList<MusicInfo> infos) {
+                                            Message.obtain(mHandler, MUSIC_LOAD_COMPLETE
+                                                    , infos).sendToTarget();
+                                        }
 
-            // 如果扫描完成，则开始获取音乐资源
-            if (MusicUtils.isScanComplete()) {
-                // 扫描完成后，获取音乐资源
-                MusicUtils.getMusicInfo(MusicHomeActivity.this
-                        , new MusicUtils.OnMusicLoadedListener() {
-                            @Override
-                            public void onMusicLoadSuccess(ArrayList<MusicInfo> infos) {
-                                Message.obtain(mHandler, MUSIC_LOAD_COMPLETE
-                                        , infos).sendToTarget();
-                            }
+                                        @Override
+                                        public void onMusicLoading() {
+                                            Message.obtain(mHandler
+                                                    , MUSIC_LOADING).sendToTarget();
+                                        }
 
-                            @Override
-                            public void onMusicLoading() {
-                                Message.obtain(mHandler
-                                        , MUSIC_LOADING).sendToTarget();
-                            }
+                                        @Override
+                                        public void onMusicLoadFail() {
+                                            Message.obtain(mHandler
+                                                    , MUSIC_LOAD_FAIL).sendToTarget();
+                                        }
+                                    });
+                        }
 
-                            @Override
-                            public void onMusicLoadFail() {
-                                Message.obtain(mHandler
-                                        , MUSIC_LOAD_FAIL).sendToTarget();
-                            }
-                        });
-            } else {
-                isRefresh = false;
-            }
+                        @Override
+                        public void onScanNoData() {
+                            Message.obtain(mHandler
+                                    , MUSIC_LOAD_NO_DATA).sendToTarget();
+                        }
+
+                        @Override
+                        public void onScanFail(Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
         }
     };
 
@@ -134,8 +149,13 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
                             , "加载异常", Toast.LENGTH_SHORT).show();
                     isRefresh = false;
                     break;
+                case MUSIC_LOAD_NO_DATA:
+                    mAdapter.updateItem(); // 更新itemView
+                    isRefresh = true;
+                    break;
             }
         }
+
     };
 
     @Override
