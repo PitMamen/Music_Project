@@ -92,7 +92,8 @@
                     android:layout_height="7dp"
                     android:layout_gravity="center"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/circle_indicator"/>
+                    android:src="@drawable/circle_indicator"
+                    />
 
                 <ImageView
                     android:id="@+id/indicator_circle_2"
