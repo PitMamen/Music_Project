@@ -20,6 +20,8 @@
               android:orientation="vertical"
     >
 
+    <include layout="@layout/title_layout_play"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -49,42 +51,61 @@
             android:background="@android:color/transparent"
             android:overScrollMode="never"/>
 
-        <LinearLayout
+        <ImageButton
+            android:id="@+id/curplaylist"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_mp_current_playlist_btn"
+            android:visibility="gone"
+            />
+
+        <ImageButton
+            android:id="@+id/shuffle"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            />
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
+            >
 
+
+            <ImageButton
+                android:id="@+id/repeat"
+                android:layout_width="wrap_content"
+                android:layout_height="54dip"
+                android:layout_centerVertical="true"
+                />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
+                android:layout_centerInParent="true"
                 android:orientation="horizontal"
                 >
 
-                <ImageButton
-                    android:id="@+id/curplaylist"
-                    android:layout_width="85dip"
-                    android:layout_height="54dip"
-                    android:src="@drawable/ic_mp_current_playlist_btn"
+                <ImageView
+                    android:id="@+id/indicator_circle_1"
+                    android:layout_width="7dp"
+                    android:layout_height="7dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:src="@drawable/circle_indicator"
                     />
 
-                <ImageButton
-                    android:id="@+id/shuffle"
-                    android:layout_width="85dip"
-                    android:layout_height="54dip"
-                    />
-
-                <ImageButton
-                    android:id="@+id/repeat"
-                    android:layout_width="85dip"
-                    android:layout_height="54dip"
-                    />
-
+                <ImageView
+                    android:id="@+id/indicator_circle_2"
+                    android:layout_width="7dp"
+                    android:layout_height="7dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/circle_indicator"/>
             </LinearLayout>
 
-        </LinearLayout>
+
+        </RelativeLayout>
+
 
     </LinearLayout>
 

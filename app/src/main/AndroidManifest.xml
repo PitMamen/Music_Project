@@ -164,7 +164,8 @@
                 <data android:mimeType="vnd.android.cursor.dir/album" />
             </intent-filter>
         </activity>
-      <!--  <activity
+        <!--
+        <activity
             android:name=".NowPlayingActivity"
             android:exported="false">
             <intent-filter>
@@ -174,7 +175,8 @@
 
                 <data android:mimeType="vnd.android.cursor.dir/nowplaying" />
             </intent-filter>
-        </activity>-->
+        </activity>
+        -->
         <activity
             android:name=".TrackBrowserActivity"
             android:exported="false">
@@ -363,14 +365,15 @@
                 <category android:name="android.intent.category.APP_MUSIC" />
             </intent-filter>
         </activity>
-        <activity android:name=".DirFileActivity"></activity>
-        <activity android:name=".MusicTracksActivity"></activity>
-        <activity android:name=".MusicAlbumsActivity"></activity>
-        <activity android:name=".MusicSingerActivity"></activity>
+        <activity android:name=".DirFileActivity" />
+        <activity android:name=".MusicTracksActivity" />
+        <activity android:name=".MusicAlbumsActivity" />
+        <activity android:name=".MusicSingerActivity" />
         <activity
             android:name=".MusicListActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity android:name=".PlayListActivity"></activity>
+        <activity android:name=".PlayListActivity" />
+        <activity android:name=".SongOfSongListActivity"></activity>
     </application>
 
 </manifest>

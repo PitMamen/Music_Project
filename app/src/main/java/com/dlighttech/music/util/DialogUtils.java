@@ -3,7 +3,11 @@ package com.dlighttech.music.util;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListPopupWindow;
 
 /**
  * Created by zhujiang on 16-6-24.
@@ -44,6 +48,30 @@ public class DialogUtils {
         builder.setNegativeButton("取消", negativeClick);
         return builder.create();
 
+    }
+
+    /**
+     * 创建一个ListPopupWindow
+     *
+     * @param ctx
+     * @param anchor
+     * @param listener
+     * @return
+     */
+    public static ListPopupWindow createListPopupWindow(Context ctx
+            , String[] menu
+            , View anchor
+            , AdapterView.OnItemClickListener listener) {
+        ListPopupWindow popupWindow = new ListPopupWindow(ctx);
+        popupWindow.setWidth(DisplayUtils.dip2px(ctx, 200));
+        popupWindow.setHeight(DisplayUtils.dip2px(ctx, 200));
+        popupWindow.setAdapter(new ArrayAdapter<String>(ctx
+                , android.R.layout.simple_list_item_1, menu));
+        popupWindow.setAnchorView(anchor);
+        popupWindow.setModal(true);
+        popupWindow.setOnItemClickListener(listener);
+        popupWindow.setDropDownGravity(Gravity.CENTER);
+        return popupWindow;
     }
 
 

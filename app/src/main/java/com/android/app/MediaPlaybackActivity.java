@@ -100,7 +100,12 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
 
 
     private ViewPager mViewPager; // cd or lrc
-    private ImageView thumb_big;
+    private ImageView thumb_big;//big thumb
+    private ImageView mIndicator_left;//indicator
+    private ImageView mIndicator_right;//indicator
+    private ImageButton mTitleBack;
+    private ImageButton mTitlePlaylist;
+    private TextView mTitlePlaying;
 
     public MediaPlaybackActivity()
     {
@@ -159,7 +164,22 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
         mShuffleButton.setOnClickListener(mShuffleListener);
         mRepeatButton = ((ImageButton) findViewById(R.id.repeat));
         mRepeatButton.setOnClickListener(mRepeatListener);
-        
+
+        mIndicator_left = (ImageView) findViewById(R.id.indicator_circle_1);
+        mIndicator_right = (ImageView) findViewById(R.id.indicator_circle_2);
+        mIndicator_right.setEnabled(false);
+        mTitleBack = (ImageButton) findViewById(R.id.title_back);
+        mTitleBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        mTitlePlaylist = (ImageButton) findViewById(R.id.title_playlist);
+        mTitlePlaylist.setOnClickListener(mQueueListener);
+        mTitlePlaying = (TextView) findViewById(R.id.title_playing);
+
+
         if (mProgress instanceof SeekBar) {
             SeekBar seeker = (SeekBar) mProgress;
             seeker.setOnSeekBarChangeListener(mSeekListener);
@@ -172,7 +192,28 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
         initViewPagerContent();
 //        mViewPager.setPageTransformer(true, new PlayPageTransformer());
 //        mPagerIndicator.create(mViewPagerContent.size());
-        mViewPager.setOnPageChangeListener(null);
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0){
+                    mIndicator_left.setEnabled(true);
+                    mIndicator_right.setEnabled(false);
+                } else if (position == 1) {
+                    mIndicator_left.setEnabled(false);
+                    mIndicator_right.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         mViewPager.setAdapter(mPagerAdapter);
     }
 
@@ -1370,6 +1411,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
                 ((View) mAlbumName.getParent()).setVisibility(View.INVISIBLE);
                 mAlbum.setVisibility(View.GONE);
                 mTrackName.setText(path);
+                mTitlePlaying.setText(path);
                 mAlbumArtHandler.removeMessages(GET_ALBUM_ART);
                 mAlbumArtHandler.obtainMessage(GET_ALBUM_ART, new AlbumSongIdWrapper(-1, -1)).sendToTarget();
             } else {
@@ -1388,6 +1430,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
                 }
                 mAlbumName.setText(albumName);
                 mTrackName.setText(mService.getTrackName());
+                mTitlePlaying.setText(mService.getTrackName());
                 mAlbumArtHandler.removeMessages(GET_ALBUM_ART);
                 mAlbumArtHandler.obtainMessage(GET_ALBUM_ART, new AlbumSongIdWrapper(albumid, songid)).sendToTarget();
                 mAlbum.setVisibility(View.VISIBLE);
