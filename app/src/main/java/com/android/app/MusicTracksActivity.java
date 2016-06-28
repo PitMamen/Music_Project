@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.allenliu.sidebar.ISideBarSelectCallBack;
 import com.allenliu.sidebar.SideBar;
 import com.dlighttech.music.adapter.ContentAdapter;
 import com.dlighttech.music.model.ContentItem;
@@ -29,7 +30,7 @@ public class MusicTracksActivity extends BaseActivity {
 
     private ContentAdapter mAdapter;
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
-    private ArrayList<MusicInfo> mMusicList = new ArrayList<MusicInfo>();
+
 
     @Override
     public void onInitView() {
@@ -42,7 +43,6 @@ public class MusicTracksActivity extends BaseActivity {
     public void onCreateView() {
         super.setTitleText("曲目");
 
-
         iv_music_icon = (ImageView) findViewById(R.id.iv_mode_icon);
 
         tv_paly_mode = (TextView) findViewById(R.id.tv_play_mode);
@@ -52,9 +52,24 @@ public class MusicTracksActivity extends BaseActivity {
 
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
         lv_music_detail = (ListView) findViewById(R.id.lv_music_detail);
-
         mAdapter = new ContentAdapter(this, mItems);
         lv_music_detail.setAdapter(mAdapter);
+
+
+        int count =   mAdapter.getCount();
+
+        tv_music_number.setText(count+"首");
+
+
+
+        sb_navigation_bar.setOnStrSelectCallBack(new ISideBarSelectCallBack() {
+            @Override
+            public void onSelectStr(int index, String selectStr) {
+
+            }
+        });
+
+
 
     }
 
@@ -64,9 +79,14 @@ public class MusicTracksActivity extends BaseActivity {
 
 
 
+
+
+
+
         MusicUtils.getMusicInfo(this, new MusicUtils.OnMusicLoadedListener() {
             @Override
             public void onMusicLoadSuccess(ArrayList<MusicInfo> infos) {
+
 
                 for (int i = 0; i < infos.size(); i++) {
 
@@ -78,8 +98,6 @@ public class MusicTracksActivity extends BaseActivity {
                     ContentItem items = new ContentItem(R.drawable.app_music, R.drawable.ic_menu_eq, musicname, singer);
 
                     mItems.add(items);
-
-
 
                 }
             }
