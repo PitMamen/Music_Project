@@ -1635,6 +1635,13 @@ public class MusicUtils {
                     // 歌手
                     String artist = c.getString(c
                             .getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
+
+                    //歌手下所有的音乐
+                    int singermusicCount = getSingerMusicCount(ctx,id);
+
+                    Log.i(TAG, "singermusicCount: "+singermusicCount);
+
+
                     // 歌曲名
                     String musicName = c.getString(c
                             .getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
@@ -1661,7 +1668,8 @@ public class MusicUtils {
                     //获取该专辑下的所有歌曲数量
                     int albumMusicNumber = getAlbumCount(ctx, albumId);
 
-//                    Log.i(TAG, "albumMusicNumber: " + albumMusicNumber);
+
+                    Log.i(TAG, "albumMusicNumber: "+albumMusicNumber);
 
                     // 文件路径
                     String path = c.getString(c
@@ -1687,21 +1695,29 @@ public class MusicUtils {
         }
     }
 
+    private static int getSingerMusicCount(Context ctx, int id) {
 
-    public static boolean deleteMusic(Context ctx, int id) {
         try {
             ContentResolver resolver = ctx.getContentResolver();
-            int row = resolver.delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-                    , MediaStore.Audio.Media._ID + "=?", new String[]{String.valueOf(id)});
-            if (row > 0) {
-                return true;
+            if (resolver != null) {
+                Cursor c = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                        , new String[]{MediaStore.Audio.Artists.DEFAULT_SORT_ORDER}
+                        , MediaStore.Audio.Media._ID+"=?"
+                        , new String[]{String.valueOf(id)}, null);
+
+                c.moveToFirst();
+                int count =c.getInt(0);
+                c.close();
+                return count;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return 0;
+        }
 
-    }
+
+
 
 
     public static int getAlbumCount(Context ctx, int albumId) {
@@ -1724,6 +1740,25 @@ public class MusicUtils {
         }
         return 0;
     }
+
+
+    public static boolean deleteMusic(Context ctx, int id) {
+        try {
+            ContentResolver resolver = ctx.getContentResolver();
+            int row = resolver.delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                    , MediaStore.Audio.Media._ID + "=?", new String[]{String.valueOf(id)});
+            if (row > 0) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+
+
+
 
 
     public interface OnMusicLoadedListener {

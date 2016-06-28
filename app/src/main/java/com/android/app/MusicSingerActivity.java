@@ -10,7 +10,11 @@ import com.dlighttech.music.model.ContentItem;
 import com.dlighttech.music.model.MusicInfo;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * Created by pengxinkai001 on 2016/6/24.
@@ -51,6 +55,10 @@ public class MusicSingerActivity extends  BaseActivity{
     }
 
 
+
+
+
+
     @Override
     public void onCreateData() {
 
@@ -58,8 +66,13 @@ public class MusicSingerActivity extends  BaseActivity{
             @Override
             public void onMusicLoadSuccess(ArrayList<MusicInfo> infos) {
 
+                for (int i = 0; i <infos.size() ; i++) {
+                    String singer =  infos.get(i).getSinger();
+                    int albumsmusicNumber = infos.get(i).getMusicAlbumsNumber();
+                    ContentItem item = new ContentItem(R.drawable.app_music,R.drawable.ic_menu_eq,singer,albumsmusicNumber+"首");
+                    items.add(item);
+                }
 
-                
 
 
                 }
