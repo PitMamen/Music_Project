@@ -1,17 +1,35 @@
 package com.dlighttech.music.adapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListPopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.app.MusicUtils;
+import com.android.app.PlayListActivity;
 import com.android.app.R;
+import com.dlighttech.music.database.DataBaseManager;
 import com.dlighttech.music.model.ContentItem;
+import com.dlighttech.music.model.MusicInfo;
+import com.dlighttech.music.model.Song;
+import com.dlighttech.music.model.SongList;
+import com.dlighttech.music.util.CommonUtils;
+import com.dlighttech.music.util.DialogUtils;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,14 +41,20 @@ import java.util.List;
 public class ContentAdapter extends BaseAdapter {
     private List<ContentItem> contentItems;
     private LayoutInflater inflater;
+    private Context mContext;
     private OnConvertViewClicked mOnConvertView;
     private OnOperateClicked mOnOperate;
     private OnThumbClicked mOnthumb;
+    private ListPopupWindow popupWindow;
     private boolean isHidden = false;
+    private boolean isMenu = false;
+    private MusicInfo mMusicInfo;
+    private int mChoice = 0;
 
     public ContentAdapter(Context context, List<ContentItem> lists) {
         this.inflater = LayoutInflater.from(context);
         this.contentItems = lists;
+        this.mContext = context;
         Activity activity = (Activity) context;
         if (activity instanceof OnConvertViewClicked) {
             mOnConvertView = (OnConvertViewClicked) activity;
@@ -92,9 +116,210 @@ public class ContentAdapter extends BaseAdapter {
         MyListener listener = new MyListener(position);
         convertView.setOnClickListener(listener);
         holder.thumb.setOnClickListener(listener);
-        holder.operator.setOnClickListener(listener);
+        if (isMenu()) {
+            holder.operator.setOnClickListener(mMenuClickListener);
+        } else {
+            holder.operator.setOnClickListener(listener);
+        }
 
         return convertView;
+    }
+
+
+    private View.OnClickListener mMenuClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            createPopupWindowMenu(v);
+        }
+    };
+
+    /**
+     * 创建一个popupWindow菜单
+     *
+     * @param v
+     */
+    private void createPopupWindowMenu(View v) {
+        String[] menus = {"新建歌单", "添加到歌单", "查看歌曲信息", "删除"};
+        popupWindow = DialogUtils.createListPopupWindow(mContext
+                , menus, v, mPopupWindowItemClick);
+        popupWindow.show();
+    }
+
+    private AdapterView.OnItemClickListener mPopupWindowItemClick =
+            new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    popupWindow.dismiss();
+                    if (position == 0) {
+                        // 新建歌单, 添加到歌单
+                        Intent intent = new Intent(mContext, PlayListActivity.class);
+                        intent.addCategory(Intent.CATEGORY_DEFAULT);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mContext.startActivity(intent);
+                    } else if (position == 1) {
+                        // 添加到歌单
+                        createAddToSongListDialog();
+                    } else if (position == 2) {
+                        // 创建歌曲详细信息显示dialog
+                        createSongDetailDialog();
+                    } else if (position == 3) {
+                        // 删除
+                        deleteMusic(position);
+                    }
+                }
+            };
+
+
+    /**
+     * 创建一个添加到歌单的dialog
+     */
+    private void createAddToSongListDialog() {
+
+        // 获取所有歌单
+        ArrayList<SongList> songLists = DataBaseManager.getInstance(mContext)
+                .getAllSongList();
+
+        if (songLists == null || songLists.size() == 0) {
+            Toast.makeText(mContext, "歌单还没有被创建", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        final String[] items = new String[songLists.size()];
+        for (int i = 0; i < songLists.size(); i++) {
+            items[i] = songLists.get(i).getName();
+        }
+
+        final AlertDialog dialog = DialogUtils.createSingleChoiceDialog(mContext
+                , "歌单列表", items, mChoice
+                , new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 选择了哪一个
+                        mChoice = which;
+                    }
+                }, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 确定按钮
+                        mChoice = mChoice < 0 ? 0
+                                : mChoice >= items.length
+                                ? items.length - 1 : mChoice;
+                        String songList = items[mChoice];
+
+                        // 将当前歌曲加入到当前歌单中
+                        // 先通过歌单名称获取歌单id
+                        int songListId = DataBaseManager.getInstance(mContext)
+                                .getSongListIdByName(songList);
+                        if (songListId != -1 || songListId > 0) {
+
+                            MusicInfo info = getMusicInfo();
+                            Song song = new Song();
+                            song.setSongListId(songListId);
+                            song.setName(info.getMusicName());
+                            song.setSongPath(info.getMusicPath());
+                            song.setSinger(info.getSinger());
+                            // 然后将歌曲添加到该歌单id下
+                            boolean isSuccess = DataBaseManager.getInstance(mContext)
+                                    .insertSong(song);
+
+                            SongList list = DataBaseManager.getInstance(mContext)
+                                    .getSongListById(songListId);
+
+                            int count = list.getCount();
+                            count++;
+                            boolean isUpdate = DataBaseManager.getInstance(mContext)
+                                    .updateSongOfListBySongListId(songListId, count);
+
+                            if (isSuccess && isUpdate) {
+                                Toast.makeText(mContext
+                                        , info.getMusicName() + "被加入到"
+                                                + songList + "歌单中", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                }, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 取消按钮
+                        dialog.dismiss();
+                    }
+                });
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
+    }
+
+    /**
+     * 删除音乐
+     */
+    private void deleteMusic(int position) {
+        MusicInfo info = getMusicInfo();
+        String path = info.getMusicPath();
+        File musicFile = new File(path);
+        if (!musicFile.exists()) {
+            return;
+        }
+        musicFile.delete();
+        // 删除MediaStore数据库中的数据
+        MusicUtils.deleteMusic(mContext, info.getMusicId());
+        contentItems.remove(position);
+        notifyDataSetChanged();
+    }
+
+    /**
+     * 创建歌曲详细信息的dialog
+     */
+    private void createSongDetailDialog() {
+        View songDetailView = inflater.inflate(R.layout.dialog_song_detail, null);
+        TextView tvSongName = (TextView) songDetailView.findViewById(R.id.tv_song_name);
+        TextView tvSongArtist = (TextView) songDetailView.findViewById(R.id.tv_song_artist);
+        TextView tvSongTime = (TextView) songDetailView.findViewById(R.id.tv_song_time);
+        TextView tvSongPath = (TextView) songDetailView.findViewById(R.id.tv_song_path);
+        TextView tvSongAlbum = (TextView) songDetailView.findViewById(R.id.tv_song_album);
+        TextView tvSongSize = (TextView) songDetailView.findViewById(R.id.tv_song_size);
+        Button btnOK = (Button) songDetailView.findViewById(R.id.btn_ok);
+
+        MusicInfo info = getMusicInfo();
+        tvSongName.setText(info.getMusicName());
+        tvSongArtist.setText(info.getSinger());
+        tvSongTime.setText(CommonUtils.stringForTime(info.getTotalTime()));
+        tvSongPath.setText(info.getMusicPath());
+        tvSongAlbum.setText(info.getMusicAlbumsName().equals("0")
+                ? "unknown" : info.getMusicAlbumsName());
+        tvSongSize.setText(Formatter.formatFileSize(mContext, info.getMusicSize()));
+
+        final AlertDialog dialog = DialogUtils
+                .createContentDialog(mContext, songDetailView);
+
+        dialog.show();
+
+        btnOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+
+    public boolean isMenu() {
+        return isMenu;
+    }
+
+    public void setMenu(boolean menu) {
+        isMenu = menu;
+    }
+
+    public void setMusicInfo(MusicInfo mMusicInfo) {
+        this.mMusicInfo = mMusicInfo;
+    }
+
+    public MusicInfo getMusicInfo() {
+        if (mMusicInfo == null) {
+            mMusicInfo = new MusicInfo();
+        }
+        return mMusicInfo;
     }
 
     private static class ViewHolder {
@@ -117,7 +342,7 @@ public class ContentAdapter extends BaseAdapter {
             switch (v.getId()) {
                 case R.id.operate_imageView_content:
                     if (mOnOperate != null) {
-                        mOnOperate.onOperateClicked(position,v);
+                        mOnOperate.onOperateClicked(position, v);
                     }
                     break;
                 case R.id.thumb_imageView_content:
@@ -154,7 +379,7 @@ public class ContentAdapter extends BaseAdapter {
      */
 
     public interface OnOperateClicked {
-        void onOperateClicked(int position,View v);
+        void onOperateClicked(int position, View v);
     }
 
 

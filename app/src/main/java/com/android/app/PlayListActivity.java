@@ -1,6 +1,7 @@
 package com.android.app;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -20,11 +21,12 @@ import com.dlighttech.music.util.DialogUtils;
 
 import java.util.ArrayList;
 
-public class PlayListActivity extends BaseActivity {
+public class PlayListActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked {
 
     private ListView mListView;
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
     private ContentAdapter mAdapter;
+    private ArrayList<SongList> songLists;
 
     @Override
     public void onCreateView() {
@@ -116,13 +118,13 @@ public class PlayListActivity extends BaseActivity {
 
     // 刷新数据
     private void updateAdapter() {
-        ArrayList<SongList> newList = DataBaseManager.getInstance(this).getAllSongList();
+        songLists = DataBaseManager.getInstance(this).getAllSongList();
         mItems.clear();
-        for (int i = 0; i < newList.size(); i++) {
+        for (int i = 0; i < songLists.size(); i++) {
             ContentItem item = new ContentItem(R.drawable.app_music
                     , R.drawable.left
-                    , newList.get(i).getName()
-                    , newList.get(i).getCount() + "首");
+                    , songLists.get(i).getName()
+                    , songLists.get(i).getCount() + "首");
             mItems.add(item);
         }
         mAdapter.notifyDataSetChanged();
@@ -138,7 +140,8 @@ public class PlayListActivity extends BaseActivity {
     public void onCreateData() {
         mItems.clear();
         // 首先获取全部歌单，如果表中没有数据，那么添加“我喜欢听”，否则全部查询
-        ArrayList<SongList> songLists = DataBaseManager.getInstance(this).getAllSongList();
+        songLists = DataBaseManager.getInstance(this).getAllSongList();
+
         if (songLists == null || songLists.size() == 0) {
             SongList list = new SongList();
             list.setName("我喜欢听");
@@ -153,8 +156,7 @@ public class PlayListActivity extends BaseActivity {
                         , R.drawable.left, songLists.get(i).getName()
                         , songLists.get(i).getCount() + "首");
                 mItems.add(item);
-
-                Log.d("TAG",item.toString());
+                Log.d("TAG", item.toString());
             }
         }
     }
@@ -167,6 +169,24 @@ public class PlayListActivity extends BaseActivity {
     @Override
     public void onSearchSubmit(String text) {
 
+    }
+
+
+    @Override
+    public void onConvertViewClicked(int position) {
+        // 当点击一个item时获取当前歌单的id，根据id获取该歌单下的所有歌曲
+        ContentItem item = mItems.get(position);
+        SongList list = songLists.get(position);
+        if (list == null || list.getCount() == 0) {
+            Toast.makeText(PlayListActivity.this, "\"" + item.getTitle() + "\"下还没有收录歌曲！"
+                    , Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent intent = new Intent(PlayListActivity.this, SongOfSongListActivity.class);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("id", list.getId());
+        startActivity(intent);
     }
 }
 
