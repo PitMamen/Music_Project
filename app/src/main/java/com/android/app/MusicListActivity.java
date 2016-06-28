@@ -176,7 +176,7 @@ public class MusicListActivity extends BaseActivity
                 }, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // 确定按钮
+                        // 确定按钮 if()else if () else()
                         mChoice = mChoice < 0 ? 0
                                 : mChoice >= items.length
                                 ? items.length - 1 : mChoice;
