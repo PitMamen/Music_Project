@@ -6,7 +6,7 @@
     android:gravity="center_vertical"
     android:orientation="horizontal" >
     
-    <com.dlighttech.music.util.LrcView
+    <com.dlighttech.music.ui.LrcView
         android:id="@+id/play_first_lrc_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

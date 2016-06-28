@@ -1,4 +1,4 @@
-package com.dlighttech.music.util;
+package com.dlighttech.music.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

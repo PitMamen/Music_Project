@@ -3,7 +3,6 @@ package com.android.app;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.view.View;
 import android.widget.AdapterView;
@@ -60,10 +59,12 @@ public class MusicListActivity extends BaseActivity
 
         for (int i = 0; i < musicInfos.size(); i++) {
             MusicInfo info = musicInfos.get(i);
-            String parent = FileUtils.getFileParent(new File(info.getMusicPath()));
-            if (TextUtils.isEmpty(parent)) continue;
-            if (parent.equals(item.getContent())) {
-                mMusicList.add(info);
+            File musicFile = new File(info.getMusicPath());
+            if (musicFile.exists()) {
+                String parent = FileUtils.getFileParent(musicFile);
+                if (parent.trim().equals(item.getContent().trim())) {
+                    mMusicList.add(info);
+                }
             }
         }
 
