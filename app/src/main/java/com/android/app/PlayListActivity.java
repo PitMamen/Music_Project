@@ -32,7 +32,7 @@ public class PlayListActivity extends BaseActivity implements ContentAdapter.OnC
     public void onCreateView() {
         super.setTitleText("播放列表");
         mListView = (ListView) findViewById(R.id.lv_play_list);
-        mAdapter = new ContentAdapter(this, mItems);
+        mAdapter = new ContentAdapter(this, mItems,false);
 
         View footView = getLayoutInflater().inflate(R.layout.content_layout, null);
         ImageView ivThumb = (ImageView) footView.findViewById(R.id.thumb_imageView_content);

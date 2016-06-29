@@ -1,5 +1,6 @@
 package com.android.app;
 
+import android.view.View;
 import android.widget.ListView;
 
 import com.dlighttech.music.adapter.ContentAdapter;
@@ -10,7 +11,7 @@ import com.dlighttech.music.util.FileUtils;
 import java.io.File;
 import java.util.ArrayList;
 
-public class MusicListActivity extends BaseActivity {
+public class MusicListActivity extends BaseActivity implements ContentAdapter.OnOperateClicked {
 
     /**
      * implements ContentAdapter.OnOperateClicked
@@ -22,15 +23,14 @@ public class MusicListActivity extends BaseActivity {
     private ListView mListView;
     private ContentAdapter mAdapter;
     private ContentItem item;
-//    private ListPopupWindow popupWindow;
+    //    private ListPopupWindow popupWindow;
     private int mSelectionPos = 0;
 
     @Override
     public void onCreateView() {
         super.setTitleText(item != null ? item.getTitle() : "N/A"); // 设置title
         mListView = (ListView) findViewById(R.id.lv_sing_list);
-        mAdapter = new ContentAdapter(this, mItems);
-        mAdapter.setMenu(true);
+        mAdapter = new ContentAdapter(this, mItems, true);
         mAdapter.setMusicInfo(getCurrMusic());
         mListView.setAdapter(mAdapter);
     }
@@ -79,16 +79,14 @@ public class MusicListActivity extends BaseActivity {
 
     }
 
-//    @Override
-//    public void onOperateClicked(int position, View v) {
-//        mSelectionPos = position;
-//        // 当点击右侧菜单时弹出popupWindow
-//        createPopupWindowMenu(v);
-//    }
-
 
     private MusicInfo getCurrMusic() {
         return mMusicList.get(mSelectionPos);
+    }
+
+    @Override
+    public void onOperateClicked(int position, View v) {
+        mSelectionPos = position;
     }
 
 //    /**

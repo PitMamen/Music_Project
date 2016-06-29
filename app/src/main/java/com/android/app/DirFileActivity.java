@@ -26,7 +26,7 @@ public class DirFileActivity extends BaseActivity implements ContentAdapter.OnCo
     public void onCreateView() {
         super.setTitleText("文件夹"); // 设置title
         mListView = (ListView) findViewById(R.id.lv_music_dir);
-        mAdapter = new ContentAdapter(DirFileActivity.this, mItems);
+        mAdapter = new ContentAdapter(DirFileActivity.this, mItems,false);
         mAdapter.setIsOperationHidden(true); // 是否隐藏右侧图标
         mListView.setAdapter(mAdapter);
     }

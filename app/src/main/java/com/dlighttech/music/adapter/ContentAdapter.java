@@ -50,11 +50,17 @@ public class ContentAdapter extends BaseAdapter {
     private boolean isMenu = false;
     private MusicInfo mMusicInfo;
     private int mChoice = 0;
+    private int mSelectPostion = 0;
 
-    public ContentAdapter(Context context, List<ContentItem> lists) {
+    public ContentAdapter(Context context
+            , List<ContentItem> lists
+            , boolean isMenu) {
         this.inflater = LayoutInflater.from(context);
         this.contentItems = lists;
         this.mContext = context;
+
+        setMenu(isMenu);
+
         Activity activity = (Activity) context;
         if (activity instanceof OnConvertViewClicked) {
             mOnConvertView = (OnConvertViewClicked) activity;
@@ -106,7 +112,6 @@ public class ContentAdapter extends BaseAdapter {
 
 
         ContentItem contentItem = contentItems.get(position);
-
         holder.thumb.setImageResource(contentItem.getThumb());
         holder.operator.setImageResource(contentItem.getOperator());
         holder.operator.setVisibility(isHidden ? View.GONE : View.VISIBLE);
@@ -164,7 +169,7 @@ public class ContentAdapter extends BaseAdapter {
                         createSongDetailDialog();
                     } else if (position == 3) {
                         // 删除
-                        deleteMusic(position);
+                        deleteMusic();
                     }
                 }
             };
@@ -253,7 +258,7 @@ public class ContentAdapter extends BaseAdapter {
     /**
      * 删除音乐
      */
-    private void deleteMusic(int position) {
+    private void deleteMusic() {
         MusicInfo info = getMusicInfo();
         String path = info.getMusicPath();
         File musicFile = new File(path);
@@ -263,7 +268,7 @@ public class ContentAdapter extends BaseAdapter {
         musicFile.delete();
         // 删除MediaStore数据库中的数据
         MusicUtils.deleteMusic(mContext, info.getMusicId());
-        contentItems.remove(position);
+        contentItems.remove(mSelectPostion);
         notifyDataSetChanged();
     }
 
@@ -307,17 +312,29 @@ public class ContentAdapter extends BaseAdapter {
         return isMenu;
     }
 
+    /**
+     * 设置是否需要popupWindow
+     *
+     * @return
+     */
     public void setMenu(boolean menu) {
         isMenu = menu;
     }
 
-    public void setMusicInfo(MusicInfo mMusicInfo) {
-        this.mMusicInfo = mMusicInfo;
+    /**
+     * 如果设置popupWindow,必须设置此方法获取当前选中音乐信息
+     * 如果没有使用则popupWindow可以不用设置
+     *
+     * @param currInfo
+     */
+    public void setMusicInfo(MusicInfo currInfo) {
+        this.mMusicInfo = currInfo;
     }
+
 
     public MusicInfo getMusicInfo() {
         if (mMusicInfo == null) {
-            mMusicInfo = new MusicInfo();
+            throw new IllegalArgumentException("Music info must be setup before set adapter!");
         }
         return mMusicInfo;
     }
@@ -342,6 +359,7 @@ public class ContentAdapter extends BaseAdapter {
             switch (v.getId()) {
                 case R.id.operate_imageView_content:
                     if (mOnOperate != null) {
+                        mSelectPostion = position;
                         mOnOperate.onOperateClicked(position, v);
                     }
                     break;
