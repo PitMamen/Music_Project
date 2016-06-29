@@ -66,8 +66,6 @@ public class MusicSingerActivity extends  BaseActivity{
                     items.add(item);
                 }
 
-
-
                 }
 
 

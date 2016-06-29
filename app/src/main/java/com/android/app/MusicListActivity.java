@@ -84,6 +84,7 @@ public class MusicListActivity extends BaseActivity implements ContentAdapter.On
         return mMusicList.get(mSelectionPos);
     }
 
+
     @Override
     public void onOperateClicked(int position, View v) {
         mSelectionPos = position;
