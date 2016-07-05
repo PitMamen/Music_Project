@@ -1701,8 +1701,8 @@ public class MusicUtils {
             ContentResolver resolver = ctx.getContentResolver();
             if (resolver != null) {
                 Cursor c = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-                        , new String[]{MediaStore.Audio.Artists.DEFAULT_SORT_ORDER}
-                        , MediaStore.Audio.Media._ID+"=?"
+                        , new String[]{MediaStore.Audio.Artists._COUNT}
+                        , MediaStore.Audio.Media.ARTIST_ID+"=?"
                         , new String[]{String.valueOf(id)}, null);
 
                 c.moveToFirst();

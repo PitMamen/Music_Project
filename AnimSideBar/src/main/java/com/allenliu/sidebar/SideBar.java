@@ -15,7 +15,7 @@ import android.widget.TextView;
  * Created by Allen Liu on 2016/5/12.
  */
 public class SideBar extends TextView {
-    private String[] letters = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I",
+    private String[] letters = new String[]{"*","A", "B", "C", "D", "E", "F", "G", "H", "I",
             "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
             "W", "X", "Y", "Z", "#"};
     private Paint textPaint;
@@ -209,7 +209,7 @@ public class SideBar extends TextView {
                     canvas.drawText(letters[i], drawX, singleTextH + itemH * i, scaleTextPaint);
 
 //抛物线实现，没有动画效果，太生硬了
-                    canvas.save();
+                  /*  canvas.save();
                     canvas.translate(w-getPaddingRight(),0);
                     double y1 = singleTextH + itemH * (index - scaleItemCount);
                     double y2 = singleTextH + itemH * (index + scaleItemCount);
@@ -220,8 +220,8 @@ public class SideBar extends TextView {
                         double currentY=singleTextH + itemH * i;
                        canvas.drawText(letters[i], (float) (p * (currentY - y1) * (currentY - y2)), singleTextH + itemH * i, scaleTextPaint);
                    }
-                   canvas.restore();
-                //     }
+                   canvas.restore();*/
+                //    }
             }
         }
     }
