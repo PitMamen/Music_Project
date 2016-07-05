@@ -11,11 +11,8 @@ import com.allenliu.sidebar.SideBar;
 import com.dlighttech.music.adapter.ContentAdapter;
 import com.dlighttech.music.model.ContentItem;
 import com.dlighttech.music.model.MusicInfo;
-import com.dlighttech.music.util.FileUtils;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by pengxinkai001 on 2016/6/23.
@@ -52,7 +49,7 @@ public class MusicTracksActivity extends BaseActivity {
 
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
         lv_music_detail = (ListView) findViewById(R.id.lv_music_detail);
-        mAdapter = new ContentAdapter(this, mItems);
+        mAdapter = new ContentAdapter(this, mItems,false);
         lv_music_detail.setAdapter(mAdapter);
 
 

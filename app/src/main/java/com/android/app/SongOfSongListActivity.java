@@ -28,7 +28,7 @@ public class SongOfSongListActivity extends BaseActivity implements
     @Override
     public void onCreateView() {
         mListView = (ListView) findViewById(R.id.lv_song_of_list);
-        mAdapter = new ContentAdapter(this, mItems);
+        mAdapter = new ContentAdapter(this, mItems,false);
         mListView.setAdapter(mAdapter);
     }
 
