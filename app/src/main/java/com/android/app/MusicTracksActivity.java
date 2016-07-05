@@ -53,19 +53,20 @@ public class MusicTracksActivity extends BaseActivity {
         lv_music_detail.setAdapter(mAdapter);
 
 
-        int count =   mAdapter.getCount();
+        int count = mAdapter.getCount();
 
-        tv_music_number.setText(count+"首");
-
+        tv_music_number.setText(count + "首");
 
 
         sb_navigation_bar.setOnStrSelectCallBack(new ISideBarSelectCallBack() {
             @Override
-            public void onSelectStr(int index, String selectStr) {
+            public void onSelectStr(int position, String selectStr) {
+
+
+
 
             }
         });
-
 
 
     }
@@ -104,9 +105,6 @@ public class MusicTracksActivity extends BaseActivity {
 
             }
         });
-
-
-
 
 
     }

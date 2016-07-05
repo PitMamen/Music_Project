@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -116,22 +117,7 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
         }
     };
 
-//    private BroadcastReceiver mMediaReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            Log.d("TAG", intent.getAction());
-//            if (intent.getAction().equals(Intent.ACTION_MEDIA_SCANNER_FINISHED)) {
-//                Log.d("TAG", "扫描完成了");
-//            } else if (intent.getAction().equals(Intent.ACTION_MEDIA_SCANNER_STARTED)) {
-//                Log.d("TAG", "扫描开始了");
-//            }
-//        }
-//    };
-
-
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
-
-
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -166,6 +152,7 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
 
     @Override
     public void onCreateView() {
+
         tvTracks = (TextView) findViewById(R.id.tv_tracks);
         tvAlbums = (TextView) findViewById(R.id.tv_album);
         tvArtist = (TextView) findViewById(R.id.tv_artist);
@@ -179,17 +166,6 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
 
-        // 注册广播
-//        IntentFilter filter = new IntentFilter();
-//        filter.setPriority(1000);// 设置最高优先级
-//        filter.addAction(Intent.ACTION_MEDIA_SCANNER_STARTED);
-//        filter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
-//        filter.addAction(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//        filter.addAction(MusicUtils.ACTION_MEDIA_SCANNER_SCAN_DIR);
-//        registerReceiver(mMediaReceiver, filter);
-//        Log.d("TAG", "注册完成");
-
-        // 开启一个线程用于加载当前手机所有文件夹下的音乐资源
         new Thread(mMusicLoadTask).start();
     }
 
@@ -254,6 +230,5 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        unregisterReceiver(mMediaReceiver);
     }
 }
