@@ -1619,7 +1619,6 @@ public class MusicUtils {
 
 
     public static void getMusicInfo(Context ctx, OnMusicLoadedListener listener) {
-
         ArrayList<MusicInfo> musicInfos = new ArrayList<MusicInfo>();
         Cursor c = null;
         try {
@@ -1637,9 +1636,9 @@ public class MusicUtils {
                             .getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
 
                     //歌手下所有的音乐
-                    int singermusicCount = getSingerMusicCount(ctx,id);
+                    int singermusicCount = getSingerMusicCount(ctx, id);
 
-                    Log.i(TAG, "singermusicCount: "+singermusicCount);
+                    Log.i(TAG, "singermusicCount: " + singermusicCount);
 
 
                     // 歌曲名
@@ -1669,7 +1668,7 @@ public class MusicUtils {
                     int albumMusicNumber = getAlbumCount(ctx, albumId);
 
 
-                    Log.i(TAG, "albumMusicNumber: "+albumMusicNumber);
+                    Log.i(TAG, "albumMusicNumber: " + albumMusicNumber);
 
                     // 文件路径
                     String path = c.getString(c
@@ -1695,6 +1694,90 @@ public class MusicUtils {
         }
     }
 
+    public static MusicInfo getMusicInfoByArgs(Context ctx
+            , String selection
+            , String[] selectionArgs) {
+
+        ArrayList<MusicInfo> musicInfos = new ArrayList<MusicInfo>();
+
+        Cursor c = null;
+        try {
+            ContentResolver resolver = ctx.getContentResolver();
+            if (resolver != null) {
+                if (!TextUtils.isEmpty(selection)
+                        && selectionArgs != null && selectionArgs.length > 0) {
+                    
+                    c = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                            , null, selection, selectionArgs, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+
+                    if (c.moveToFirst()) {
+                        // 歌曲id
+                        int id = c.getInt(c
+                                .getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
+                        // 歌手
+                        String artist = c.getString(c
+                                .getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
+
+                        //歌手下所有的音乐
+                        int singermusicCount = getSingerMusicCount(ctx, id);
+
+                        Log.i(TAG, "singermusicCount:" + singermusicCount);
+
+
+                        // 歌曲名
+                        String musicName = c.getString(c
+                                .getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
+                        // 歌曲播放当前时间
+                        long currTime = 0;
+                        // 歌曲播放总时间
+                        long totalTime = c.getLong(c
+                                .getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
+                        // 歌曲专辑图片
+                        int albumId = c.getInt(c
+                                .getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
+                        Bitmap albumImage = getArtwork(ctx, id, albumId);
+
+
+                        albumImage = ThumbnailUtils.extractThumbnail(albumImage
+                                , DisplayUtils.dip2px(ctx, 30)
+                                , DisplayUtils.dip2px(ctx, 30));
+
+                        // 歌曲专辑名
+                        String albumName = c.getString(c
+                                .getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
+
+
+                        //获取该专辑下的所有歌曲数量
+                        int albumMusicNumber = getAlbumCount(ctx, albumId);
+
+
+                        Log.i(TAG, "albumMusicNumber: " + albumMusicNumber);
+
+                        // 文件路径
+                        String path = c.getString(c
+                                .getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+                        // 歌曲文件大小
+                        long size = c.getLong(c
+                                .getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
+
+
+                        MusicInfo info = new MusicInfo(id, artist, musicName, currTime
+                                , totalTime, MusicInfo.MusicState.NORMAL
+                                , albumImage, albumName, albumMusicNumber, path, size);
+
+                        return info;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) c.close();
+        }
+        return null;
+
+    }
+
     private static int getSingerMusicCount(Context ctx, int id) {
 
         try {
@@ -1702,11 +1785,11 @@ public class MusicUtils {
             if (resolver != null) {
                 Cursor c = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
                         , new String[]{MediaStore.Audio.Artists.DEFAULT_SORT_ORDER}
-                        , MediaStore.Audio.Media._ID+"=?"
+                        , MediaStore.Audio.Media._ID + "=?"
                         , new String[]{String.valueOf(id)}, null);
 
                 c.moveToFirst();
-                int count =c.getInt(0);
+                int count = c.getInt(0);
                 c.close();
                 return count;
             }
@@ -1714,10 +1797,7 @@ public class MusicUtils {
             e.printStackTrace();
         }
         return 0;
-        }
-
-
-
+    }
 
 
     public static int getAlbumCount(Context ctx, int albumId) {
@@ -1756,9 +1836,6 @@ public class MusicUtils {
         return false;
 
     }
-
-
-
 
 
     public interface OnMusicLoadedListener {

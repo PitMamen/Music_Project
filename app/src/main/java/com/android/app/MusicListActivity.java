@@ -1,6 +1,5 @@
 package com.android.app;
 
-import android.view.View;
 import android.widget.ListView;
 
 import com.dlighttech.music.adapter.ContentAdapter;
@@ -11,7 +10,7 @@ import com.dlighttech.music.util.FileUtils;
 import java.io.File;
 import java.util.ArrayList;
 
-public class MusicListActivity extends BaseActivity implements ContentAdapter.OnOperateClicked {
+public class MusicListActivity extends BaseActivity {
 
     /**
      * implements ContentAdapter.OnOperateClicked
@@ -24,14 +23,13 @@ public class MusicListActivity extends BaseActivity implements ContentAdapter.On
     private ContentAdapter mAdapter;
     private ContentItem item;
     //    private ListPopupWindow popupWindow;
-    private int mSelectionPos = 0;
 
     @Override
     public void onCreateView() {
         super.setTitleText(item != null ? item.getTitle() : "N/A"); // 设置title
         mListView = (ListView) findViewById(R.id.lv_sing_list);
         mAdapter = new ContentAdapter(this, mItems, true);
-        mAdapter.setMusicInfo(getCurrMusic());
+        mAdapter.setMusicInfos(mMusicList);
         mListView.setAdapter(mAdapter);
     }
 
@@ -79,16 +77,6 @@ public class MusicListActivity extends BaseActivity implements ContentAdapter.On
 
     }
 
-
-    private MusicInfo getCurrMusic() {
-        return mMusicList.get(mSelectionPos);
-    }
-
-
-    @Override
-    public void onOperateClicked(int position, View v) {
-        mSelectionPos = position;
-    }
 
 //    /**
 //     * 创建一个popupWindow菜单

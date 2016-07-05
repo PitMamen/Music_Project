@@ -18,10 +18,15 @@ import com.dlighttech.music.database.DataBaseManager;
 import com.dlighttech.music.model.ContentItem;
 import com.dlighttech.music.model.SongList;
 import com.dlighttech.music.util.DialogUtils;
+import com.dlighttech.music.util.PreferencesUtils;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
-public class PlayListActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked {
+public class PlayListActivity extends BaseActivity
+        implements ContentAdapter.OnConvertViewClicked
+        , Observer {
 
     private ListView mListView;
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
@@ -32,7 +37,10 @@ public class PlayListActivity extends BaseActivity implements ContentAdapter.OnC
     public void onCreateView() {
         super.setTitleText("播放列表");
         mListView = (ListView) findViewById(R.id.lv_play_list);
-        mAdapter = new ContentAdapter(this, mItems,false);
+        // 需要在设置适配器之前注册
+        DataChangedWatcher.getInstance().registerObserver(this);
+
+        mAdapter = new ContentAdapter(this, mItems, false);
 
         View footView = getLayoutInflater().inflate(R.layout.content_layout, null);
         ImageView ivThumb = (ImageView) footView.findViewById(R.id.thumb_imageView_content);
@@ -186,7 +194,43 @@ public class PlayListActivity extends BaseActivity implements ContentAdapter.OnC
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("id", list.getId());
+        PreferencesUtils.getInstance(this, PreferencesUtils.SONG_LIST)
+                .putData(PreferencesUtils.SONG_LIST_ID_KEY, list.getId());
         startActivity(intent);
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        if (data instanceof SongList) {
+            SongList list = (SongList) data;
+            list.setCount(list.getCount() - 1);
+            boolean isSuccess = DataBaseManager.getInstance(this)
+                    .updateCountBySongList(list);
+            if (isSuccess) {
+                Log.d("TAG", "song list count update -1 success! count ===" + list.getCount());
+                mItems.clear();
+                songLists.clear();
+
+                songLists = DataBaseManager.getInstance(this)
+                        .getAllSongList();
+
+                for (int i = 0; i < songLists.size(); i++) {
+                    ContentItem item = new ContentItem(R.drawable.app_music
+                            , R.drawable.left, songLists.get(i).getName()
+                            , songLists.get(i).getCount() + "首");
+                    mItems.add(item);
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 反注册观察者
+        DataChangedWatcher.getInstance().deleteObserver(this);
     }
 }
 

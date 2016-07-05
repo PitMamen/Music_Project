@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.ListPopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.app.DataChangedWatcher;
 import com.android.app.MusicUtils;
 import com.android.app.PlayListActivity;
 import com.android.app.R;
@@ -27,6 +29,7 @@ import com.dlighttech.music.model.Song;
 import com.dlighttech.music.model.SongList;
 import com.dlighttech.music.util.CommonUtils;
 import com.dlighttech.music.util.DialogUtils;
+import com.dlighttech.music.util.PreferencesUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -46,9 +49,9 @@ public class ContentAdapter extends BaseAdapter {
     private OnOperateClicked mOnOperate;
     private OnThumbClicked mOnthumb;
     private ListPopupWindow popupWindow;
+    private ArrayList<MusicInfo> mMusicInfos;
     private boolean isHidden = false;
     private boolean isMenu = false;
-    private MusicInfo mMusicInfo;
     private int mChoice = 0;
     private int mSelectPostion = 0;
 
@@ -122,7 +125,15 @@ public class ContentAdapter extends BaseAdapter {
         convertView.setOnClickListener(listener);
         holder.thumb.setOnClickListener(listener);
         if (isMenu()) {
-            holder.operator.setOnClickListener(mMenuClickListener);
+
+            final int mPostion = position;
+
+            holder.operator.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    createPopupWindowMenu(v, mPostion);
+                }
+            });
         } else {
             holder.operator.setOnClickListener(listener);
         }
@@ -131,19 +142,14 @@ public class ContentAdapter extends BaseAdapter {
     }
 
 
-    private View.OnClickListener mMenuClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            createPopupWindowMenu(v);
-        }
-    };
-
     /**
      * 创建一个popupWindow菜单
      *
      * @param v
      */
-    private void createPopupWindowMenu(View v) {
+    private void createPopupWindowMenu(View v, int mPosition) {
+        mSelectPostion = mPosition;
+
         String[] menus = {"新建歌单", "添加到歌单", "查看歌曲信息", "删除"};
         popupWindow = DialogUtils.createListPopupWindow(mContext
                 , menus, v, mPopupWindowItemClick);
@@ -265,11 +271,37 @@ public class ContentAdapter extends BaseAdapter {
         if (!musicFile.exists()) {
             return;
         }
-        musicFile.delete();
-        // 删除MediaStore数据库中的数据
-        MusicUtils.deleteMusic(mContext, info.getMusicId());
-        contentItems.remove(mSelectPostion);
-        notifyDataSetChanged();
+        // 删除SongList表下的Song数据
+        // 通过歌曲名称获取songListId，通过songListId和songName删除Song表中的数据
+        int songListId = PreferencesUtils.getInstance(mContext,PreferencesUtils.SONG_LIST)
+                .getInteger(PreferencesUtils.SONG_LIST_ID_KEY);
+
+        boolean isSuccess = DataBaseManager.getInstance(mContext)
+                .deleteSongBySongListIdAndName(songListId, info.getMusicName());
+
+        Log.d("TAG", "popupWindow Adapter song delete===" + isSuccess + " songListId===" + songListId);
+        // 成功删除song表中的数据
+        if (isSuccess && songListId > 0) {
+            // 获取当前songListId下有几首歌曲
+            SongList list = DataBaseManager.getInstance(mContext)
+                    .getSongListById(songListId);
+
+            // 通知数据发生改变
+            DataChangedWatcher.getInstance().update(list);
+
+            boolean isFileDel = musicFile.delete();
+            // 删除MediaStore数据库中的数据
+            boolean isMusicDel = MusicUtils.deleteMusic(mContext, info.getMusicId());
+
+            Log.d("TAG", "isFileDel===" + isFileDel + " isMusicDel===" + isMusicDel);
+
+            if (isFileDel && isMusicDel) {
+                contentItems.remove(mSelectPostion);
+                notifyDataSetChanged();
+                Toast.makeText(mContext, info.getMusicName() + "删除ok！",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     /**
@@ -321,23 +353,18 @@ public class ContentAdapter extends BaseAdapter {
         isMenu = menu;
     }
 
-    /**
-     * 如果设置popupWindow,必须设置此方法获取当前选中音乐信息
-     * 如果没有使用则popupWindow可以不用设置
-     *
-     * @param currInfo
-     */
-    public void setMusicInfo(MusicInfo currInfo) {
-        this.mMusicInfo = currInfo;
+    public void setMusicInfos(ArrayList<MusicInfo> infos) {
+        this.mMusicInfos = infos;
     }
 
-
-    public MusicInfo getMusicInfo() {
-        if (mMusicInfo == null) {
-            throw new IllegalArgumentException("Music info must be setup before set adapter!");
+    private MusicInfo getMusicInfo() {
+        if (mMusicInfos == null || mMusicInfos.size() == 0) {
+            throw new IllegalArgumentException("Music info array not be null and size more than 0!");
         }
-        return mMusicInfo;
+
+        return mMusicInfos.get(mSelectPostion);
     }
+
 
     private static class ViewHolder {
         ImageView thumb;
@@ -359,7 +386,6 @@ public class ContentAdapter extends BaseAdapter {
             switch (v.getId()) {
                 case R.id.operate_imageView_content:
                     if (mOnOperate != null) {
-                        mSelectPostion = position;
                         mOnOperate.onOperateClicked(position, v);
                     }
                     break;

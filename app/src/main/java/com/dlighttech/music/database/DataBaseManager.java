@@ -73,7 +73,7 @@ public class DataBaseManager {
     /**
      * 根据歌单名称获取歌单id
      *
-     * @param name
+     * @param name 歌单名称
      * @return
      */
     public int getSongListIdByName(String name) {
@@ -307,4 +307,55 @@ public class DataBaseManager {
         }
     }
 
+    /**
+     * 根据歌单id和歌曲名称删除歌曲
+     *
+     * @param songListId
+     * @param name
+     * @return
+     */
+    public boolean deleteSongBySongListIdAndName(int songListId, String name) {
+        synchronized (mDataBase) {
+            SQLiteDatabase database = null;
+            try {
+                database = mDataBase.getReadableDatabase();
+                String sql = "delete from " + SongListDataBase.SONG_TABLE + " where "
+                        + SongListDataBase.SONG_LIST_ID + "=? and "
+                        + SongListDataBase.SONG_NAME + "=?";
+                database.execSQL(sql, new Object[]{songListId, name});
+                return true;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                if (database != null) database.close();
+            }
+            return false;
+        }
+    }
+
+
+    /**
+     * 更新songList中的count列
+     *
+     * @param list
+     * @return
+     */
+    public boolean updateCountBySongList(SongList list) {
+        synchronized (mDataBase) {
+            SQLiteDatabase database = null;
+            try {
+                database = mDataBase.getReadableDatabase();
+                String sql = "update " + SongListDataBase.SONG_LIST_TABLE
+                        + " set " + SongListDataBase.SONG_LIST_COUNT + "=?"
+                        + " where " + SongListDataBase._ID + "=?";
+                database.execSQL(sql, new Object[]{list.getCount(), list.getId()});
+                return true;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                if (database != null) database.close();
+            }
+            return false;
+        }
+    }
 }
