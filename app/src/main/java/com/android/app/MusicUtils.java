@@ -1650,7 +1650,7 @@ public class MusicUtils {
                         int artistId = c.getInt(c.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST_ID));
 
                         //歌手下所有的音乐
-                        int singermusicCount = getSingerMusicCount(ctx, artistId);
+                        int singermusicCount = getSingerMusicCount(ctx, isMusic);
 
                         Log.d("TAG", artist + "======" + singermusicCount);
 

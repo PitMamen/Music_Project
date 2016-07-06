@@ -200,7 +200,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
 
             @Override
             public void onPageSelected(int position) {
-                if (position == 0){
+               if (position == 0){
                     mIndicator_left.setEnabled(true);
                     mIndicator_right.setEnabled(false);
                 } else if (position == 1) {
@@ -236,7 +236,8 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            ((ViewPager) container).removeView((View) object);
+//            ((ViewPager) container).removeView((View) object);
+               container.removeView(mViewPagerContent.get(position));
         }
     };
     
@@ -1526,8 +1527,6 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
     private void initViewPagerContent() {
         View cd = View.inflate(this, R.layout.play_pager_item_1, null);
         thumb_big = (ImageView) cd.findViewById(R.id.album);
-//        mSingerTextView = (TextView) cd.findViewById(R.id.play_singer);
-//        mLrcViewOnFirstPage = (LrcView) cd.findViewById(R.id.play_first_lrc);
 
         View lrcView = View.inflate(this, R.layout.play_pager_item_2, null);
         mLrcViewOnSecondPage = (LrcView) lrcView.findViewById(R.id.play_first_lrc_2);
