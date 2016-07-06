@@ -80,7 +80,7 @@ import java.util.Locale;
 
 public class MusicUtils {
 
-    private static final String TAG = "MusicUtils++++++++++++++++";
+    private static final String TAG = "MusicUtils+++";
 
     public interface Defs {
         public final static int OPEN_URL = 0;
@@ -1635,8 +1635,9 @@ public class MusicUtils {
                     String artist = c.getString(c
                             .getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
 
+                    int artistId = c.getInt(c.getColumnIndex(MediaStore.Audio.Artists._ID ));
                     //歌手下所有的音乐
-                    int singermusicCount = getSingerMusicCount(ctx, id);
+                    int singermusicCount = getSingerMusicCount(ctx, artistId);
 
                     Log.i(TAG, "singermusicCount: " + singermusicCount);
 
@@ -1784,7 +1785,7 @@ public class MusicUtils {
             ContentResolver resolver = ctx.getContentResolver();
             if (resolver != null) {
                 Cursor c = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-                        , new String[]{MediaStore.Audio.Artists._COUNT}
+                        , new String[]{MediaStore.Audio.Artists._ID}
                         , MediaStore.Audio.Media.ARTIST_ID+"=?"
                         , new String[]{String.valueOf(id)}, null);
 

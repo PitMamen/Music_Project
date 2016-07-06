@@ -146,6 +146,7 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
 
     @Override
     public void onInitView() {
+
         setContentView(R.layout.music_home_page_layout);
 
     }
