@@ -55,7 +55,7 @@ public class MusicSingerActivity extends  BaseActivity{
     @Override
     public void onCreateData() {
 
-        MusicUtils.getMusicInfo(this, new MusicUtils.OnMusicLoadedListener() {
+        MusicUtils.getMusicInfo(this,false, new MusicUtils.OnMusicLoadedListener() {
             @Override
             public void onMusicLoadSuccess(ArrayList<MusicInfo> infos) {
 

@@ -61,8 +61,8 @@ public class ContentAdapter extends BaseAdapter {
         this.inflater = LayoutInflater.from(context);
         this.contentItems = lists;
         this.mContext = context;
+        this.isMenu = isMenu;
 
-        setMenu(isMenu);
 
         Activity activity = (Activity) context;
         if (activity instanceof OnConvertViewClicked) {
@@ -224,6 +224,18 @@ public class ContentAdapter extends BaseAdapter {
                         if (songListId != -1 || songListId > 0) {
 
                             MusicInfo info = getMusicInfo();
+
+                            // 判断当前音乐是否已经添加到歌单中, 同一个歌单中，无论歌曲同名与否
+                            // 只能存在一种路径的音乐文件
+                            boolean isSamePath = DataBaseManager.getInstance(mContext)
+                                    .isExistsSamePathOfSongList(songListId, info.getMusicPath());
+                            if (isSamePath) {
+                                Toast.makeText(mContext
+                                        , info.getMusicPath() + "已经收录到该歌单中"
+                                        , Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
                             Song song = new Song();
                             song.setSongListId(songListId);
                             song.setName(info.getMusicName());
@@ -266,36 +278,97 @@ public class ContentAdapter extends BaseAdapter {
      */
     private void deleteMusic() {
         MusicInfo info = getMusicInfo();
+        // 是否为歌单删除
+        boolean isSongList = PreferencesUtils.getInstance(mContext, PreferencesUtils.SONG_LIST)
+                .getBoolean(PreferencesUtils.IS_SONG_LIST_DEL_KEY);
+
+        if (isSongList) {
+            songListDelOption(info);
+        } else {
+            musicFileDelOption(info);
+        }
+    }
+
+
+    private AlertDialog tmpDialog;
+
+    /**
+     * 此操作真正将音乐文件删除,如果歌单中也存在该歌曲，则该歌曲也将删除
+     *
+     * @param info
+     */
+    private void musicFileDelOption(final MusicInfo info) {
         String path = info.getMusicPath();
-        File musicFile = new File(path);
+        final File musicFile = new File(path);
         if (!musicFile.exists()) {
             return;
         }
+
+        tmpDialog = DialogUtils.createYesOrNoDialog(mContext, "提示", "确定", "取消"
+                , "如果删除该歌曲，同时也会将歌单中该歌曲同时删除，确认要删除吗？"
+                , new DialogUtils.OnChoiceButtonListener() {
+                    @Override
+                    public void onPositive() {
+
+                        // 如果删除该歌曲，同时也会将歌单中该歌曲同时删除,如果歌单中没有
+                        // 该首歌曲则没有任何操作
+                        DataBaseManager.getInstance(mContext)
+                                .deleteSongBySongList(info);
+
+                        // 删除音乐文件
+                        boolean isFileDel = musicFile.delete();
+                        // 删除MediaStore数据库中的数据
+                        boolean isMusicDel = MusicUtils.deleteMusic(mContext, info.getMusicId());
+                        if (isFileDel && isMusicDel) {
+                            Log.d("TAG", "isFileDel====" + isFileDel
+                                    + ", isMusicDel======" + isMusicDel);
+                            Toast.makeText(mContext
+                                    , info.getMusicName() + "已删除！"
+                                    , Toast.LENGTH_SHORT).show();
+                            contentItems.remove(mSelectPostion);
+                            notifyDataSetChanged();
+                            tmpDialog.dismiss();
+                        }
+                    }
+
+                    @Override
+                    public void onNegative() {
+                        tmpDialog.dismiss();
+                    }
+                });
+
+
+        tmpDialog.show();
+
+
+    }
+
+    /**
+     * 在歌单中删除音乐,只删除在歌单表库中的数据，而不是真正将音乐删除
+     *
+     * @param info
+     */
+    private void songListDelOption(MusicInfo info) {
         // 删除SongList表下的Song数据
         // 通过歌曲名称获取songListId，通过songListId和songName删除Song表中的数据
-        int songListId = PreferencesUtils.getInstance(mContext,PreferencesUtils.SONG_LIST)
+        int songListId = PreferencesUtils.getInstance(mContext, PreferencesUtils.SONG_LIST)
                 .getInteger(PreferencesUtils.SONG_LIST_ID_KEY);
 
-        boolean isSuccess = DataBaseManager.getInstance(mContext)
-                .deleteSongBySongListIdAndName(songListId, info.getMusicName());
+        boolean isExistsSongOfSongList = DataBaseManager.getInstance(mContext)
+                .isExistsSamePathOfSongList(songListId, info.getMusicPath());
 
-        Log.d("TAG", "popupWindow Adapter song delete===" + isSuccess + " songListId===" + songListId);
-        // 成功删除song表中的数据
-        if (isSuccess && songListId > 0) {
-            // 获取当前songListId下有几首歌曲
-            SongList list = DataBaseManager.getInstance(mContext)
-                    .getSongListById(songListId);
+        if (isExistsSongOfSongList) {
+            boolean isSuccess = DataBaseManager.getInstance(mContext)
+                    .deleteSongBySongListIdAndName(songListId, info.getMusicName());
+            Log.d("TAG", "popupWindow Adapter song delete===" + isSuccess + " songListId===" + songListId);
+            // 成功删除song表中的数据
+            if (isSuccess && songListId > 0) {
+                // 获取当前songListId下有几首歌曲
+                SongList list = DataBaseManager.getInstance(mContext)
+                        .getSongListById(songListId);
 
-            // 通知数据发生改变
-            DataChangedWatcher.getInstance().update(list);
-
-            boolean isFileDel = musicFile.delete();
-            // 删除MediaStore数据库中的数据
-            boolean isMusicDel = MusicUtils.deleteMusic(mContext, info.getMusicId());
-
-            Log.d("TAG", "isFileDel===" + isFileDel + " isMusicDel===" + isMusicDel);
-
-            if (isFileDel && isMusicDel) {
+                // 通知数据发生改变
+                DataChangedWatcher.getInstance().update(list);
                 contentItems.remove(mSelectPostion);
                 notifyDataSetChanged();
                 Toast.makeText(mContext, info.getMusicName() + "删除ok！",
@@ -349,10 +422,9 @@ public class ContentAdapter extends BaseAdapter {
      *
      * @return
      */
-    public void setMenu(boolean menu) {
-        isMenu = menu;
-    }
-
+//    public void setMenu(boolean menu) {
+//        isMenu = menu;
+//    }
     public void setMusicInfos(ArrayList<MusicInfo> infos) {
         this.mMusicInfos = infos;
     }

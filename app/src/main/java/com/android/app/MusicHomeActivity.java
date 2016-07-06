@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,10 +80,11 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
                         public void onScanSuccess() {
                             // 如果扫描完成，则开始获取音乐资源
                             // 扫描完成后，获取音乐资源
-                            MusicUtils.getMusicInfo(MusicHomeActivity.this
+                            MusicUtils.getMusicInfo(MusicHomeActivity.this, false
                                     , new MusicUtils.OnMusicLoadedListener() {
                                         @Override
                                         public void onMusicLoadSuccess(ArrayList<MusicInfo> infos) {
+                                            Log.d("TAG", "infos.size()====" + infos.size());
                                             Message.obtain(mHandler, MUSIC_LOAD_COMPLETE
                                                     , infos).sendToTarget();
                                         }
@@ -224,6 +224,16 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
             intent.addCategory(Intent.CATEGORY_DEFAULT);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+        } else if (position == 2) {
+            // 最近更新
+            Intent intent = new Intent(MusicHomeActivity.this, LastUpdatedActivity.class);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } else if (position == 3) {
+            // 最近播放
+
+
         }
     }
 

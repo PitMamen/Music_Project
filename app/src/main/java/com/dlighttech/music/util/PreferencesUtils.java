@@ -12,10 +12,12 @@ public class PreferencesUtils {
     private static PreferencesUtils mPreferencesUtils;
 
     public static final String SONG_LIST_ID_KEY = "song_list_id_key";
+    public static final String IS_SONG_LIST_DEL_KEY = "song_list_del_song";
     public static final String SONG_LIST = "song_list";
 
 
     private PreferencesUtils() {
+
     }
 
     public static PreferencesUtils getInstance(Context ctx, String name) {

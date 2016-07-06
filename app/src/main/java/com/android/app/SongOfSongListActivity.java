@@ -8,6 +8,7 @@ import com.dlighttech.music.database.DataBaseManager;
 import com.dlighttech.music.model.ContentItem;
 import com.dlighttech.music.model.MusicInfo;
 import com.dlighttech.music.model.Song;
+import com.dlighttech.music.util.PreferencesUtils;
 
 import java.util.ArrayList;
 
@@ -44,6 +45,10 @@ public class SongOfSongListActivity extends BaseActivity {
 
     @Override
     public void onCreateData() {
+        // 当前popupWindow的删除操作为只将音乐从歌单中删除
+        PreferencesUtils.getInstance(this, PreferencesUtils.SONG_LIST)
+                .putData(PreferencesUtils.IS_SONG_LIST_DEL_KEY, true);
+
         int id = getIntent().getIntExtra("id", 0);
         mSongs = DataBaseManager.getInstance(this).getSongByListId(id);
         if (mSongs != null && mSongs.size() > 0) {
@@ -53,8 +58,9 @@ public class SongOfSongListActivity extends BaseActivity {
                         , R.drawable.ic_menu_eq
                         , song.getName()
                         , song.getSinger());
-                MusicInfo info = MusicUtils.getMusicInfoByArgs(this
-                        , MediaStore.Audio.Media.TITLE + "=?", new String[]{song.getName()});
+
+                MusicInfo info = MusicUtils.getMusicInfoByArgs(this, false
+                        , MediaStore.Audio.Media.DATA + "=?", new String[]{song.getSongPath()});
                 mMusicInfos.add(info);
                 mItems.add(item);
             }

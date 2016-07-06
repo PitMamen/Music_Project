@@ -75,11 +75,76 @@ public class DialogUtils {
     }
 
 
-//    public interface OnChoiceButtonListener {
-//        void onPositive();
-//
-//        void onNegative();
-//    }
+    /**
+     * 创建一个只有确认和取消的dialog
+     *
+     * @param ctx
+     * @param title
+     * @param yes
+     * @param no
+     * @param message
+     * @param listener
+     * @return
+     */
+    public static AlertDialog createYesOrNoDialog(Context ctx, String title
+            , String yes, String no, String message
+            , final OnChoiceButtonListener listener) {
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        builder.setTitle(title).setMessage(message)
+                .setPositiveButton(yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        listener.onPositive();
+                    }
+                }).setNegativeButton(no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                listener.onNegative();
+            }
+        });
+
+        return builder.create();
+    }
+
+    /**
+     * 创建一个只有确认和取消的dialog
+     *
+     * @param ctx
+     * @param title
+     * @param yes
+     * @param no
+     * @param message
+     * @param listener
+     * @return
+     */
+    public static AlertDialog createYesOrNoDialog(Context ctx, int title
+            , int yes, int no, int message
+            , final OnChoiceButtonListener listener) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        builder.setTitle(title).setMessage(message)
+                .setPositiveButton(yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        listener.onPositive();
+                    }
+                }).setNegativeButton(no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                listener.onNegative();
+            }
+        });
+
+        return builder.create();
+    }
+
+
+    public interface OnChoiceButtonListener {
+        void onPositive();
+
+        void onNegative();
+    }
 
 
 }

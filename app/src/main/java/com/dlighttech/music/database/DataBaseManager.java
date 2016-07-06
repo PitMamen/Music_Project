@@ -4,7 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
+import com.android.app.DataChangedWatcher;
+import com.dlighttech.music.model.MusicInfo;
 import com.dlighttech.music.model.Song;
 import com.dlighttech.music.model.SongList;
 
@@ -356,6 +359,105 @@ public class DataBaseManager {
                 if (database != null) database.close();
             }
             return false;
+        }
+    }
+
+
+    /**
+     * 判断是否存在同一路径的歌曲在同一个歌单中
+     *
+     * @param songListId
+     * @param musicPath
+     * @return
+     */
+    public boolean isExistsSamePathOfSongList(int songListId, String musicPath) {
+        ArrayList<Song> songs = getSongByListId(songListId);
+
+        if (songs == null || songs.size() == 0) {
+            return false;
+        }
+
+        for (int i = 0; i < songs.size(); i++) {
+            if (songs.get(i).getSongPath().equals(musicPath)) {
+                Log.d("TAG", "songs.get(i).getSongPath()==="
+                        + songs.get(i).getSongPath()
+                        + ", musicPath===" + musicPath);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * 根据音乐文件路径和歌单id删除歌单下的歌曲
+     *
+     * @param path
+     * @return
+     */
+    public boolean delSongOfSongListByPath(int songListId, String path) {
+        synchronized (mDataBase) {
+            SQLiteDatabase database = null;
+            try {
+                database = mDataBase.getReadableDatabase();
+                String sql = "delete from " + SongListDataBase.SONG_TABLE + " where "
+                        + SongListDataBase.SONG_LIST_ID + "=? and "
+                        + SongListDataBase.SONG_PATH + "=?";
+                database.execSQL(sql, new Object[]{songListId, path});
+                return true;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                if (database != null) database.close();
+            }
+            return false;
+        }
+    }
+
+    /**
+     * 检查所有歌单中匹配的音乐资源
+     * 由于同一个歌单中只能存在一种路径的歌，在添加时做了判断
+     * 这时，当用户删除该音乐资源时，相应删除歌单表中相应数据即可
+     *
+     * @param info
+     * @return
+     */
+    public void deleteSongBySongList(MusicInfo info) {
+
+        // bug 删除歌曲时，会将歌单中的所有路径同民歌曲删除？？？
+        ArrayList<SongList> songLists = getAllSongList();
+        if (songLists == null || songLists.size() == 0)
+            return;
+
+        for (int i = 0; i < songLists.size(); i++) {
+            SongList list = songLists.get(i);
+
+            ArrayList<Song> songs = getSongByListId(list.getId());
+
+            for (int j = 0; j < songs.size(); j++) {
+                Song song = songs.get(j);
+                if (song.getSongPath().equals(info.getMusicPath())) {
+                    boolean isDel = delSongOfSongListByPath(list.getId()
+                            , info.getMusicPath());
+                    if (isDel) {
+                        Log.d("TAG", list.getName() + "删除了" + info.getMusicName());
+                        Log.d("TAG", "song.getSongPath()==="+song.getSongPath() + "删除了" + info.getMusicName());
+                        DataChangedWatcher.getInstance().update(list);
+                    }
+                }
+            }
+//            // 歌曲是否存在于该歌单中
+//            if (isExistsSamePathOfSongList(list.getId(), info.getMusicPath())) {
+//
+//                // 删除该歌单中的歌曲
+//                boolean isDel = delSongOfSongListByPath(list.getId()
+//                        , info.getMusicPath());
+//                if (isDel) {
+//                    Log.d("TAG", list.getName() + "删除了" + info.getMusicName());
+//                    // 通知数据发生改变
+//                    break;
+//                }
+//            }
         }
     }
 }
