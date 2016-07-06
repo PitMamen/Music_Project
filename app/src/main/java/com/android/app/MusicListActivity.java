@@ -5,7 +5,7 @@ import android.widget.ListView;
 import com.dlighttech.music.adapter.ContentAdapter;
 import com.dlighttech.music.model.ContentItem;
 import com.dlighttech.music.model.MusicInfo;
-import com.dlighttech.music.util.FileUtils;
+import com.dlighttech.music.util.PreferencesUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,6 +40,10 @@ public class MusicListActivity extends BaseActivity {
 
     @Override
     public void onCreateData() {
+        // 当前操作表示音乐文件将被删除
+        PreferencesUtils.getInstance(this, PreferencesUtils.SONG_LIST)
+                .putData(PreferencesUtils.IS_SONG_LIST_DEL_KEY, false);
+
         item = (ContentItem) getIntent().getSerializableExtra("item");
         ArrayList<MusicInfo> musicInfos = getIntent().getParcelableArrayListExtra("musicInfos");
 
@@ -47,8 +51,8 @@ public class MusicListActivity extends BaseActivity {
             MusicInfo info = musicInfos.get(i);
             File musicFile = new File(info.getMusicPath());
             if (musicFile.exists()) {
-                String parent = FileUtils.getFileParent(musicFile);
-                if (parent.trim().equals(item.getContent().trim())) {
+                String parent = musicFile.getParent();
+                if (parent.equals(item.getContent())) {
                     mMusicList.add(info);
                 }
             }

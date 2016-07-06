@@ -366,17 +366,21 @@
             </intent-filter>
         </activity>
         <activity android:name=".DirFileActivity" />
-        <activity android:name=".MusicTracksActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
-        <activity android:name=".MusicAlbumsActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
-        <activity android:name=".MusicSingerActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity
+            android:name=".MusicTracksActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".MusicAlbumsActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".MusicSingerActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".MusicListActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".PlayListActivity" />
-        <activity android:name=".SongOfSongListActivity"></activity>
+        <activity android:name=".SongOfSongListActivity" />
+        <activity android:name=".LastUpdatedActivity"></activity>
     </application>
 
 </manifest>

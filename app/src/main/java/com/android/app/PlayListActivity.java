@@ -36,9 +36,10 @@ public class PlayListActivity extends BaseActivity
     @Override
     public void onCreateView() {
         super.setTitleText("播放列表");
-        mListView = (ListView) findViewById(R.id.lv_play_list);
         // 需要在设置适配器之前注册
         DataChangedWatcher.getInstance().registerObserver(this);
+
+        mListView = (ListView) findViewById(R.id.lv_play_list);
 
         mAdapter = new ContentAdapter(this, mItems, false);
 
@@ -194,6 +195,8 @@ public class PlayListActivity extends BaseActivity
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("id", list.getId());
+
+        // 保存点击哪一个歌单时的id号
         PreferencesUtils.getInstance(this, PreferencesUtils.SONG_LIST)
                 .putData(PreferencesUtils.SONG_LIST_ID_KEY, list.getId());
         startActivity(intent);
@@ -201,6 +204,8 @@ public class PlayListActivity extends BaseActivity
 
     @Override
     public void update(Observable observable, Object data) {
+        // 通知观察者更新 song count
+
         if (data instanceof SongList) {
             SongList list = (SongList) data;
             list.setCount(list.getCount() - 1);
@@ -230,7 +235,7 @@ public class PlayListActivity extends BaseActivity
     protected void onDestroy() {
         super.onDestroy();
         // 反注册观察者
-        DataChangedWatcher.getInstance().deleteObserver(this);
+//        DataChangedWatcher.getInstance().unRegisterObserver(this);
     }
 }
 
