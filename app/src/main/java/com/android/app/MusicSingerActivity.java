@@ -35,7 +35,7 @@ public class MusicSingerActivity extends  BaseActivity{
     @Override
     public void onCreateView() {
 
-        super.setTitleText("歌手");
+        super.setTitleText("singer");
 
 
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);

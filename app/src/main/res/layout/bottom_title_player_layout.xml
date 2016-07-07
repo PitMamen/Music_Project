@@ -1,45 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/bottom_title_bar"
-    android:layout_width="match_parent"
-    android:layout_height="75dp"
-    android:orientation="vertical"
+              android:id="@+id/bottom_title_bar"
+              android:layout_width="match_parent"
+              android:layout_height="64dp"
+              android:orientation="vertical"
+
     >
 
     <ProgressBar
         android:id="@+id/pro_music_schedule"
-        style="@style/StyleProgressBarMini"
         android:layout_width="fill_parent"
-        android:layout_height="5dp"
-        android:background="@drawable/shape_progressbar_bg"
+        android:layout_height="3dp"
+        android:background="@drawable/progressbar_home"
         android:max="100"
-        android:progress="50" />
+        android:progress="60"/>
 
 
     <RelativeLayout
         android:id="@+id/music_relayout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#5883AD">
+        android:background="#4487F3">
 
         <ImageView
             android:id="@+id/iv_music_icon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/albumart_mp_unknown" />
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="6dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/singer"/>
 
         <TextView
             android:id="@+id/tv_music_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="11dp"
             android:layout_toRightOf="@+id/iv_music_icon"
-            android:paddingTop="15dp"
+            android:layout_marginTop="6dp"
             android:text="歌曲名称"
-            android:textSize="16sp" />
+            android:textSize="18dp"/>
 
 
         <TextView
@@ -47,29 +48,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_music_name"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="11dp"
             android:layout_toRightOf="@+id/iv_music_icon"
-            android:paddingTop="8dp"
-            android:text="歌手" />
-
+            android:layout_marginTop="6dp"
+            android:text="歌手"
+            android:textSize="14dp"/>
 
         <ImageView
-            android:id="@+id/iv_music_pause"
+            android:id="@+id/iv_music_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="40dp"
-            android:src="@drawable/ic_appwidget_music_pause" />
-
+            android:src="@drawable/next_btn"/>
 
         <ImageView
-            android:id="@+id/iv_music_paly"
+            android:id="@+id/iv_music_play_pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_appwidget_music_play" />
+            android:layout_marginRight="14dp"
+            android:layout_toLeftOf="@id/iv_music_next"
+            android:src="@drawable/pause_btn"
+            />
 
 
     </RelativeLayout>

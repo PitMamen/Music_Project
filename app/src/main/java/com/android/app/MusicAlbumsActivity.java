@@ -29,7 +29,7 @@ public class MusicAlbumsActivity extends BaseActivity {
 
     @Override
     public void onCreateView() {
-        super.setTitleText("专辑");
+        super.setTitleText("album");
         mListview = (ListView) findViewById(R.id.lv_music_detail);
 
 

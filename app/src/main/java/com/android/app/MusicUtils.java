@@ -1643,7 +1643,7 @@ public class MusicUtils {
                         // 歌曲id
                         int id = c.getInt(c
                                 .getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
-                        // 歌手
+                        // singer
                         String artist = c.getString(c
                                 .getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
 
@@ -1733,7 +1733,7 @@ public class MusicUtils {
                         // 歌曲id
                         int id = c.getInt(c
                                 .getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
-                        // 歌手
+                        // singer
                         String artist = c.getString(c
                                 .getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
 
@@ -1821,7 +1821,7 @@ public class MusicUtils {
                         // 歌曲id
                         int id = c.getInt(c
                                 .getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
-                        // 歌手
+                        // singer
                         String artist = c.getString(c
                                 .getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
 

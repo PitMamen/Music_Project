@@ -38,7 +38,7 @@ public class MusicTracksActivity extends BaseActivity {
     //初始化视图
     @Override
     public void onCreateView() {
-        super.setTitleText("曲目");
+        super.setTitleText("music");
 
         iv_music_icon = (ImageView) findViewById(R.id.iv_mode_icon);
 

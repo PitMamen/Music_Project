@@ -42,15 +42,15 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.tv_tracks: // 曲目
+                case R.id.tv_tracks: // music
                     Intent intenttracks = new Intent(MusicHomeActivity.this, MusicTracksActivity.class);
                     startActivity(intenttracks);
                     break;
-                case R.id.tv_album: // 专辑
+                case R.id.tv_album: // album
                     Intent intentalbums = new Intent(MusicHomeActivity.this, MusicAlbumsActivity.class);
                     startActivity(intentalbums);
                     break;
-                case R.id.tv_artist: // 歌手
+                case R.id.tv_artist: // singer
                     Intent intentsinger = new Intent(MusicHomeActivity.this, MusicSingerActivity.class);
                     startActivity(intentsinger);
                     break;
@@ -173,14 +173,14 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
     @Override
     public void onCreateData() {
         mData = new ArrayList<ContentItem>();
-        ContentItem itemDir = new ContentItem(R.drawable.seek_thumb
-                , R.drawable.left, "文件夹");
-        ContentItem itemPlayList = new ContentItem(R.drawable.playlist_tile
-                , R.drawable.left, "播放列表");
-        ContentItem itemUpdate = new ContentItem(R.drawable.app_music
-                , R.drawable.left, "最近更新");
-        ContentItem itemPlay = new ContentItem(R.drawable.stat_notify_musicplayer
-                , R.drawable.left, "最近播放");
+        ContentItem itemDir = new ContentItem(R.drawable.folders
+                , R.drawable.arrow_list, "文件夹");
+        ContentItem itemPlayList = new ContentItem(R.drawable.playlists
+                , R.drawable.arrow_list, "播放列表");
+        ContentItem itemUpdate = new ContentItem(R.drawable.recent_update
+                , R.drawable.arrow_list, "最近更新");
+        ContentItem itemPlay = new ContentItem(R.drawable.recent_played
+                , R.drawable.arrow_list, "最近播放");
         mData.add(itemDir);
         mData.add(itemPlayList);
         mData.add(itemUpdate);
