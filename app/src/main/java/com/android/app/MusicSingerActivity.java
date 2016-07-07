@@ -1,5 +1,6 @@
 package com.android.app;
 
+import android.graphics.Bitmap;
 import android.widget.ListView;
 
 import com.allenliu.sidebar.SideBar;
@@ -35,7 +36,7 @@ public class MusicSingerActivity extends  BaseActivity{
     @Override
     public void onCreateView() {
 
-        super.setTitleText("singer");
+        super.setTitleText("Singer");
 
 
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
@@ -59,10 +60,17 @@ public class MusicSingerActivity extends  BaseActivity{
             @Override
             public void onMusicLoadSuccess(ArrayList<MusicInfo> infos) {
 
-                for (int i = 0; i <infos.size() ; i++) {
-                    String singer =  infos.get(i).getSinger();
-                    int albumsmusicNumber = infos.get(i).getMusicAlbumsNumber();
-                    ContentItem item = new ContentItem(R.drawable.app_music,R.drawable.ic_menu_eq,singer,albumsmusicNumber+"首");
+                for (int i = 0; i < infos.size(); i++) {
+                    MusicInfo info = infos.get(i);
+                    String singer = info.getSinger();
+                    int albumsmusicNumber = info.getMusicAlbumsNumber();
+                    Bitmap bitmap = info.getMusicAlbumsImage();
+                    ContentItem item;
+                    if (bitmap != null) {
+                        item = new ContentItem(bitmap, R.drawable.more_title_selected, singer, albumsmusicNumber + "首");
+                    } else {
+                        item = new ContentItem(R.drawable.singer, R.drawable.more_title_selected, singer, albumsmusicNumber + "首");
+                    }
                     items.add(item);
                 }
 

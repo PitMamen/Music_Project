@@ -62,8 +62,8 @@ public class MusicListActivity extends BaseActivity {
         for (int i = 0; i < mMusicList.size(); i++) {
             MusicInfo info = mMusicList.get(i);
 
-            ContentItem newItem = new ContentItem(R.drawable.app_music
-                    , R.drawable.ic_menu_eq
+            ContentItem newItem = new ContentItem(R.drawable.folder_list
+                    , R.drawable.more_title_selected
                     , info.getMusicName()
                     , info.getSinger());
             mItems.add(newItem);

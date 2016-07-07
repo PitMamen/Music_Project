@@ -58,8 +58,8 @@ public class PlayListActivity extends BaseActivity
             }
         });
 
-        ivThumb.setImageResource(R.drawable.ic_mp_album_playback);
-        ivOpera.setImageResource(R.drawable.left);
+        ivThumb.setImageResource(R.drawable.create_playlist);
+        ivOpera.setImageResource(R.drawable.arrow_list);
         tvName.setText("新建歌单");
 
         mListView.addFooterView(footView);
@@ -131,8 +131,8 @@ public class PlayListActivity extends BaseActivity
         songLists.clear();
         songLists = DataBaseManager.getInstance(this).getAllSongList();
         for (int i = 0; i < songLists.size(); i++) {
-            ContentItem item = new ContentItem(R.drawable.app_music
-                    , R.drawable.left
+            ContentItem item = new ContentItem(R.drawable.folder_list
+                    , R.drawable.arrow_list
                     , songLists.get(i).getName()
                     , songLists.get(i).getCount() + "首");
             mItems.add(item);
@@ -157,13 +157,13 @@ public class PlayListActivity extends BaseActivity
             list.setName("我喜欢听");
             list.setCount(0);
             DataBaseManager.getInstance(this).insertSongList(list);
-            ContentItem item = new ContentItem(R.drawable.app_music
-                    , R.drawable.left, "我喜欢听", "0首");
+            ContentItem item = new ContentItem(R.drawable.favorites_playlist
+                    , R.drawable.arrow_list, "我喜欢听", "0首");
             mItems.add(item);
         } else {
             for (int i = 0; i < songLists.size(); i++) {
-                ContentItem item = new ContentItem(R.drawable.app_music
-                        , R.drawable.left, songLists.get(i).getName()
+                ContentItem item = new ContentItem(R.drawable.champions_playlist
+                        , R.drawable.arrow_list, songLists.get(i).getName()
                         , songLists.get(i).getCount() + "首");
                 mItems.add(item);
                 Log.d("TAG", item.toString());

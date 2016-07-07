@@ -113,8 +113,14 @@ public class ContentAdapter extends BaseAdapter {
         }
 
 
+
         ContentItem contentItem = contentItems.get(position);
-        holder.thumb.setImageResource(contentItem.getThumb());
+
+        if (contentItem.getThumb() == 0) {
+            holder.thumb.setImageBitmap(contentItem.getBitmap());
+        } else {
+            holder.thumb.setImageResource(contentItem.getThumb());
+        }
         holder.operator.setImageResource(contentItem.getOperator());
         holder.operator.setVisibility(isHidden ? View.GONE : View.VISIBLE);
         holder.title.setText(contentItem.getTitle());

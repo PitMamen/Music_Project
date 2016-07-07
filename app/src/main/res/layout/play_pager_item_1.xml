@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/album"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="245dp"
+        android:layout_height="245dp"
         android:scaleType="fitCenter"
         android:src="@drawable/music_thumb_big"
         android:layout_gravity="center"

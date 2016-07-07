@@ -54,8 +54,8 @@ public class SongOfSongListActivity extends BaseActivity {
         if (mSongs != null && mSongs.size() > 0) {
             for (int i = 0; i < mSongs.size(); i++) {
                 Song song = mSongs.get(i);
-                ContentItem item = new ContentItem(R.drawable.app_music
-                        , R.drawable.ic_menu_eq
+                ContentItem item = new ContentItem(R.drawable.singer
+                        , R.drawable.more_title_selected
                         , song.getName()
                         , song.getSinger());
 

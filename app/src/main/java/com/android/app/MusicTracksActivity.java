@@ -1,5 +1,6 @@
 package com.android.app;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -38,7 +39,7 @@ public class MusicTracksActivity extends BaseActivity {
     //初始化视图
     @Override
     public void onCreateView() {
-        super.setTitleText("music");
+        super.setTitleText("Music");
 
         iv_music_icon = (ImageView) findViewById(R.id.iv_mode_icon);
 
@@ -84,19 +85,25 @@ public class MusicTracksActivity extends BaseActivity {
 
                     Log.i("TAG", "infos.size=====" + infos.size());
 
-                    String musicname = infos.get(i).getMusicName();
-                    String singer = infos.get(i).getSinger();
+                    MusicInfo info = infos.get(i);
+                    String musicname = info.getMusicName();
+                    String singer = info.getSinger();
 
-                    ContentItem items = new ContentItem(R.drawable.app_music, R.drawable.ic_menu_eq, musicname, singer);
+                    Bitmap bitmap = info.getMusicAlbumsImage();
+                    ContentItem item;
+                    if (bitmap != null) {
+                        item = new ContentItem(bitmap, R.drawable.more_title_selected, musicname, singer);
+                    } else {
+                        item = new ContentItem(R.drawable.singer, R.drawable.more_title_selected, musicname, singer);
+                    }
 
-                    mItems.add(items);
+                    mItems.add(item);
 
                 }
             }
 
             @Override
             public void onMusicLoading() {
-
 
             }
 

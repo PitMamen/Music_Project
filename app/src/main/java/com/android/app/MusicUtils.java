@@ -806,7 +806,7 @@ public class MusicUtils {
         if (list.length == 0 || sService == null) {
             Log.d("MusicUtils", "attempt to play empty song list");
             // Don't try to play empty playlists. Nothing good will come of it.
-            String message = context.getString(R.string.emptyplaylist, list.length);
+            String message = context.getString(R.string.emptyplaylist);
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -1103,8 +1103,10 @@ public class MusicUtils {
     private static Bitmap getDefaultArtwork(Context context) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        return BitmapFactory.decodeStream(
-                context.getResources().openRawResource(R.drawable.albumart_mp_unknown), null, opts);
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.albumart_mp_unknown,opts);
+        return bitmap;
+//        return BitmapFactory.decodeStream(
+//                context.getResources().openRawResource(R.drawable.albumart_mp_unknown), null, opts);
     }
 
     static int getIntPref(Context context, String name, int def) {
@@ -1668,8 +1670,8 @@ public class MusicUtils {
                         Bitmap albumImage = getArtwork(ctx, id, albumId);
 
                         albumImage = ThumbnailUtils.extractThumbnail(albumImage
-                                , DisplayUtils.dip2px(ctx, 30)
-                                , DisplayUtils.dip2px(ctx, 30));
+                                , DisplayUtils.dip2px(ctx, 64)
+                                , DisplayUtils.dip2px(ctx, 64));
 
                         // 歌曲专辑名
                         String albumName = c.getString(c

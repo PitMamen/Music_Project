@@ -1,5 +1,6 @@
 package com.android.app;
 
+import android.graphics.Bitmap;
 import android.widget.ListView;
 
 import com.allenliu.sidebar.SideBar;
@@ -26,14 +27,13 @@ public class MusicAlbumsActivity extends BaseActivity {
 
     }
 
-
     @Override
     public void onCreateView() {
-        super.setTitleText("album");
+        super.setTitleText("Album");
         mListview = (ListView) findViewById(R.id.lv_music_detail);
 
 
-        mListview.setAdapter(new ContentAdapter(this,items,false));
+        mListview.setAdapter(new ContentAdapter(this, items, false));
 
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
     }
@@ -43,23 +43,25 @@ public class MusicAlbumsActivity extends BaseActivity {
     public void onCreateData() {
 
 
-
-        MusicUtils.getMusicInfo(this,false, new MusicUtils.OnMusicLoadedListener() {
+        MusicUtils.getMusicInfo(this, false, new MusicUtils.OnMusicLoadedListener() {
             @Override
             public void onMusicLoadSuccess(ArrayList<MusicInfo> infos) {
 
-                for (int i = 0; i <infos.size() ; i++) {
+                for (int i = 0; i < infos.size(); i++) {
 
-                      String albumsname = infos.get(i).getMusicAlbumsName();
-                      int albumsmusicNumber = infos.get(i).getMusicAlbumsNumber();
+                    MusicInfo info = infos.get(i);
+                    String albumsname = info.getMusicAlbumsName();
+                    int albumsmusicNumber = info.getMusicAlbumsNumber();
 
-                    ContentItem item = new ContentItem(R.drawable.app_music,R.drawable.ic_menu_eq,albumsname,albumsmusicNumber+"首");
+                    Bitmap bitmap = info.getMusicAlbumsImage();
+                    ContentItem item;
+                    if (bitmap != null) {
+                        item = new ContentItem(bitmap, R.drawable.more_title_selected, albumsname, albumsmusicNumber + "首");
+                    } else {
+                        item = new ContentItem(R.drawable.albums_list, R.drawable.more_title_selected, albumsname, albumsmusicNumber + "首");
+                    }
                     items.add(item);
-
-
                 }
-
-
             }
 
             @Override
@@ -72,7 +74,6 @@ public class MusicAlbumsActivity extends BaseActivity {
 
             }
         });
-
 
 
     }

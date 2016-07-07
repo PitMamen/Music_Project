@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/action_bar_layout"
-    android:layout_width="match_parent"
-    android:layout_height="?android:attr/actionBarSize"
-    android:background="@color/color_primary"
-    android:orientation="horizontal">
+              android:id="@+id/action_bar_layout"
+              android:layout_width="match_parent"
+              android:layout_height="?android:attr/actionBarSize"
+              android:background="@color/color_primary"
+              android:orientation="horizontal">
 
     <RelativeLayout
         android:id="@+id/title_layout"
@@ -19,8 +19,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/musicbrowserlabel"
-            android:textColor="@color/text_color_white"
-            android:textSize="20sp" />
+            android:textColor="#4D4D4D"
+            android:textSize="20sp"/>
 
         <ImageButton
             android:id="@+id/btn_return"
@@ -28,8 +28,9 @@
             android:layout_height="40dp"
             android:layout_centerInParent="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/arrow_back_title"
-            android:visibility="gone" />
+            android:background="@null"
+            android:src="@drawable/arrow_back_title_selected"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -47,7 +48,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/tv_title"
@@ -55,9 +56,9 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/musicbrowserlabel"
-            android:textColor="@color/text_color_white"
-            android:visibility="gone"
-            android:textSize="20sp" />
+            android:textColor="#4D4D4D"
+            android:textSize="20sp"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -68,10 +69,10 @@
 
         <ImageView
             android:id="@+id/btn_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_centerInParent="true"
             android:scaleType="centerInside"
-            android:src="@drawable/search_title" />
+            android:src="@drawable/search_title_selected"/>
     </RelativeLayout>
 </LinearLayout>
