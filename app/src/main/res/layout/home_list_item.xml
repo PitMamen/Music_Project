@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/content_layout"
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="3dp"
-                android:paddingTop="6dp"
-    >
+    android:id="@+id/content_layout"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="3dp"
+    android:paddingTop="6dp">
 
 
     <ImageView
@@ -16,7 +15,7 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="2dp"
         android:scaleType="centerInside"
-        android:src="@drawable/albumart_mp_unknown"/>
+        android:src="@drawable/albumart_mp_unknown" />
 
     <ImageView
         android:id="@+id/operate_imageView_content"
@@ -25,7 +24,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginTop="14dp"
-        android:scaleType="centerInside"/>
+        android:scaleType="centerInside" />
 
     <ProgressBar
         android:id="@+id/progress"
@@ -35,8 +34,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:progressDrawable="@drawable/progressbar_home"
-
-        />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/title_content"
@@ -49,5 +47,5 @@
         android:maxLines="1"
         android:text="TextView"
         android:textSize="20sp"
-        android:textStyle="normal|bold"/>
+        android:textStyle="normal|bold" />
 </RelativeLayout>
