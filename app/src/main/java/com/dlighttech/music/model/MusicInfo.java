@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class MusicInfo implements Serializable, Parcelable {
     // 歌曲id
     private int musicId;
-    // 歌手
+    // singer
     private String singer;
     // 歌曲名
     private String musicName;

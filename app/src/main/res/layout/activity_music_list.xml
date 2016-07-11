@@ -13,7 +13,8 @@
         android:id="@+id/lv_sing_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:dividerHeight="1dp"
+        android:dividerHeight="0.6dp"
+        android:divider="#F0F0F0"
         android:layout_weight="1"/>
 
     <include layout="@layout/bottom_title_player_layout"/>

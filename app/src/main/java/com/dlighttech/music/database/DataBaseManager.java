@@ -6,7 +6,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.android.app.DataChangedWatcher;
 import com.dlighttech.music.model.MusicInfo;
 import com.dlighttech.music.model.Song;
 import com.dlighttech.music.model.SongList;
@@ -395,15 +394,14 @@ public class DataBaseManager {
      * @param path
      * @return
      */
-    public boolean delSongOfSongListByPath(int songListId, String path) {
+    public boolean delSongOfSongListByPath(String path) {
         synchronized (mDataBase) {
             SQLiteDatabase database = null;
             try {
                 database = mDataBase.getReadableDatabase();
                 String sql = "delete from " + SongListDataBase.SONG_TABLE + " where "
-                        + SongListDataBase.SONG_LIST_ID + "=? and "
                         + SongListDataBase.SONG_PATH + "=?";
-                database.execSQL(sql, new Object[]{songListId, path});
+                database.execSQL(sql, new Object[]{path});
                 return true;
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -422,42 +420,32 @@ public class DataBaseManager {
      * @param info
      * @return
      */
-    public void deleteSongBySongList(MusicInfo info) {
-
+    public ArrayList<SongList> deleteSongBySongList(MusicInfo info) {
         // bug 删除歌曲时，会将歌单中的所有路径同民歌曲删除？？？
         ArrayList<SongList> songLists = getAllSongList();
+        ArrayList<SongList> newSongLists = new ArrayList<SongList>();
         if (songLists == null || songLists.size() == 0)
-            return;
+            return null;
 
         for (int i = 0; i < songLists.size(); i++) {
             SongList list = songLists.get(i);
 
             ArrayList<Song> songs = getSongByListId(list.getId());
-
             for (int j = 0; j < songs.size(); j++) {
                 Song song = songs.get(j);
+                // 遍历所有歌单下的歌曲，如果匹配有则删除
                 if (song.getSongPath().equals(info.getMusicPath())) {
-                    boolean isDel = delSongOfSongListByPath(list.getId()
-                            , info.getMusicPath());
+                    boolean isDel = delSongOfSongListByPath(info.getMusicPath());
                     if (isDel) {
                         Log.d("TAG", list.getName() + "删除了" + info.getMusicName());
-                        Log.d("TAG", "song.getSongPath()==="+song.getSongPath() + "删除了" + info.getMusicName());
-                        DataChangedWatcher.getInstance().update(list);
+                        Log.d("TAG", "song.getSongPath()===" + song.getSongPath()
+                                + ", info.getMusicName()===" + info.getMusicName());
                     }
+                    // 获取已经删除歌单的SongList列表
+                    newSongLists.add(list);
                 }
             }
-//            // 歌曲是否存在于该歌单中
-//            if (isExistsSamePathOfSongList(list.getId(), info.getMusicPath())) {
-//
-//                // 删除该歌单中的歌曲
-//                boolean isDel = delSongOfSongListByPath(list.getId()
-//                        , info.getMusicPath());
-//                if (isDel) {
-//                    Log.d("TAG", list.getName() + "删除了" + info.getMusicName());
-//                    // 通知数据发生改变
-//                    break;
-//                }
-//            }
         }
+        return newSongLists;
     }
 }

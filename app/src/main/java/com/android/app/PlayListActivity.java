@@ -33,13 +33,13 @@ public class PlayListActivity extends BaseActivity
     private ContentAdapter mAdapter;
     private ArrayList<SongList> songLists;
 
+
     @Override
     public void onCreateView() {
         super.setTitleText("播放列表");
-        // 需要在设置适配器之前注册
-        DataChangedWatcher.getInstance().registerObserver(this);
-
         mListView = (ListView) findViewById(R.id.lv_play_list);
+
+        DataChangedWatcher.getInstance().registerObserver(this);
 
         mAdapter = new ContentAdapter(this, mItems, false);
 
@@ -58,8 +58,8 @@ public class PlayListActivity extends BaseActivity
             }
         });
 
-        ivThumb.setImageResource(R.drawable.ic_mp_album_playback);
-        ivOpera.setImageResource(R.drawable.left);
+        ivThumb.setImageResource(R.drawable.create_playlist);
+        ivOpera.setImageResource(R.drawable.arrow_list);
         tvName.setText("新建歌单");
 
         mListView.addFooterView(footView);
@@ -127,11 +127,12 @@ public class PlayListActivity extends BaseActivity
 
     // 刷新数据
     private void updateAdapter() {
-        songLists = DataBaseManager.getInstance(this).getAllSongList();
         mItems.clear();
+        songLists.clear();
+        songLists = DataBaseManager.getInstance(this).getAllSongList();
         for (int i = 0; i < songLists.size(); i++) {
-            ContentItem item = new ContentItem(R.drawable.app_music
-                    , R.drawable.left
+            ContentItem item = new ContentItem(R.drawable.folder_list
+                    , R.drawable.arrow_list
                     , songLists.get(i).getName()
                     , songLists.get(i).getCount() + "首");
             mItems.add(item);
@@ -156,13 +157,13 @@ public class PlayListActivity extends BaseActivity
             list.setName("我喜欢听");
             list.setCount(0);
             DataBaseManager.getInstance(this).insertSongList(list);
-            ContentItem item = new ContentItem(R.drawable.app_music
-                    , R.drawable.left, "我喜欢听", "0首");
+            ContentItem item = new ContentItem(R.drawable.favorites_playlist
+                    , R.drawable.arrow_list, "我喜欢听", "0首");
             mItems.add(item);
         } else {
             for (int i = 0; i < songLists.size(); i++) {
-                ContentItem item = new ContentItem(R.drawable.app_music
-                        , R.drawable.left, songLists.get(i).getName()
+                ContentItem item = new ContentItem(R.drawable.champions_playlist
+                        , R.drawable.arrow_list, songLists.get(i).getName()
                         , songLists.get(i).getCount() + "首");
                 mItems.add(item);
                 Log.d("TAG", item.toString());
@@ -191,51 +192,43 @@ public class PlayListActivity extends BaseActivity
                     , Toast.LENGTH_SHORT).show();
             return;
         }
-        Intent intent = new Intent(PlayListActivity.this, SongOfSongListActivity.class);
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("id", list.getId());
-
         // 保存点击哪一个歌单时的id号
         PreferencesUtils.getInstance(this, PreferencesUtils.SONG_LIST)
                 .putData(PreferencesUtils.SONG_LIST_ID_KEY, list.getId());
+
+        // 保存是否为歌单
+        PreferencesUtils.getInstance(this, PreferencesUtils.SONG_LIST)
+                .putData(PreferencesUtils.IS_SONG_LIST_DEL_KEY, true);
+
+        Intent intent = new Intent(PlayListActivity.this, SongOfSongListActivity.class);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        intent.putExtra("id", list.getId());
         startActivity(intent);
     }
 
     @Override
     public void update(Observable observable, Object data) {
         // 通知观察者更新 song count
-
         if (data instanceof SongList) {
             SongList list = (SongList) data;
-            list.setCount(list.getCount() - 1);
             boolean isSuccess = DataBaseManager.getInstance(this)
                     .updateCountBySongList(list);
             if (isSuccess) {
-                Log.d("TAG", "song list count update -1 success! count ===" + list.getCount());
-                mItems.clear();
-                songLists.clear();
-
-                songLists = DataBaseManager.getInstance(this)
-                        .getAllSongList();
-
-                for (int i = 0; i < songLists.size(); i++) {
-                    ContentItem item = new ContentItem(R.drawable.app_music
-                            , R.drawable.left, songLists.get(i).getName()
-                            , songLists.get(i).getCount() + "首");
-                    mItems.add(item);
-                }
-                mAdapter.notifyDataSetChanged();
+                Log.d("TAG", "song list count update success! count ===" + list.getCount());
+                updateAdapter();
             }
         }
+
     }
 
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // 反注册观察者
-//        DataChangedWatcher.getInstance().unRegisterObserver(this);
-    }
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        // 反注册观察者
+////        DataChangedWatcher.getInstance().unRegisterObserver(this);
+//    }
 }
 

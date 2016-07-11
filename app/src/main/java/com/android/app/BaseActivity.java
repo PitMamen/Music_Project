@@ -54,8 +54,8 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         mImageViewIcon = (ImageView) mBottomtitl.findViewById(R.id.iv_music_icon);
         tvMusicName = (TextView) mBottomtitl.findViewById(R.id.tv_music_name);
         tvMusicAuthor = (TextView) findViewById(R.id.tv_music_author);
-        mImageViewPause = (ImageView) findViewById(R.id.iv_music_pause);
-        mImageViewplay = (ImageView) mBottomtitl.findViewById(R.id.iv_music_paly);
+        mImageViewPause = (ImageView) findViewById(R.id.iv_music_play_pause);
+        mImageViewplay = (ImageView) mBottomtitl.findViewById(R.id.iv_music_next);
 
 
         mImageViewIcon.setOnClickListener(new View.OnClickListener() {

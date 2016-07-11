@@ -1,5 +1,7 @@
 package com.dlighttech.music.model;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 
 /**
@@ -9,13 +11,26 @@ import java.io.Serializable;
 
 
 public class ContentItem implements Serializable {
-    private int thumb;
+    private int thumb = 0;
     private int operator;
     private String title;
     private String content;
+    private Bitmap thumbBitmap;
+    /**
+     * @param bitmap    左侧缩略图
+     * @param operator 右侧操作图（资源id）
+     * @param title    上部文字
+     * @param content  下部文字
+     */
 
-    public ContentItem() {
+    public ContentItem(Bitmap bitmap,int operator, String title, String content) {
+        this.operator = operator;
+        this.title = title;
+        this.content = content;
+        this.thumbBitmap = bitmap;
     }
+
+
 
     /**
      * @param thumb    左侧缩略图（资源id）
@@ -23,8 +38,6 @@ public class ContentItem implements Serializable {
      * @param title    上部文字
      * @param content  下部文字
      */
-
-
 
 
     public ContentItem(int thumb, int operator, String title, String content) {
@@ -38,6 +51,18 @@ public class ContentItem implements Serializable {
         this.thumb = thumb;
         this.operator = operator;
         this.title = title;
+    }
+
+    public Bitmap getBitmap() {
+
+        return thumbBitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.thumbBitmap = bitmap;
+    }
+
+    public ContentItem() {
     }
 
     public int getThumb() {

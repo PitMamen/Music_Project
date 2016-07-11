@@ -63,7 +63,6 @@ public class ContentAdapter extends BaseAdapter {
         this.mContext = context;
         this.isMenu = isMenu;
 
-
         Activity activity = (Activity) context;
         if (activity instanceof OnConvertViewClicked) {
             mOnConvertView = (OnConvertViewClicked) activity;
@@ -114,8 +113,14 @@ public class ContentAdapter extends BaseAdapter {
         }
 
 
+
         ContentItem contentItem = contentItems.get(position);
-        holder.thumb.setImageResource(contentItem.getThumb());
+
+        if (contentItem.getThumb() == 0) {
+            holder.thumb.setImageBitmap(contentItem.getBitmap());
+        } else {
+            holder.thumb.setImageResource(contentItem.getThumb());
+        }
         holder.operator.setImageResource(contentItem.getOperator());
         holder.operator.setVisibility(isHidden ? View.GONE : View.VISIBLE);
         holder.title.setText(contentItem.getTitle());
@@ -249,7 +254,7 @@ public class ContentAdapter extends BaseAdapter {
                                     .getSongListById(songListId);
 
                             int count = list.getCount();
-                            count++;
+                            ++count;
                             boolean isUpdate = DataBaseManager.getInstance(mContext)
                                     .updateSongOfListBySongListId(songListId, count);
 
@@ -283,8 +288,10 @@ public class ContentAdapter extends BaseAdapter {
                 .getBoolean(PreferencesUtils.IS_SONG_LIST_DEL_KEY);
 
         if (isSongList) {
+            // true删除歌单音乐文件
             songListDelOption(info);
         } else {
+            // 默认为删除音乐文件
             musicFileDelOption(info);
         }
     }
@@ -312,8 +319,17 @@ public class ContentAdapter extends BaseAdapter {
 
                         // 如果删除该歌曲，同时也会将歌单中该歌曲同时删除,如果歌单中没有
                         // 该首歌曲则没有任何操作
-                        DataBaseManager.getInstance(mContext)
+                        // 获取已经删除歌曲的列表，每次只可能将一个歌单中的数据删除一次
+                        ArrayList<SongList> songLists = DataBaseManager.getInstance(mContext)
                                 .deleteSongBySongList(info);
+
+                        for (int i = 0; i < songLists.size(); i++) {
+                            SongList list = songLists.get(i);
+                            // 当删除歌单中的数据时，需要将count通知观察者更新
+                            list.setCount(list.getCount() - 1);
+                            DataChangedWatcher.getInstance().update(list);
+                        }
+
 
                         // 删除音乐文件
                         boolean isFileDel = musicFile.delete();
@@ -354,28 +370,24 @@ public class ContentAdapter extends BaseAdapter {
         int songListId = PreferencesUtils.getInstance(mContext, PreferencesUtils.SONG_LIST)
                 .getInteger(PreferencesUtils.SONG_LIST_ID_KEY);
 
-        boolean isExistsSongOfSongList = DataBaseManager.getInstance(mContext)
-                .isExistsSamePathOfSongList(songListId, info.getMusicPath());
-
-        if (isExistsSongOfSongList) {
-            boolean isSuccess = DataBaseManager.getInstance(mContext)
-                    .deleteSongBySongListIdAndName(songListId, info.getMusicName());
-            Log.d("TAG", "popupWindow Adapter song delete===" + isSuccess + " songListId===" + songListId);
-            // 成功删除song表中的数据
-            if (isSuccess && songListId > 0) {
-                // 获取当前songListId下有几首歌曲
-                SongList list = DataBaseManager.getInstance(mContext)
-                        .getSongListById(songListId);
-
-                // 通知数据发生改变
-                DataChangedWatcher.getInstance().update(list);
-                contentItems.remove(mSelectPostion);
-                notifyDataSetChanged();
-                Toast.makeText(mContext, info.getMusicName() + "删除ok！",
-                        Toast.LENGTH_SHORT).show();
-            }
+        boolean isSuccess = DataBaseManager.getInstance(mContext)
+                .deleteSongBySongListIdAndName(songListId, info.getMusicName());
+        Log.d("TAG", "popupWindow Adapter song delete===" + isSuccess + " songListId===" + songListId);
+        // 成功删除song表中的数据
+        if (isSuccess && songListId > 0) {
+            contentItems.remove(mSelectPostion);
+            Toast.makeText(mContext, info.getMusicName() + "删除ok！",
+                    Toast.LENGTH_SHORT).show();
+            notifyDataSetChanged();
+            // 获取当前songListId下有几首歌曲
+            SongList list = DataBaseManager.getInstance(mContext)
+                    .getSongListById(songListId);
+            list.setCount(list.getCount() - 1);
+            // 通知数据发生改变
+            DataChangedWatcher.getInstance().update(list);
         }
     }
+
 
     /**
      * 创建歌曲详细信息的dialog

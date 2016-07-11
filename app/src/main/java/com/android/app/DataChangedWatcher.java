@@ -7,12 +7,14 @@ import java.util.Observer;
 
 /**
  * 观察者模式，数据发生改变时，将被调用
- *
+ * <p/>
  * Created by zhujiang on 16-7-1.
  */
 public class DataChangedWatcher extends Observable {
 
     private static DataChangedWatcher mWatcher = null;
+//    public  boolean isRegister = false;
+
 
     private DataChangedWatcher() {
 
@@ -56,5 +58,10 @@ public class DataChangedWatcher extends Observable {
     public void update(Object data) {
         setChanged();
         notifyObservers(data);
+    }
+
+    public void update() {
+        setChanged();
+        notifyObservers();
     }
 }

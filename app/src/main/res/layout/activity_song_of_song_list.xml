@@ -14,7 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:dividerHeight="1dp" />
+        android:dividerHeight="0.6dp"
+        android:divider="#F0F0F0"/>
 
     <include layout="@layout/bottom_title_player_layout" />
 </LinearLayout>

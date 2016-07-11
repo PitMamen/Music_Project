@@ -28,8 +28,8 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:divider="#999999"
-            android:dividerHeight="2dp"
+            android:divider="#F0F0F0"
+            android:dividerHeight="0.6dp"
             >
         </ListView>
         <com.allenliu.sidebar.SideBar

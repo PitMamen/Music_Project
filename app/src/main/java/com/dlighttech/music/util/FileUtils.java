@@ -112,8 +112,8 @@ public class FileUtils {
                             .getLong(cursor
                                     .getColumnIndexOrThrow(Audio.Media.DURATION)); // 时长
 
-                    ContentItem item = new ContentItem(R.drawable.app_music
-                            , R.drawable.left, name, Data);
+                    ContentItem item = new ContentItem(R.drawable.singer
+                            , R.drawable.arrow_list_selected, name, Data);
                     list.add(item);
                 }
 

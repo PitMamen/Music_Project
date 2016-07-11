@@ -10,39 +10,43 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="38dp"
         android:orientation="horizontal"
-        android:padding="20dp">
+        android:gravity="center"
+        >
 
         <TextView
             android:id="@+id/tv_tracks"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawablePadding="10dp"
-            android:drawableTop="@drawable/movie"
+            android:drawablePadding="22dp"
+            android:drawableTop="@drawable/music"
             android:gravity="center"
             android:text="@string/sort_by_track"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            />
 
         <TextView
             android:id="@+id/tv_album"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawablePadding="10dp"
-            android:drawableTop="@drawable/movie"
+            android:drawablePadding="22dp"
+            android:drawableTop="@drawable/album"
             android:gravity="center"
             android:text="@string/sort_by_album"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+
+            />
 
         <TextView
             android:id="@+id/tv_artist"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawablePadding="10dp"
-            android:drawableTop="@drawable/movie"
+            android:drawablePadding="22dp"
+            android:drawableTop="@drawable/singer"
             android:gravity="center"
             android:text="@string/singer"
             android:textSize="20sp" />
@@ -60,7 +64,8 @@
             android:id="@+id/home_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:dividerHeight="1dp" />
+            android:dividerHeight="0.6dp"
+            android:divider="#F0F0F0"/>
     </LinearLayout>
 
 

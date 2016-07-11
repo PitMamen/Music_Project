@@ -1,5 +1,6 @@
 package com.android.app;
 
+import android.graphics.Bitmap;
 import android.widget.ListView;
 
 import com.dlighttech.music.adapter.ContentAdapter;
@@ -19,6 +20,7 @@ public class LastUpdatedActivity extends BaseActivity {
 
     @Override
     public void onCreateView() {
+        getWindow().setBackgroundDrawable(getDrawable(android.R.color.white));
         super.setTitleText("最近更新");
         mListView = (ListView) findViewById(R.id.lv_updated_list);
         mAdapter = new ContentAdapter(this, mItems, true);
@@ -40,10 +42,16 @@ public class LastUpdatedActivity extends BaseActivity {
         infos = MusicUtils.getMusicInfo(this, true);
         if (infos != null && infos.size() > 0) {
             for (int i = 0; i < infos.size(); i++) {
-                ContentItem item = new ContentItem(R.drawable.app_music
-                        , R.drawable.ic_menu_eq
-                        , infos.get(i).getMusicName()
-                        , infos.get(i).getSinger());
+                MusicInfo info = infos.get(i);
+                String name = info.getMusicName();
+                String singer = info.getSinger();
+                Bitmap bitmap = info.getMusicAlbumsImage();
+                ContentItem item;
+                if (bitmap != null) {
+                    item = new ContentItem(bitmap, R.drawable.more_title_selected, name, singer);
+                } else {
+                    item = new ContentItem(R.drawable.albums_list, R.drawable.more_title_selected, name, singer);
+                }
 
                 mItems.add(item);
             }

@@ -68,15 +68,21 @@
 
         <com.android.app.RepeatingImageButton
             android:id="@+id/prev"
-            style="@android:style/MediaButton.Previous"/>
+            style="@android:style/MediaButton.Previous"
+            />
 
         <ImageButton
             android:id="@+id/pause"
-            style="@android:style/MediaButton.Play"/>
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/play_playback"
+            android:background="@null"/>
 
         <com.android.app.RepeatingImageButton
             android:id="@+id/next"
-            style="@android:style/MediaButton.Next"/>
+
+            style="@android:style/MediaButton.Next"
+            />
 
     </LinearLayout>
 
