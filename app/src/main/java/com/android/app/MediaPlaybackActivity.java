@@ -126,7 +126,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
 
         mCurrentTime = (TextView) findViewById(R.id.currenttime);
         mTotalTime = (TextView) findViewById(R.id.totaltime);
-        mProgress = (ProgressBar) findViewById(android.R.id.progress);
+        mProgress = (SeekBar) findViewById(R.id.seekbar_playback);
         mAlbum = (ImageView) findViewById(R.id.album);
         mArtistName = (TextView) findViewById(R.id.artistname);
         mAlbumName = (TextView) findViewById(R.id.albumname);
@@ -558,6 +558,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
     @Override
     public void onStart() {
         super.onStart();
+
         paused = false;
 
         mToken = MusicUtils.bindToService(this, osc);
@@ -1219,9 +1220,9 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
     private void setPauseButtonImage() {
         try {
             if (mService != null && mService.isPlaying()) {
-                mPauseButton.setImageResource(android.R.drawable.ic_media_pause);
+                mPauseButton.setImageResource(R.drawable.pause_playback);
             } else {
-                mPauseButton.setImageResource(android.R.drawable.ic_media_play);
+                mPauseButton.setImageResource(R.drawable.play_playback);
             }
         } catch (RemoteException ex) {
         }
@@ -1261,6 +1262,10 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
             long remaining = 1000 - (pos % 1000);
             if ((pos >= 0) && (mDuration > 0)) {
                 mCurrentTime.setText(MusicUtils.makeTimeString(this, pos / 1000));
+
+                int progress = (int) (1000 * pos / mDuration);
+                mProgress.setProgress(progress);
+
                 
                 if (mService.isPlaying()) {
                     mCurrentTime.setVisibility(View.VISIBLE);
@@ -1272,7 +1277,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
                     remaining = 500;
                 }
 
-                mProgress.setProgress((int) (1000 * pos / mDuration));
+//                mProgress.setProgress((int) (1000 * pos / mDuration));
 
                 // TODO: 2016/6/24
                 mLrcViewOnSecondPage.changeCurrent(pos);//update lrc
