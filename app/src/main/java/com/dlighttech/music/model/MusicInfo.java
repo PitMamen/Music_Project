@@ -28,23 +28,60 @@ public class MusicInfo implements Serializable, Parcelable {
     private String musicAlbumsName;
     //专辑下歌曲的数目
     private int musicAlbumsNumber;
-
-
+    //每个歌手拥有多少首歌曲
+    private int singermusicCount;
     // 文件路径
-    private String musicPath;
+   private String musicPath;
     // 歌曲文件大小
     private long musicSize;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MusicInfo)) return false;
 
+        MusicInfo musicInfo = (MusicInfo) o;
+
+        if (getMusicId() != musicInfo.getMusicId()) return false;
+        if (getCurrTime() != musicInfo.getCurrTime()) return false;
+        if (getTotalTime() != musicInfo.getTotalTime()) return false;
+        if (getMusicAlbumsNumber() != musicInfo.getMusicAlbumsNumber()) return false;
+        if (getSingermusicCount() != musicInfo.getSingermusicCount()) return false;
+        if (getMusicSize() != musicInfo.getMusicSize()) return false;
+        if (!getSinger().equals(musicInfo.getSinger())) return false;
+        if (!getMusicName().equals(musicInfo.getMusicName())) return false;
+        if (getState() != musicInfo.getState()) return false;
+        if (!getMusicAlbumsImage().equals(musicInfo.getMusicAlbumsImage())) return false;
+        if (!getMusicAlbumsName().equals(musicInfo.getMusicAlbumsName())) return false;
+        return getMusicPath().equals(musicInfo.getMusicPath());
+
+    }
+    @Override
+    public int hashCode() {
+        int result = getMusicId();
+        result = 31 * result + getSinger().hashCode();
+        result = 31 * result + getMusicName().hashCode();
+        result = 31 * result + (int) (getCurrTime() ^ (getCurrTime() >>> 32));
+        result = 31 * result + (int) (getTotalTime() ^ (getTotalTime() >>> 32));
+        result = 31 * result + getState().hashCode();
+        result = 31 * result + getMusicAlbumsImage().hashCode();
+        result = 31 * result + getMusicAlbumsName().hashCode();
+        result = 31 * result + getMusicAlbumsNumber();
+        result = 31 * result + getSingermusicCount();
+        result = 31 * result + getMusicPath().hashCode();
+        result = 31 * result + (int) (getMusicSize() ^ (getMusicSize() >>> 32));
+        return result;
+    }
 
     public MusicInfo() {
     }
 
-    public MusicInfo(int id, String singer, String musicName
+    public MusicInfo(int id, String singer, int singermusicCount, String musicName
             , long currTime, long totalTime, MusicState state
-            , Bitmap musicAlbumsImage, String musicAlbumsName,int musicAlbumsNumber
+            , Bitmap musicAlbumsImage, String musicAlbumsName, int musicAlbumsNumber
             , String musicPath, long musicSize) {
         this.musicId = id;
         this.singer = singer;
+        this.singermusicCount = singermusicCount;
         this.musicName = musicName;
         this.currTime = currTime;
         this.totalTime = totalTime;
@@ -57,14 +94,16 @@ public class MusicInfo implements Serializable, Parcelable {
     }
 
     protected MusicInfo(Parcel in) {
+
         musicId = in.readInt();
         singer = in.readString();
+        singermusicCount = in.readInt();
         musicName = in.readString();
         currTime = in.readLong();
         totalTime = in.readLong();
         musicAlbumsImage = in.readParcelable(Bitmap.class.getClassLoader());
         musicAlbumsName = in.readString();
-        musicAlbumsNumber =in.readInt();
+        musicAlbumsNumber = in.readInt();
         musicPath = in.readString();
         musicSize = in.readLong();
     }
@@ -80,6 +119,14 @@ public class MusicInfo implements Serializable, Parcelable {
             return new MusicInfo[size];
         }
     };
+
+    public int getSingermusicCount() {
+        return singermusicCount;
+    }
+
+    public void setSingermusicCount(int singermusicCount) {
+        this.singermusicCount = singermusicCount;
+    }
 
     public int getMusicId() {
         return musicId;
@@ -174,7 +221,8 @@ public class MusicInfo implements Serializable, Parcelable {
     public String toString() {
         return "MusicInfo{" +
                 "musicId=" + musicId +
-                ", singer='" + singer + '\'' +
+                ", singer='" + singer +
+                "singermusicCount" + singermusicCount +'\'' +
                 ", musicName='" + musicName + '\'' +
                 ", currTime=" + currTime +
                 ", totalTime=" + totalTime +
@@ -195,6 +243,7 @@ public class MusicInfo implements Serializable, Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(musicId);
         dest.writeString(singer);
+        dest.writeInt(singermusicCount);
         dest.writeString(musicName);
         dest.writeLong(currTime);
         dest.writeLong(totalTime);
@@ -203,6 +252,7 @@ public class MusicInfo implements Serializable, Parcelable {
         dest.writeInt(musicAlbumsNumber);
         dest.writeString(musicPath);
         dest.writeLong(musicSize);
+
     }
 
     public enum MusicState {

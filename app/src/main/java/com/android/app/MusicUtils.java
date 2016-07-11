@@ -1647,10 +1647,11 @@ public class MusicUtils {
                         String artist = c.getString(c
                                 .getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
 
+                        //歌手ID
                         int artistId = c.getInt(c.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST_ID));
 
                         //歌手下所有的音乐
-                        int singermusicCount = getSingerMusicCount(ctx, isMusic);
+                        int singermusicCount = getSingerMusicCount(ctx, artistId);
 
                         Log.d("TAG", artist + "======" + singermusicCount);
 
@@ -1689,7 +1690,7 @@ public class MusicUtils {
                                 .getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
 
 
-                        MusicInfo info = new MusicInfo(id, artist, musicName, currTime
+                        MusicInfo info = new MusicInfo(id, artist,singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
                                 , albumImage, albumName, albumMusicNumber, path, size);
                         musicInfos.add(info);
@@ -1780,7 +1781,7 @@ public class MusicUtils {
                                 .getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
 
 
-                        MusicInfo info = new MusicInfo(id, artist, musicName, currTime
+                        MusicInfo info = new MusicInfo(id, artist,singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
                                 , albumImage, albumName, albumMusicNumber, path, size);
                         musicInfos.add(info);
@@ -1830,7 +1831,7 @@ public class MusicUtils {
                         //歌手下所有的音乐
                         int singermusicCount = getSingerMusicCount(ctx, artistId);
 
-                        Log.d("TAG", artist + "======" + singermusicCount);
+                        Log.i("TAG", artist + "======" + singermusicCount);
 
 
                         // 歌曲名
@@ -1870,7 +1871,7 @@ public class MusicUtils {
                                 .getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
 
 
-                        MusicInfo info = new MusicInfo(id, artist, musicName, currTime
+                        MusicInfo info = new MusicInfo(id, artist,singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
                                 , albumImage, albumName, albumMusicNumber, path, size);
 
@@ -1886,7 +1887,7 @@ public class MusicUtils {
         return null;
 
     }
-
+        //获取每个歌手下的所有歌曲
     private static int getSingerMusicCount(Context ctx, int id) {
 
         try {
@@ -1908,7 +1909,7 @@ public class MusicUtils {
         return 0;
     }
 
-
+    //获取专辑下的所有歌曲
     public static int getAlbumCount(Context ctx, int albumId) {
 
         try {
