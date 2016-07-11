@@ -15,74 +15,95 @@
 -->
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-              >
+    >
 
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingRight="5dp"
-        android:paddingLeft="5dp">
+        >
+
+        <SeekBar
+            android:id="@+id/seekbar_playback"
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:background="@drawable/progressbar_home"
+            />
 
         <TextView
             android:id="@+id/currenttime"
             android:layout_width="wrap_content"
-            android:maxWidth="50dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/seekbar_playback"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="10dp"
             android:text="left"
-            android:layout_gravity="center_vertical"
+            android:textSize="16sp"/>
 
-            android:textSize="14sp"/>
-
-        <SeekBar
-            android:id="@android:id/progress"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:progressBackgroundTint="@color/color_primary"
-            />
 
         <TextView
             android:id="@+id/totaltime"
             android:layout_width="wrap_content"
-            android:maxWidth="50dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/seekbar_playback"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="10dp"
             android:text="right"
-            android:layout_gravity="center_vertical"
-            android:textSize="14sp"/>
+            android:textSize="16sp"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:gravity="center"
-        android:orientation="horizontal"
         android:layout_marginBottom="30dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/listloop_mode_playback_selected"
+            android:layout_marginRight="28dp"/>
+
 
         <com.android.app.RepeatingImageButton
             android:id="@+id/prev"
-            style="@android:style/MediaButton.Previous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:scaleType="centerInside"
+            android:src="@drawable/pre_palyback"
+            android:layout_marginRight="28dp"
             />
 
         <ImageButton
             android:id="@+id/pause"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:scaleType="centerInside"
             android:src="@drawable/play_playback"
-            android:background="@null"/>
+            android:layout_marginRight="28dp"/>
 
         <com.android.app.RepeatingImageButton
             android:id="@+id/next"
-
-            style="@android:style/MediaButton.Next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:scaleType="centerInside"
+            android:src="@drawable/next_playback"
+            android:layout_marginRight="28dp"
             />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/list_playback_selected"/>
 
     </LinearLayout>
 
