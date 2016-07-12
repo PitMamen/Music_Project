@@ -30,6 +30,7 @@
             android:layout_height="match_parent"
             android:divider="#F0F0F0"
             android:dividerHeight="0.6dp"
+            android:background="@android:color/white"
             >
         </ListView>
         <com.allenliu.sidebar.SideBar
