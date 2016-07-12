@@ -62,25 +62,35 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="56dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:background="#FFFFFF"
         >
 
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/listloop_mode_playback_selected"-->
+            <!--android:layout_marginRight="28dp"/>-->
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/repeat"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="28dp"
             android:src="@drawable/listloop_mode_playback_selected"
-            android:layout_marginRight="28dp"/>
+            />
 
 
         <com.android.app.RepeatingImageButton
             android:id="@+id/prev"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:maxHeight="40dp"
+            android:maxWidth="40dp"
             android:background="@null"
             android:scaleType="centerInside"
             android:src="@drawable/pre_palyback"
@@ -89,8 +99,8 @@
 
         <ImageButton
             android:id="@+id/pause"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:background="@null"
             android:scaleType="centerInside"
             android:src="@drawable/play_playback"
@@ -98,18 +108,21 @@
 
         <com.android.app.RepeatingImageButton
             android:id="@+id/next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="@null"
             android:scaleType="centerInside"
             android:src="@drawable/next_playback"
             android:layout_marginRight="28dp"
+
             />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/list_playback_selected"/>
+            android:id="@+id/playlist_iv_playback"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/list_playback_selector"
+            />
 
     </LinearLayout>
 

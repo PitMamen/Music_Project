@@ -89,7 +89,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
     private RepeatingImageButton mPrevButton;
     private ImageButton mPauseButton;
     private RepeatingImageButton mNextButton;
-    private ImageButton mRepeatButton;
+    private ImageView mRepeatButton;
     private ImageButton mShuffleButton;
     private ImageButton mQueueButton;
     private Worker mAlbumArtWorker;
@@ -106,6 +106,8 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
     private ImageButton mTitleBack;
     private ImageButton mTitlePlaylist;
     private TextView mTitlePlaying;
+
+    private ImageView playlistPlayback;
 
     public MediaPlaybackActivity()
     {
@@ -162,7 +164,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
         mQueueButton.setOnClickListener(mQueueListener);
         mShuffleButton = ((ImageButton) findViewById(R.id.shuffle));
         mShuffleButton.setOnClickListener(mShuffleListener);
-        mRepeatButton = ((ImageButton) findViewById(R.id.repeat));
+        mRepeatButton = ((ImageView) findViewById(R.id.repeat));
         mRepeatButton.setOnClickListener(mRepeatListener);
 
         mIndicator_left = (ImageView) findViewById(R.id.indicator_circle_1);
@@ -178,6 +180,9 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
         mTitlePlaylist = (ImageButton) findViewById(R.id.title_playlist);
         mTitlePlaylist.setOnClickListener(mQueueListener);
         mTitlePlaying = (TextView) findViewById(R.id.title_playing);
+
+        playlistPlayback = (ImageView) findViewById(R.id.playlist_iv_playback);
+        playlistPlayback.setOnClickListener(mShowPlaylistListener);
 
 
         if (mProgress instanceof SeekBar) {
@@ -447,6 +452,20 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
         startActivity(Intent.createChooser(i, title));
         return true;
     }
+
+    /**
+     * 显示播放列表
+     */
+    private View.OnClickListener mShowPlaylistListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(Intent.ACTION_EDIT);
+            intent.setDataAndType(Uri.EMPTY, "vnd.android.cursor.dir/track");
+            intent.putExtra("playlist", "nowplaying");
+            startActivity(intent);
+        }
+    };
 
     private OnSeekBarChangeListener mSeekListener = new OnSeekBarChangeListener() {
         public void onStartTrackingTouch(SeekBar bar) {
@@ -1185,16 +1204,18 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
         if (mService == null) return;
         try {
             switch (mService.getRepeatMode()) {
+
                 case MediaPlaybackService.REPEAT_ALL:
-                    mRepeatButton.setImageResource(R.drawable.ic_mp_repeat_all_btn);
+                    mRepeatButton.setImageResource(R.drawable.listloop_mode_playback);
                     break;
                 case MediaPlaybackService.REPEAT_CURRENT:
-                    mRepeatButton.setImageResource(R.drawable.ic_mp_repeat_once_btn);
+                    mRepeatButton.setImageResource(R.drawable.singleloop_mode_playback);
                     break;
                 default:
                     mRepeatButton.setImageResource(R.drawable.ic_mp_repeat_off_btn);
                     break;
             }
+            mRepeatButton.setBackground(null);
         } catch (RemoteException ex) {
         }
     }
