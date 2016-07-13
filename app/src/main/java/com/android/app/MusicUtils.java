@@ -1671,8 +1671,8 @@ public class MusicUtils {
                         Bitmap albumImage = getArtwork(ctx, id, albumId);
 
                         albumImage = ThumbnailUtils.extractThumbnail(albumImage
-                                , DisplayUtils.dip2px(ctx, 64)
-                                , DisplayUtils.dip2px(ctx, 64));
+                                , DisplayUtils.dip2px(ctx, 30)
+                                , DisplayUtils.dip2px(ctx, 30));
 
                         // 歌曲专辑名
                         String albumName = c.getString(c

@@ -50,7 +50,7 @@ public class MusicTracksActivity extends BaseActivity {
 
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
         lv_music_detail = (ListView) findViewById(R.id.lv_music_detail);
-        mAdapter = new ContentAdapter(this, mItems,false);
+        mAdapter = new ContentAdapter(this, mItems, false);
         lv_music_detail.setAdapter(mAdapter);
 
 
@@ -64,8 +64,6 @@ public class MusicTracksActivity extends BaseActivity {
             public void onSelectStr(int position, String selectStr) {
 
 
-
-
             }
         });
 
@@ -76,7 +74,7 @@ public class MusicTracksActivity extends BaseActivity {
     @Override
     public void onCreateData() {
 
-        MusicUtils.getMusicInfo(this,false, new MusicUtils.OnMusicLoadedListener() {
+        MusicUtils.getMusicInfo(this, false, new MusicUtils.OnMusicLoadedListener() {
             @Override
             public void onMusicLoadSuccess(ArrayList<MusicInfo> infos) {
 
@@ -84,7 +82,6 @@ public class MusicTracksActivity extends BaseActivity {
                 for (int i = 0; i < infos.size(); i++) {
 
                     Log.i("TAG", "infos.size=====" + infos.size());
-
                     MusicInfo info = infos.get(i);
                     String musicname = info.getMusicName();
                     String singer = info.getSinger();
