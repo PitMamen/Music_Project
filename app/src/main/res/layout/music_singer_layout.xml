@@ -10,6 +10,38 @@
 
     <include layout="@layout/home_title_layout"/>
 
+    <RelativeLayout
+        android:background="@color/re_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_mode_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/ic_mp_repeat_off_btn"
+            android:paddingLeft="5dp"/>
+
+        <TextView
+            android:id="@+id/tv_play_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="随机播放"
+            android:layout_marginLeft="40dp"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/tv_music_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="共12首"
+            android:layout_marginRight="8dp"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
 
     <View
         android:layout_width="match_parent"
@@ -42,6 +74,7 @@
             android:paddingRight="15dp"
             android:layout_width="20dp"
             android:layout_height="match_parent"
+            android:visibility="gone"
             />
     </LinearLayout>
 

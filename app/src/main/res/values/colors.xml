@@ -20,7 +20,8 @@
 
     <!--add color by ZhuJiang-->
     <color name="statusBar_color">#446584</color>
-    <color name="color_primary">#5883AD</color>
+    <color name="color_primary">#F0F0F0</color>
+    <color name="re_color">#EDEDED</color>
     <color name="color_dark_primary">#446584</color>
     <color name="text_color_black">#000000</color>
     <color name="text_color_gray">#A7A7A7</color>
