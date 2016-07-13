@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -115,12 +116,30 @@ public class ContentAdapter extends BaseAdapter {
 
         ContentItem contentItem = contentItems.get(position);
 
-        if (contentItem.getThumb() == 0) {
-            holder.thumb.setImageBitmap(contentItem.getBitmap());
+        Bitmap bmOpr = contentItem.getOperatorBitmap();
+        Bitmap bmThumb = contentItem.getThumbBitmap();
+
+
+        if (bmOpr == null) {
+            holder.operator.setImageResource(contentItem.getOperator());
         } else {
-            holder.thumb.setImageResource(contentItem.getThumb());
+            holder.operator.setImageBitmap(bmOpr);
         }
-        holder.operator.setImageResource(contentItem.getOperator());
+
+        if (bmThumb == null) {
+            holder.thumb.setImageResource(contentItem.getThumb());
+        } else {
+            holder.thumb.setImageBitmap(bmThumb);
+        }
+
+//        if (contentItem.getThumb() == 0) {
+//            holder.thumb.setImageBitmap(contentItem.getBitmap());
+//        } else {
+//            holder.thumb.setImageResource(contentItem.getThumb());
+//        }
+//        holder.operator.setImageResource(contentItem.getOperator());
+
+
         holder.operator.setVisibility(isHidden ? View.GONE : View.VISIBLE);
         holder.title.setText(contentItem.getTitle());
         holder.content.setText(contentItem.getContent());

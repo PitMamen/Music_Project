@@ -1,5 +1,8 @@
 package com.android.app;
 
+import android.database.Cursor;
+import android.os.RemoteException;
+import android.provider.MediaStore;
 import android.widget.ListView;
 
 import com.dlighttech.music.adapter.ContentAdapter;
@@ -10,7 +13,8 @@ import com.dlighttech.music.util.PreferencesUtils;
 import java.io.File;
 import java.util.ArrayList;
 
-public class MusicListActivity extends BaseActivity {
+public class MusicListActivity extends BaseActivity
+        implements ContentAdapter.OnConvertViewClicked {
 
     /**
      * implements ContentAdapter.OnOperateClicked
@@ -22,6 +26,8 @@ public class MusicListActivity extends BaseActivity {
     private ListView mListView;
     private ContentAdapter mAdapter;
     private ContentItem item;
+    private Cursor mTrackCursor;
+    private MusicUtils.ServiceToken mToken;
     //    private ListPopupWindow popupWindow;
 
     @Override
@@ -62,12 +68,16 @@ public class MusicListActivity extends BaseActivity {
         for (int i = 0; i < mMusicList.size(); i++) {
             MusicInfo info = mMusicList.get(i);
 
-            ContentItem newItem = new ContentItem(R.drawable.folder_list
+            ContentItem newItem = new ContentItem(info.getMusicAlbumsImage()
                     , R.drawable.more_title_selected
                     , info.getMusicName()
                     , info.getSinger());
             mItems.add(newItem);
         }
+
+        // 绑定服务
+        mToken = MusicUtils.bindToService(this);
+
     }
 
 
@@ -81,4 +91,32 @@ public class MusicListActivity extends BaseActivity {
 
     }
 
+
+    @Override
+    public void onConvertViewClicked(int position) {
+        MusicInfo info = mMusicList.get(position);
+        mTrackCursor = MusicUtils.getMusicInfo(this, false, MediaStore.Audio.Media._ID + "=?"
+                , new String[]{String.valueOf(info.getMusicId())});
+
+        if (mTrackCursor.getCount() == 0) {
+            return;
+        }
+        if (mTrackCursor instanceof TrackBrowserActivity.NowPlayingCursor) {
+            if (MusicUtils.sService != null) {
+                try {
+                    MusicUtils.sService.setQueuePosition(position);
+                    return;
+                } catch (RemoteException ex) {
+                }
+            }
+        }
+        MusicUtils.playAll(this, mTrackCursor);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MusicUtils.unbindFromService(mToken);
+    }
 }

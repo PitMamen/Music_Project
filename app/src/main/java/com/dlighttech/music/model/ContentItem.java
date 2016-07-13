@@ -16,20 +16,33 @@ public class ContentItem implements Serializable {
     private String title;
     private String content;
     private Bitmap thumbBitmap;
+    private Bitmap operatorBitmap;
+
     /**
-     * @param bitmap    左侧缩略图
+     * @param thumb   左侧缩略图
      * @param operator 右侧操作图（资源id）
      * @param title    上部文字
      * @param content  下部文字
      */
-
-    public ContentItem(Bitmap bitmap,int operator, String title, String content) {
+    public ContentItem(Bitmap thumb, int operator, String title, String content) {
         this.operator = operator;
         this.title = title;
         this.content = content;
-        this.thumbBitmap = bitmap;
+        this.thumbBitmap = thumb;
     }
 
+    /**
+     * @param thumb    左侧缩略图
+     * @param operator 右侧操作图（资源id）
+     * @param title    上部文字
+     * @param content  下部文字
+     */
+    public ContentItem(Bitmap thumb, Bitmap operator, String title, String content) {
+        this.operatorBitmap = operator;
+        this.title = title;
+        this.content = content;
+        this.thumbBitmap = thumb;
+    }
 
 
     /**
@@ -53,25 +66,17 @@ public class ContentItem implements Serializable {
         this.title = title;
     }
 
-    public Bitmap getBitmap() {
-
-        return thumbBitmap;
-    }
-
-    public void setBitmap(Bitmap bitmap) {
-        this.thumbBitmap = bitmap;
-    }
 
     public ContentItem() {
     }
 
-    public int getThumb() {
 
+    public int getThumb() {
         return thumb;
     }
 
-    public void setThumb(int imageView) {
-        this.thumb = imageView;
+    public void setThumb(int thumb) {
+        this.thumb = thumb;
     }
 
     public int getOperator() {
@@ -80,6 +85,22 @@ public class ContentItem implements Serializable {
 
     public void setOperator(int operator) {
         this.operator = operator;
+    }
+
+    public Bitmap getThumbBitmap() {
+        return thumbBitmap;
+    }
+
+    public void setThumbBitmap(Bitmap thumbBitmap) {
+        this.thumbBitmap = thumbBitmap;
+    }
+
+    public Bitmap getOperatorBitmap() {
+        return operatorBitmap;
+    }
+
+    public void setOperatorBitmap(Bitmap operatorBitmap) {
+        this.operatorBitmap = operatorBitmap;
     }
 
     public String getTitle() {
