@@ -19,7 +19,7 @@
     <color name="transparent">#00000000</color>
 
     <!--add color by ZhuJiang-->
-    <color name="statusBar_color">#446584</color>
+    <color name="statusBar_color">#C0C0C0</color>
     <color name="color_primary">#F0F0F0</color>
     <color name="re_color">#EDEDED</color>
     <color name="color_dark_primary">#446584</color>

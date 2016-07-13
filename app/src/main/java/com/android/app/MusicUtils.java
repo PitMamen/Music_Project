@@ -1103,7 +1103,7 @@ public class MusicUtils {
     private static Bitmap getDefaultArtwork(Context context) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.albumart_mp_unknown,opts);
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.albumart_mp_unknown, opts);
         return bitmap;
 //        return BitmapFactory.decodeStream(
 //                context.getResources().openRawResource(R.drawable.albumart_mp_unknown), null, opts);
@@ -1692,7 +1692,7 @@ public class MusicUtils {
                                 .getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
 
 
-                        MusicInfo info = new MusicInfo(id, artist,singermusicCount, musicName, currTime
+                        MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
                                 , albumImage, albumName, albumMusicNumber, path, size);
                         musicInfos.add(info);
@@ -1783,7 +1783,7 @@ public class MusicUtils {
                                 .getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
 
 
-                        MusicInfo info = new MusicInfo(id, artist,singermusicCount, musicName, currTime
+                        MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
                                 , albumImage, albumName, albumMusicNumber, path, size);
                         musicInfos.add(info);
@@ -1873,7 +1873,7 @@ public class MusicUtils {
                                 .getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
 
 
-                        MusicInfo info = new MusicInfo(id, artist,singermusicCount, musicName, currTime
+                        MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
                                 , albumImage, albumName, albumMusicNumber, path, size);
 
@@ -1889,7 +1889,36 @@ public class MusicUtils {
         return null;
 
     }
-        //获取每个歌手下的所有歌曲
+
+
+    public static Cursor getMusicInfo(Context ctx, boolean isOrder
+            , String selection
+            , String[] selectionArgs) {
+
+        Cursor c = null;
+
+        ContentResolver resolver = ctx.getContentResolver();
+        if (resolver != null) {
+
+            String order = isOrder ? MediaStore.Audio.Media.DATE_ADDED + " desc"
+                    : MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
+
+            if (!TextUtils.isEmpty(selection)
+                    && selectionArgs != null && selectionArgs.length > 0) {
+                c = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                        , null, selection, selectionArgs, order);
+                return c;
+            }
+
+            c = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                    , null, null, null, order);
+
+            return c;
+        }
+        return null;
+    }
+
+    //获取每个歌手下的所有歌曲
     private static int getSingerMusicCount(Context ctx, int id) {
 
         try {

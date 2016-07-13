@@ -883,6 +883,9 @@ public class TrackBrowserActivity extends ListActivity
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id)
     {
+
+//        Log.d("TAG","点我了");
+
         if (mTrackCursor.getCount() == 0) {
             return;
         }
@@ -1091,7 +1094,7 @@ public class TrackBrowserActivity extends ListActivity
         return ret;
     }
 
-    private class NowPlayingCursor extends AbstractCursor
+    public class NowPlayingCursor extends AbstractCursor
     {
         public NowPlayingCursor(IMediaPlaybackService service, String [] cols)
         {

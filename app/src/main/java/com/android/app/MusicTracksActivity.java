@@ -1,6 +1,9 @@
 package com.android.app;
 
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.os.RemoteException;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -18,13 +21,15 @@ import java.util.ArrayList;
 /**
  * Created by pengxinkai001 on 2016/6/23.
  */
-public class MusicTracksActivity extends BaseActivity {
+public class MusicTracksActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked {
 
     private ImageButton ib_music_back;
     private TextView tv_title, tv_paly_mode, tv_music_number;
     private ImageView iv_music_search, iv_music_icon;
     private ListView lv_music_detail;
     private SideBar sb_navigation_bar;
+    private Cursor cursor;
+    private  MusicUtils.ServiceToken token;
 
     private ContentAdapter mAdapter;
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
@@ -98,6 +103,9 @@ public class MusicTracksActivity extends BaseActivity {
             }
             mItems.add(item);
 
+            //绑定服务
+            token = MusicUtils.bindToService(this);
+
         }
 
     }
@@ -111,5 +119,37 @@ public class MusicTracksActivity extends BaseActivity {
     @Override
     public void onSearchSubmit(String text) {
 
+    }
+
+    @Override
+    public void onConvertViewClicked(int position) {
+        MusicInfo info = arrayList.get(position);
+        cursor = MusicUtils.getMusicInfo(this, false, MediaStore.Audio.Media._ID + "=?"
+                , new String[]{String.valueOf(info.getMusicId())});
+
+        if (cursor.getCount() == 0) {
+            return;
+        }
+        if (cursor instanceof TrackBrowserActivity.NowPlayingCursor) {
+            if (MusicUtils.sService != null) {
+                try {
+                    MusicUtils.sService.setQueuePosition(position);
+                    return;
+                } catch (RemoteException ex) {
+                }
+            }
+        }
+        //播放音乐
+        MusicUtils.playAll(this, cursor);
+
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+       // 解绑服务
+        MusicUtils.unbindFromService(token);
     }
 }

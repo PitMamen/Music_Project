@@ -1,6 +1,9 @@
 package com.android.app;
 
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.os.RemoteException;
+import android.provider.MediaStore;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,13 +22,15 @@ import java.util.Set;
 /**
  * Created by pengxinkai001 on 2016/6/24.
  */
-public class MusicSingerActivity extends BaseActivity {
+public class MusicSingerActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked {
 
     private ListView mListview;
     private SideBar sb_navigation_bar;
     private TextView tv_music_number;
 
     private ContentAdapter mdapter;
+    private Cursor cursor;
+    private MusicUtils.ServiceToken token;
 
     private ArrayList<ContentItem> items = new ArrayList<ContentItem>();
     private ArrayList<MusicInfo> arrayList;
@@ -66,7 +71,7 @@ public class MusicSingerActivity extends BaseActivity {
 
         arrayList = MusicUtils.getMusicInfo(this, true);
 
-        for (int i = 0; i < arrayList.size() ; i++) {
+        for (int i = 0; i < arrayList.size(); i++) {
 
             MusicInfo info = arrayList.get(i);
 
@@ -78,16 +83,19 @@ public class MusicSingerActivity extends BaseActivity {
             Bitmap bitmap = info.getMusicAlbumsImage();
 
             ContentItem item;
-            if (bitmap!=null){
-                item = new ContentItem(bitmap,R.drawable.more_title_selected,musicsiner,musiccount+"首");
-            }else {
-                item = new ContentItem(R.drawable.singer,R.drawable.more_title_selected,musicsiner,musiccount+"首");
+            if (bitmap != null) {
+                item = new ContentItem(bitmap, R.drawable.more_title_selected, musicsiner, musiccount + "首");
+            } else {
+                item = new ContentItem(R.drawable.singer, R.drawable.more_title_selected, musicsiner, musiccount + "首");
             }
             items.add(item);
 
-        }
+            //绑定服务
+            MusicUtils.bindToService(this);
 
         }
+
+    }
 
     @Override
     public void onSearchTextChanged(String text) {
@@ -100,22 +108,39 @@ public class MusicSingerActivity extends BaseActivity {
     }
 
 
-    /*//去除相同元素的方法
-    public static ArrayList<MusicInfo> singleElement(ArrayList<MusicInfo> al) {
-        ArrayList<MusicInfo> arrayList = new ArrayList<>();
-        Iterator<MusicInfo> it = al.iterator();
-        while (it.hasNext()) {
-            MusicInfo obj = it.next();
-            //如果不包含该元素,则添加进来,contains() 方法底层调用的是 Person 的 equals() 方法
-            if (!arrayList.contains(obj))
-                arrayList.add(obj);
+    @Override
+    public void onConvertViewClicked(int position) {
+
+        MusicInfo info = arrayList.get(position);
+        cursor = MusicUtils.getMusicInfo(this, false, MediaStore.Audio.Media._ID + "=?"
+                , new String[]{String.valueOf(info.getMusicId())});
+
+        if (cursor.getCount() == 0) {
+            return;
         }
-        //返回新的没有重复元素的ArrayList集合对象
-        return arrayList;
+        if (cursor instanceof TrackBrowserActivity.NowPlayingCursor) {
+            if (MusicUtils.sService != null) {
+                try {
+                    MusicUtils.sService.setQueuePosition(position);
+                    return;
+                } catch (RemoteException ex) {
+                }
+            }
+        }
+        //播放音乐
+        MusicUtils.playAll(this, cursor);
+
+
     }
-*/
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+       MusicUtils.unbindFromService(token);
+
+    }
 }
 
 
