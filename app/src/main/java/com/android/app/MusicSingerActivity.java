@@ -28,6 +28,7 @@ public class MusicSingerActivity extends BaseActivity {
     private ContentAdapter mdapter;
 
     private ArrayList<ContentItem> items = new ArrayList<ContentItem>();
+    private ArrayList<MusicInfo> arrayList;
 
     @Override
     public void onInitView() {
@@ -45,11 +46,14 @@ public class MusicSingerActivity extends BaseActivity {
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
         mListview = (ListView) findViewById(R.id.lv_music_detail);
         tv_music_number = (TextView) findViewById(R.id.tv_music_num);
-        mdapter = new ContentAdapter(this, items, false);
+
+
+        mdapter = new ContentAdapter(this, items, true);
+        mdapter.setMusicInfos(arrayList);
         mListview.setAdapter(mdapter);
 
         int count = mdapter.getCount();
-        tv_music_number.setText(count + "首");
+        tv_music_number.setText("共" + count + "首");
 
 
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
@@ -59,41 +63,31 @@ public class MusicSingerActivity extends BaseActivity {
     @Override
     public void onCreateData() {
 
-        MusicUtils.getMusicInfo(this, false, new MusicUtils.OnMusicLoadedListener() {
-            @Override
-            public void onMusicLoadSuccess(ArrayList<MusicInfo> infos) {
 
-                for (int i = 0; i < infos.size(); i++) {
+        arrayList = MusicUtils.getMusicInfo(this, true);
 
+        for (int i = 0; i < arrayList.size() ; i++) {
 
-                    MusicInfo info = infos.get(i);
-                    String singer = info.getSinger();
-                    int albumsmusicNumber = info.getSingermusicCount();
-                    Bitmap bitmap = info.getMusicAlbumsImage();
-                    ContentItem item;
-                    if (bitmap != null) {
-                        item = new ContentItem(bitmap, R.drawable.more_title_selected, singer, albumsmusicNumber + "首");
-                    } else {
-                        item = new ContentItem(R.drawable.singer, R.drawable.more_title_selected, singer, albumsmusicNumber + "首");
-                    }
-                    items.add(item);
-                }
+            MusicInfo info = arrayList.get(i);
+
+            String musicsiner = info.getSinger();
 
 
+            int musiccount = info.getSingermusicCount();
+
+            Bitmap bitmap = info.getMusicAlbumsImage();
+
+            ContentItem item;
+            if (bitmap!=null){
+                item = new ContentItem(bitmap,R.drawable.more_title_selected,musicsiner,musiccount+"首");
+            }else {
+                item = new ContentItem(R.drawable.singer,R.drawable.more_title_selected,musicsiner,musiccount+"首");
             }
+            items.add(item);
 
-            @Override
-            public void onMusicLoading() {
+        }
 
-            }
-
-            @Override
-            public void onMusicLoadFail() {
-
-            }
-        });
-    }
-
+        }
 
     @Override
     public void onSearchTextChanged(String text) {
@@ -105,6 +99,8 @@ public class MusicSingerActivity extends BaseActivity {
 
     }
 
+
+    /*//去除相同元素的方法
     public static ArrayList<MusicInfo> singleElement(ArrayList<MusicInfo> al) {
         ArrayList<MusicInfo> arrayList = new ArrayList<>();
         Iterator<MusicInfo> it = al.iterator();
@@ -117,6 +113,9 @@ public class MusicSingerActivity extends BaseActivity {
         //返回新的没有重复元素的ArrayList集合对象
         return arrayList;
     }
+*/
+
+
 }
 
 

@@ -28,6 +28,7 @@ public class MusicTracksActivity extends BaseActivity {
 
     private ContentAdapter mAdapter;
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
+    private ArrayList<MusicInfo> arrayList;
 
 
     @Override
@@ -50,13 +51,16 @@ public class MusicTracksActivity extends BaseActivity {
 
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
         lv_music_detail = (ListView) findViewById(R.id.lv_music_detail);
-        mAdapter = new ContentAdapter(this, mItems, false);
+        mAdapter = new ContentAdapter(this, mItems, true);
+
+        mAdapter.setMusicInfos(arrayList);
+
         lv_music_detail.setAdapter(mAdapter);
 
 
         int count = mAdapter.getCount();
 
-        tv_music_number.setText(count + "首");
+        tv_music_number.setText("共" + count + "首");
 
 
         sb_navigation_bar.setOnStrSelectCallBack(new ISideBarSelectCallBack() {
@@ -74,42 +78,27 @@ public class MusicTracksActivity extends BaseActivity {
     @Override
     public void onCreateData() {
 
-        MusicUtils.getMusicInfo(this, false, new MusicUtils.OnMusicLoadedListener() {
-            @Override
-            public void onMusicLoadSuccess(ArrayList<MusicInfo> infos) {
 
+        arrayList = MusicUtils.getMusicInfo(this, false);
 
-                for (int i = 0; i < infos.size(); i++) {
+        for (int i = 0; i < arrayList.size(); i++) {
 
-                    Log.i("TAG", "infos.size=====" + infos.size());
-                    MusicInfo info = infos.get(i);
-                    String musicname = info.getMusicName();
-                    String singer = info.getSinger();
+            MusicInfo info = arrayList.get(i);
 
-                    Bitmap bitmap = info.getMusicAlbumsImage();
-                    ContentItem item;
-                    if (bitmap != null) {
-                        item = new ContentItem(bitmap, R.drawable.more_title_selected, musicname, singer);
-                    } else {
-                        item = new ContentItem(R.drawable.singer, R.drawable.more_title_selected, musicname, singer);
-                    }
+            String musicName = info.getMusicName();
+            String musicSinger = info.getSinger();
 
-                    mItems.add(item);
+            Bitmap bitmap = info.getMusicAlbumsImage();
 
-                }
+            ContentItem item;
+            if (bitmap != null) {
+                item = new ContentItem(bitmap, R.drawable.more_title_selected, musicName, musicSinger);
+            } else {
+                item = new ContentItem(R.drawable.singer, R.drawable.more_title_selected, musicName, musicSinger);
             }
+            mItems.add(item);
 
-            @Override
-            public void onMusicLoading() {
-
-            }
-
-            @Override
-            public void onMusicLoadFail() {
-
-            }
-        });
-
+        }
 
     }
 

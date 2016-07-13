@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/bottom_title_bar"
-              android:layout_width="match_parent"
-              android:layout_height="64dp"
-              android:orientation="vertical"
+    android:id="@+id/bottom_title_bar"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:orientation="vertical"
 
     >
 
@@ -13,7 +13,7 @@
         android:layout_height="3dp"
         android:background="@drawable/progressbar_home"
         android:max="100"
-        android:progress="60"/>
+        android:progress="90" />
 
 
     <RelativeLayout
@@ -30,17 +30,17 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="6dp"
             android:scaleType="centerInside"
-            android:src="@drawable/singer"/>
+            android:src="@drawable/singer" />
 
         <TextView
             android:id="@+id/tv_music_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="11dp"
-            android:layout_toRightOf="@+id/iv_music_icon"
             android:layout_marginTop="6dp"
+            android:layout_toRightOf="@+id/iv_music_icon"
             android:text="歌曲名称"
-            android:textSize="18dp"/>
+            android:textSize="18dp" />
 
 
         <TextView
@@ -49,10 +49,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_music_name"
             android:layout_marginLeft="11dp"
-            android:layout_toRightOf="@+id/iv_music_icon"
             android:layout_marginTop="6dp"
+            android:layout_toRightOf="@+id/iv_music_icon"
             android:text="歌手"
-            android:textSize="14dp"/>
+            android:textSize="14dp" />
 
         <ImageView
             android:id="@+id/iv_music_next"
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/next_btn"/>
+            android:src="@drawable/next_btn" />
 
         <ImageView
             android:id="@+id/iv_music_play_pause"
@@ -68,10 +68,9 @@
             android:layout_height="48dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="14dp"
-            android:layout_toLeftOf="@id/iv_music_next"
             android:layout_marginTop="10dp"
-            android:src="@drawable/pause_btn"
-            />
+            android:layout_toLeftOf="@id/iv_music_next"
+            android:src="@drawable/pause_btn" />
 
 
     </RelativeLayout>

@@ -19,6 +19,7 @@ public class MusicAlbumsActivity extends BaseActivity {
     private ArrayList<ContentItem> items = new ArrayList<ContentItem>();
     private ContentAdapter mAdapter;
     private SideBar sb_navigation_bar;
+    private ArrayList<MusicInfo> arrayList;
 
 
     @Override
@@ -35,6 +36,8 @@ public class MusicAlbumsActivity extends BaseActivity {
 
         mListview.setAdapter(new ContentAdapter(this, items, false));
 
+
+
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
     }
 
@@ -43,37 +46,28 @@ public class MusicAlbumsActivity extends BaseActivity {
     public void onCreateData() {
 
 
-        MusicUtils.getMusicInfo(this, false, new MusicUtils.OnMusicLoadedListener() {
-            @Override
-            public void onMusicLoadSuccess(ArrayList<MusicInfo> infos) {
+        arrayList = MusicUtils.getMusicInfo(this, false);
 
-                for (int i = 0; i < infos.size(); i++) {
+        for (int i = 0; i < arrayList.size(); i++) {
 
-                    MusicInfo info = infos.get(i);
-                    String albumsname = info.getMusicAlbumsName();
-                    int albumsmusicNumber = info.getMusicAlbumsNumber();
+            MusicInfo info = arrayList.get(i);
 
-                    Bitmap bitmap = info.getMusicAlbumsImage();
-                    ContentItem item;
-                    if (bitmap != null) {
-                        item = new ContentItem(bitmap, R.drawable.more_title_selected, albumsname, albumsmusicNumber + "首");
-                    } else {
-                        item = new ContentItem(R.drawable.albums_list, R.drawable.more_title_selected, albumsname, albumsmusicNumber + "首");
-                    }
-                    items.add(item);
-                }
+            String musicAlbums = info.getMusicAlbumsName();
+            int musicAblumscount = info.getMusicAlbumsNumber();
+
+            Bitmap bitmap = info.getMusicAlbumsImage();
+            ContentItem item;
+            if (bitmap != null) {
+
+                item = new ContentItem(bitmap, R.drawable.more_title_selected, musicAlbums, musicAblumscount + "首");
+
+            } else {
+                item = new ContentItem(R.drawable.singer, R.drawable.more_title_selected, musicAlbums, musicAblumscount + "首");
             }
 
-            @Override
-            public void onMusicLoading() {
+            items.add(item);
 
-            }
-
-            @Override
-            public void onMusicLoadFail() {
-
-            }
-        });
+        }
 
 
     }
