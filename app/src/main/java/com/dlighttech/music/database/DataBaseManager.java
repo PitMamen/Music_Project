@@ -392,16 +392,18 @@ public class DataBaseManager {
      * 根据音乐文件路径和歌单id删除歌单下的歌曲
      *
      * @param path
+     * @param songListId
      * @return
      */
-    public boolean delSongOfSongListByPath(String path) {
+    public boolean delSongOfSongListByPathAndId(int songListId, String path) {
         synchronized (mDataBase) {
             SQLiteDatabase database = null;
             try {
                 database = mDataBase.getReadableDatabase();
                 String sql = "delete from " + SongListDataBase.SONG_TABLE + " where "
-                        + SongListDataBase.SONG_PATH + "=?";
-                database.execSQL(sql, new Object[]{path});
+                        + SongListDataBase.SONG_PATH + "=? and "
+                        + SongListDataBase.SONG_LIST_ID + "=?";
+                database.execSQL(sql, new Object[]{path, songListId});
                 return true;
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -421,21 +423,23 @@ public class DataBaseManager {
      * @return
      */
     public ArrayList<SongList> deleteSongBySongList(MusicInfo info) {
-        // bug 删除歌曲时，会将歌单中的所有路径同民歌曲删除？？？
         ArrayList<SongList> songLists = getAllSongList();
         ArrayList<SongList> newSongLists = new ArrayList<SongList>();
         if (songLists == null || songLists.size() == 0)
             return null;
-
         for (int i = 0; i < songLists.size(); i++) {
             SongList list = songLists.get(i);
 
             ArrayList<Song> songs = getSongByListId(list.getId());
+
             for (int j = 0; j < songs.size(); j++) {
                 Song song = songs.get(j);
+                Log.d("TAG", "song.getSongPath()===" + song.getSongPath()
+                        + ", info.getMusicPath()===" + info.getMusicPath());
                 // 遍历所有歌单下的歌曲，如果匹配有则删除
                 if (song.getSongPath().equals(info.getMusicPath())) {
-                    boolean isDel = delSongOfSongListByPath(info.getMusicPath());
+                    boolean isDel = delSongOfSongListByPathAndId(list.getId()
+                            , info.getMusicPath());
                     if (isDel) {
                         Log.d("TAG", list.getName() + "删除了" + info.getMusicName());
                         Log.d("TAG", "song.getSongPath()===" + song.getSongPath()

@@ -113,7 +113,6 @@ public class ContentAdapter extends BaseAdapter {
         }
 
 
-
         ContentItem contentItem = contentItems.get(position);
 
         if (contentItem.getThumb() == 0) {
@@ -325,6 +324,7 @@ public class ContentAdapter extends BaseAdapter {
 
                         for (int i = 0; i < songLists.size(); i++) {
                             SongList list = songLists.get(i);
+                            Log.d("TAG", "(更新)getName.get=====" + list.getName());
                             // 当删除歌单中的数据时，需要将count通知观察者更新
                             list.setCount(list.getCount() - 1);
                             DataChangedWatcher.getInstance().update(list);
