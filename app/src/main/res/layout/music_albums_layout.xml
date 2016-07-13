@@ -24,6 +24,7 @@
 
 
         <ListView
+            android:background="#FFFFFF"
             android:id="@+id/lv_music_detail"
             android:layout_width="0dp"
             android:layout_weight="1"

@@ -12,9 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        lrc:textSize="18sp"
+        lrc:textSize="28sp"
         lrc:normalTextColor="@android:color/darker_gray"
-        lrc:currentTextColor="@android:color/white"
+        lrc:currentTextColor="#ffe400"
         lrc:dividerHeight="20dp"
         lrc:rows="9" />
 

@@ -15,21 +15,40 @@
 -->
 
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+
     >
 
     <item android:id="@android:id/background">
-        <shape>
+        <shape android:shape="rectangle">
+
             <solid android:color="#F0F0F0" />
+
         </shape>
+    </item>
+
+    <item
+        android:id="@android:id/secondaryProgress"
+        >
+        <clip>
+
+            <shape>
+                <solid android:color="#00FFFF"/>
+
+            </shape>
+        </clip>
     </item>
 
     <item android:id="@android:id/progress">
-        <shape>
-            <solid android:color="#FDE600"/>
+        <clip>
 
-        </shape>
+            <shape >
+                <solid android:color="#FDE600"/>
+
+            </shape>
+        </clip>
 
     </item>
+
 
 </layer-list>
 
