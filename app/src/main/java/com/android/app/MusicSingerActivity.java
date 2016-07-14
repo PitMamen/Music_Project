@@ -137,7 +137,7 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+             //解绑服务
        MusicUtils.unbindFromService(token);
 
     }

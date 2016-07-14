@@ -37,7 +37,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="11dp"
-            />
+            android:layout_toRightOf="@id/iv_music_icon"
+            android:layout_marginTop="6dp"
+            android:text="歌曲名称"
+            android:textSize="18dp" />
 
 
         <TextView
@@ -46,8 +49,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_music_name"
             android:layout_marginLeft="11dp"
+            android:layout_toRightOf="@id/iv_music_icon"
             android:layout_marginTop="6dp"
-            android:layout_toRightOf="@+id/iv_music_icon"
             android:text="歌手"
             android:textSize="14dp" />
 

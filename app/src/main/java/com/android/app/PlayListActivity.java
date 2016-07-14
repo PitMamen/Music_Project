@@ -37,15 +37,17 @@ public class PlayListActivity extends BaseActivity
     @Override
     public void onCreateView() {
         super.setTitleText("播放列表");
-        mListView = (ListView) findViewById(R.id.lv_play_list);
+        mListView = (ListView) findViewById(R.id.lv_music_detail);
 
         DataChangedWatcher.getInstance().registerObserver(this);
 
         mAdapter = new ContentAdapter(this, mItems, false);
+        mAdapter.setIsOperationHidden(true);
 
         View footView = getLayoutInflater().inflate(R.layout.content_layout, null);
         ImageView ivThumb = (ImageView) footView.findViewById(R.id.thumb_imageView_content);
         ImageView ivOpera = (ImageView) footView.findViewById(R.id.operate_imageView_content);
+        ivOpera.setVisibility(View.GONE);
         TextView tvName = (TextView) footView.findViewById(R.id.title_content);
         TextView tvContent = (TextView) footView.findViewById(R.id.content_content);
         tvContent.setVisibility(View.GONE);
@@ -60,6 +62,7 @@ public class PlayListActivity extends BaseActivity
 
         ivThumb.setImageResource(R.drawable.create_playlist);
         ivOpera.setImageResource(R.drawable.arrow_list);
+        ivOpera.setVisibility(View.GONE);
         tvName.setText("新建歌单");
 
         mListView.addFooterView(footView);
@@ -131,8 +134,8 @@ public class PlayListActivity extends BaseActivity
         songLists.clear();
         songLists = DataBaseManager.getInstance(this).getAllSongList();
         for (int i = 0; i < songLists.size(); i++) {
-            ContentItem item = new ContentItem(R.drawable.folder_list
-                    , R.drawable.arrow_list
+            int resId = i == 0 ? R.drawable.favorites_playlist : R.drawable.champions_playlist;
+            ContentItem item = new ContentItem(resId
                     , songLists.get(i).getName()
                     , songLists.get(i).getCount() + "首");
             mItems.add(item);
@@ -143,6 +146,7 @@ public class PlayListActivity extends BaseActivity
 
     @Override
     public void onInitView() {
+
         setContentView(R.layout.activity_play_list);
     }
 
@@ -158,12 +162,13 @@ public class PlayListActivity extends BaseActivity
             list.setCount(0);
             DataBaseManager.getInstance(this).insertSongList(list);
             ContentItem item = new ContentItem(R.drawable.favorites_playlist
-                    , R.drawable.arrow_list, "我喜欢听", "0首");
+                    , "我喜欢听", "0首");
             mItems.add(item);
         } else {
             for (int i = 0; i < songLists.size(); i++) {
-                ContentItem item = new ContentItem(R.drawable.champions_playlist
-                        , R.drawable.arrow_list, songLists.get(i).getName()
+                int resId = i == 0 ? R.drawable.favorites_playlist : R.drawable.champions_playlist;
+                ContentItem item = new ContentItem(resId
+                        , songLists.get(i).getName()
                         , songLists.get(i).getCount() + "首");
                 mItems.add(item);
                 Log.d("TAG", item.toString());
@@ -222,13 +227,5 @@ public class PlayListActivity extends BaseActivity
         }
 
     }
-
-
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        // 反注册观察者
-////        DataChangedWatcher.getInstance().unRegisterObserver(this);
-//    }
 }
 
