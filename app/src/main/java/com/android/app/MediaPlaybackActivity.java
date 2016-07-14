@@ -70,8 +70,8 @@ import android.widget.Toast;
 
 import com.android.app.MusicUtils.ServiceToken;
 import com.android.music.IMediaPlaybackService;
-import com.dlighttech.music.util.PathFromUriUtil;
 import com.dlighttech.music.ui.LrcView;
+import com.dlighttech.music.util.PathFromUriUtil;
 
 import java.util.ArrayList;
 
@@ -536,6 +536,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
                     mService.seek(0);
                     mService.play();
                 }
+                updateState();
             } catch (RemoteException ex) {
             }
         }
@@ -546,6 +547,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
             if (mService == null) return;
             try {
                 mService.next();
+                updateState();
             } catch (RemoteException ex) {
             }
         }
@@ -1059,14 +1061,23 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
             if (mService != null) {
                 if (mService.isPlaying()) {
                     mService.pause();
+                    updateState();
                 } else {
                     mService.play();
+                    updateState();
                 }
                 refreshNow();
                 setPauseButtonImage();
             }
         } catch (RemoteException ex) {
         }
+    }
+
+    /**
+     * 通过观察者模式通知BaseActivity更新底部视图
+     */
+    private void updateState() {
+        DataChangedWatcher.getInstance().update();
     }
 
     private void toggleShuffle() {
@@ -1090,10 +1101,15 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
                 Log.e("MediaPlaybackActivity", "Invalid shuffle mode: " + shuffle);
             }
             setShuffleButtonImage();
+
+
         } catch (RemoteException ex) {
         }
     }
 
+    /**
+     * 循环播放被点击时操作的方法
+     */
     private void cycleRepeat() {
         if (mService == null) {
             return;
@@ -1115,6 +1131,8 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
                 showToast(R.string.repeat_off_notif);
             }
             setRepeatButtonImage();
+
+            updateState();
         } catch (RemoteException ex) {
         }
 
@@ -1165,6 +1183,9 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
             mService = IMediaPlaybackService.Stub.asInterface(obj);
             startPlayback();
             try {
+                // 监听当前播放状态更新BaseActivity底部View视图
+                updateState();
+
                 // Assume something is playing when the service says it is,
                 // but also if the audio ID is valid but the service is paused.
                 if (mService.getAudioId() >= 0 || mService.isPlaying() ||
@@ -1217,6 +1238,9 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
         }
     }
 
+    /**
+     * 设置是否重复播放歌曲
+     */
     private void setShuffleButtonImage() {
         if (mService == null) return;
         try {

@@ -10,10 +10,8 @@ import com.dlighttech.music.util.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
 
-public class DirFileActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked,Observer {
+public class DirFileActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked {
 
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
     /**
@@ -80,10 +78,5 @@ public class DirFileActivity extends BaseActivity implements ContentAdapter.OnCo
         intent.putExtra("item", item);
         intent.putParcelableArrayListExtra("musicInfos", mMusicInfos);
         startActivity(intent);
-    }
-
-    @Override
-    public void update(Observable observable, Object data) {
-
     }
 }

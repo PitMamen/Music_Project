@@ -1,8 +1,7 @@
 package com.android.app;
 
-import android.database.Cursor;
-import android.os.RemoteException;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.ListView;
 
 import com.dlighttech.music.adapter.ContentAdapter;
@@ -26,9 +25,6 @@ public class MusicListActivity extends BaseActivity
     private ListView mListView;
     private ContentAdapter mAdapter;
     private ContentItem item;
-    private Cursor mTrackCursor;
-    private MusicUtils.ServiceToken mToken;
-    //    private ListPopupWindow popupWindow;
 
     @Override
     public void onCreateView() {
@@ -74,10 +70,6 @@ public class MusicListActivity extends BaseActivity
                     , info.getSinger());
             mItems.add(newItem);
         }
-
-        // 绑定服务
-        mToken = MusicUtils.bindToService(this);
-
     }
 
 
@@ -94,29 +86,22 @@ public class MusicListActivity extends BaseActivity
 
     @Override
     public void onConvertViewClicked(int position) {
-        MusicInfo info = mMusicList.get(position);
-        mTrackCursor = MusicUtils.getMusicInfo(this, false, MediaStore.Audio.Media._ID + "=?"
-                , new String[]{String.valueOf(info.getMusicId())});
-
-        if (mTrackCursor.getCount() == 0) {
-            return;
-        }
-        if (mTrackCursor instanceof TrackBrowserActivity.NowPlayingCursor) {
-            if (MusicUtils.sService != null) {
-                try {
-                    MusicUtils.sService.setQueuePosition(position);
-                    return;
-                } catch (RemoteException ex) {
-                }
-            }
-        }
-        MusicUtils.playAll(this, mTrackCursor);
+        // 当点击了listView item将在底部布局中播放音乐
+        playMusic(position);
     }
 
+    private void playMusic(int position) {
+        StringBuilder mSelection = new StringBuilder();
+        String[] mSelectionArgs = new String[mMusicList.size()];
+        // 由于需要下一曲的播放所以需要将当前目录下的歌曲以游标的形式传递给Service
+        for (int i = 0; i < mMusicList.size(); i++) {
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        MusicUtils.unbindFromService(mToken);
+            mSelection.append(MediaStore.Audio.Media._ID + "=?");
+            mSelection.append(i == mMusicList.size() - 1 ? "" : " or ");
+
+            mSelectionArgs[i] = String.valueOf(mMusicList.get(i).getMusicId());
+        }
+        super.playCursor(mSelection.toString(), mSelectionArgs, false, position);
+        Log.d("TAG", mSelection.toString());
     }
 }
