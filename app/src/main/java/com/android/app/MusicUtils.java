@@ -833,11 +833,12 @@ public class MusicUtils {
             sService.open(list, force_shuffle ? -1 : position);
             sService.play();
         } catch (RemoteException ex) {
-        } finally {
-            Intent intent = new Intent("com.android.music.PLAYBACK_VIEWER")
-                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            context.startActivity(intent);
         }
+//        finally {
+//            Intent intent = new Intent("com.android.music.PLAYBACK_VIEWER")
+//                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            context.startActivity(intent);
+//        }
     }
 
     public static void clearQueue() {

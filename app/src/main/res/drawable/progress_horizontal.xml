@@ -19,7 +19,7 @@
     <item android:id="@android:id/background">
         <shape>
             <gradient
-                android:startColor="#3f808080"
+                android:startColor="#FFFF00"
                 android:endColor="#7f000000"
                 android:angle="270"
             />

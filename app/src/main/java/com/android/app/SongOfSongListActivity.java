@@ -1,5 +1,7 @@
 package com.android.app;
 
+import android.database.Cursor;
+import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.widget.ListView;
 
@@ -12,13 +14,16 @@ import com.dlighttech.music.util.PreferencesUtils;
 
 import java.util.ArrayList;
 
-public class SongOfSongListActivity extends BaseActivity {
+public class SongOfSongListActivity extends BaseActivity
+        implements ContentAdapter.OnConvertViewClicked {
 
     private ListView mListView;
     private ContentAdapter mAdapter;
     private ArrayList<Song> mSongs = new ArrayList<Song>();
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
     private ArrayList<MusicInfo> mMusicInfos = new ArrayList<MusicInfo>();
+    private Cursor mTrackCursor;
+    private MusicUtils.ServiceToken mToken;
 //    private int mPosition;
 
 
@@ -65,6 +70,10 @@ public class SongOfSongListActivity extends BaseActivity {
                 mItems.add(item);
             }
         }
+
+
+        // 绑定服务
+        mToken = MusicUtils.bindToService(this);
     }
 
     @Override
@@ -77,20 +86,31 @@ public class SongOfSongListActivity extends BaseActivity {
 
     }
 
+    @Override
+    public void onConvertViewClicked(int position) {
+        MusicInfo info = mMusicInfos.get(position);
+        mTrackCursor = MusicUtils.getMusicInfo(this, false, MediaStore.Audio.Media._ID + "=?"
+                , new String[]{String.valueOf(info.getMusicId())});
 
-//    /**
-//     * 创建一个popupWindow菜单
-//     *
-//     * @param v
-//     */
-//    private void createPopupWindowMenu(View v) {
-//        String[] menus = {"新建歌单", "添加到歌单", "查看歌曲信息", "删除"};
-//        popupWindow = DialogUtils.createListPopupWindow(this, menus, v, this);
-//        popupWindow.show();
-//    }
+        if (mTrackCursor.getCount() == 0) {
+            return;
+        }
+        if (mTrackCursor instanceof TrackBrowserActivity.NowPlayingCursor) {
+            if (MusicUtils.sService != null) {
+                try {
+                    MusicUtils.sService.setQueuePosition(position);
+                    return;
+                } catch (RemoteException ex) {
+                }
+            }
+        }
+        MusicUtils.playAll(this, mTrackCursor);
+    }
 
-//    @Override
-//    public void onOperateClicked(int position, View v) {
-//        mPosition = position;
-//    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MusicUtils.unbindFromService(mToken);
+    }
 }

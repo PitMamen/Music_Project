@@ -15,6 +15,13 @@ public class PreferencesUtils {
     public static final String IS_SONG_LIST_DEL_KEY = "song_list_del_song";
     public static final String SONG_LIST = "song_list";
 
+    public static final String MUSIC = "music";
+    public static final String SINGER = "singer";
+    public static final String MUSIC_NAME = "music_name";
+    public static final String SONG_ID = "song_id";
+    public static final String ALBUM_ID = "album_id";
+    public static final String IS_PLAYING = "is_playing";
+
 
     private PreferencesUtils() {
 
@@ -66,7 +73,7 @@ public class PreferencesUtils {
     }
 
     public long getLong(String key) {
-        return mShared.getLong(key, 0L);
+        return mShared.getLong(key, -1);
     }
 
     public float getFloat(String key) {
