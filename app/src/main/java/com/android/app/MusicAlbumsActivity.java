@@ -1,6 +1,9 @@
 package com.android.app;
 
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.os.RemoteException;
+import android.provider.MediaStore;
 import android.widget.ListView;
 
 import com.allenliu.sidebar.SideBar;
@@ -13,12 +16,17 @@ import java.util.ArrayList;
 /**
  * Created by pengxinkai001 on 2016/6/24.
  */
-public class MusicAlbumsActivity extends BaseActivity {
+public class MusicAlbumsActivity extends BaseActivity  implements ContentAdapter.OnConvertViewClicked{
 
     private ListView mListview;
     private ArrayList<ContentItem> items = new ArrayList<ContentItem>();
     private ContentAdapter mAdapter;
     private SideBar sb_navigation_bar;
+    private ArrayList<MusicInfo> arrayList;
+
+    private Cursor cursor;
+
+    private  MusicUtils.ServiceToken token;
 
 
     @Override
@@ -35,6 +43,8 @@ public class MusicAlbumsActivity extends BaseActivity {
 
         mListview.setAdapter(new ContentAdapter(this, items, false));
 
+
+
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
     }
 
@@ -43,37 +53,30 @@ public class MusicAlbumsActivity extends BaseActivity {
     public void onCreateData() {
 
 
-        MusicUtils.getMusicInfo(this, false, new MusicUtils.OnMusicLoadedListener() {
-            @Override
-            public void onMusicLoadSuccess(ArrayList<MusicInfo> infos) {
+        arrayList = MusicUtils.getMusicInfo(this, false);
 
-                for (int i = 0; i < infos.size(); i++) {
+        for (int i = 0; i < arrayList.size(); i++) {
 
-                    MusicInfo info = infos.get(i);
-                    String albumsname = info.getMusicAlbumsName();
-                    int albumsmusicNumber = info.getMusicAlbumsNumber();
+            MusicInfo info = arrayList.get(i);
 
-                    Bitmap bitmap = info.getMusicAlbumsImage();
-                    ContentItem item;
-                    if (bitmap != null) {
-                        item = new ContentItem(bitmap, R.drawable.more_title_selected, albumsname, albumsmusicNumber + "首");
-                    } else {
-                        item = new ContentItem(R.drawable.albums_list, R.drawable.more_title_selected, albumsname, albumsmusicNumber + "首");
-                    }
-                    items.add(item);
-                }
+            String musicAlbums = info.getMusicAlbumsName();
+            int musicAblumscount = info.getMusicAlbumsNumber();
+
+            Bitmap bitmap = info.getMusicAlbumsImage();
+            ContentItem item;
+            if (bitmap != null) {
+
+                item = new ContentItem(bitmap, R.drawable.more_title_selected, musicAlbums, musicAblumscount + "首");
+
+            } else {
+                item = new ContentItem(R.drawable.singer, R.drawable.more_title_selected, musicAlbums, musicAblumscount + "首");
             }
 
-            @Override
-            public void onMusicLoading() {
+            items.add(item);
 
-            }
+            MusicUtils.bindToService(this);
 
-            @Override
-            public void onMusicLoadFail() {
-
-            }
-        });
+        }
 
 
     }
@@ -86,5 +89,39 @@ public class MusicAlbumsActivity extends BaseActivity {
     @Override
     public void onSearchSubmit(String text) {
 
+    }
+
+    @Override
+    public void onConvertViewClicked(int position) {
+
+        MusicInfo info = arrayList.get(position);
+        cursor = MusicUtils.getMusicInfo(this, false, MediaStore.Audio.Media._ID + "=?"
+                , new String[]{String.valueOf(info.getMusicId())});
+
+        if (cursor.getCount() == 0) {
+            return;
+        }
+        if (cursor instanceof TrackBrowserActivity.NowPlayingCursor) {
+            if (MusicUtils.sService != null) {
+                try {
+                    MusicUtils.sService.setQueuePosition(position);
+                    return;
+                } catch (RemoteException ex) {
+                }
+            }
+        }
+        MusicUtils.playAll(this, cursor);
+
+
+
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        //解绑服务
+        MusicUtils.unbindFromService(token);
     }
 }

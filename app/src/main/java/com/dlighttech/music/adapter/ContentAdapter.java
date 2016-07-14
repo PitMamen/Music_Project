@@ -55,6 +55,7 @@ public class ContentAdapter extends BaseAdapter {
     private boolean isMenu = false;
     private int mChoice = 0;
     private int mSelectPostion = 0;
+    private final Activity activity;
 
     public ContentAdapter(Context context
             , List<ContentItem> lists
@@ -64,7 +65,7 @@ public class ContentAdapter extends BaseAdapter {
         this.mContext = context;
         this.isMenu = isMenu;
 
-        Activity activity = (Activity) context;
+        activity = (Activity) context;
         if (activity instanceof OnConvertViewClicked) {
             mOnConvertView = (OnConvertViewClicked) activity;
         }
@@ -74,6 +75,7 @@ public class ContentAdapter extends BaseAdapter {
         if (activity instanceof OnOperateClicked) {
             mOnOperate = (OnOperateClicked) activity;
         }
+
     }
 
     public void setIsOperationHidden(boolean isHidden) {
@@ -118,7 +120,6 @@ public class ContentAdapter extends BaseAdapter {
 
         Bitmap bmOpr = contentItem.getOperatorBitmap();
         Bitmap bmThumb = contentItem.getThumbBitmap();
-
 
         if (bmOpr == null) {
             holder.operator.setImageResource(contentItem.getOperator());

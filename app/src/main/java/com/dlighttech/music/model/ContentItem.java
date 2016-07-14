@@ -66,6 +66,14 @@ public class ContentItem implements Serializable {
         this.title = title;
     }
 
+    public ContentItem(int thumb,String tiltle,String content){
+        this.thumb = thumb;
+        this.title=tiltle;
+        this.content = content;
+
+    }
+
+
 
     public ContentItem() {
     }

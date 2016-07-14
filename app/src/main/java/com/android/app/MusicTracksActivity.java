@@ -1,6 +1,9 @@
 package com.android.app;
 
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.os.RemoteException;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -18,16 +21,19 @@ import java.util.ArrayList;
 /**
  * Created by pengxinkai001 on 2016/6/23.
  */
-public class MusicTracksActivity extends BaseActivity {
+public class MusicTracksActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked {
 
     private ImageButton ib_music_back;
     private TextView tv_title, tv_paly_mode, tv_music_number;
     private ImageView iv_music_search, iv_music_icon;
     private ListView lv_music_detail;
     private SideBar sb_navigation_bar;
+    private Cursor cursor;
+    private  MusicUtils.ServiceToken token;
 
     private ContentAdapter mAdapter;
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
+    private ArrayList<MusicInfo> arrayList;
 
 
     @Override
@@ -50,13 +56,16 @@ public class MusicTracksActivity extends BaseActivity {
 
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
         lv_music_detail = (ListView) findViewById(R.id.lv_music_detail);
-        mAdapter = new ContentAdapter(this, mItems, false);
+        mAdapter = new ContentAdapter(this, mItems, true);
+
+        mAdapter.setMusicInfos(arrayList);
+
         lv_music_detail.setAdapter(mAdapter);
 
 
         int count = mAdapter.getCount();
 
-        tv_music_number.setText(count + "首");
+        tv_music_number.setText("共" + count + "首");
 
 
         sb_navigation_bar.setOnStrSelectCallBack(new ISideBarSelectCallBack() {
@@ -74,42 +83,30 @@ public class MusicTracksActivity extends BaseActivity {
     @Override
     public void onCreateData() {
 
-        MusicUtils.getMusicInfo(this, false, new MusicUtils.OnMusicLoadedListener() {
-            @Override
-            public void onMusicLoadSuccess(ArrayList<MusicInfo> infos) {
 
+        arrayList = MusicUtils.getMusicInfo(this, false);
 
-                for (int i = 0; i < infos.size(); i++) {
+        for (int i = 0; i < arrayList.size(); i++) {
 
-                    Log.i("TAG", "infos.size=====" + infos.size());
-                    MusicInfo info = infos.get(i);
-                    String musicname = info.getMusicName();
-                    String singer = info.getSinger();
+            MusicInfo info = arrayList.get(i);
 
-                    Bitmap bitmap = info.getMusicAlbumsImage();
-                    ContentItem item;
-                    if (bitmap != null) {
-                        item = new ContentItem(bitmap, R.drawable.more_title_selected, musicname, singer);
-                    } else {
-                        item = new ContentItem(R.drawable.singer, R.drawable.more_title_selected, musicname, singer);
-                    }
+            String musicName = info.getMusicName();
+            String musicSinger = info.getSinger();
 
-                    mItems.add(item);
+            Bitmap bitmap = info.getMusicAlbumsImage();
 
-                }
+            ContentItem item;
+            if (bitmap != null) {
+                item = new ContentItem(bitmap, R.drawable.more_title_selected, musicName, musicSinger);
+            } else {
+                item = new ContentItem(R.drawable.singer, R.drawable.more_title_selected, musicName, musicSinger);
             }
+            mItems.add(item);
 
-            @Override
-            public void onMusicLoading() {
+            //绑定服务
+            token = MusicUtils.bindToService(this);
 
-            }
-
-            @Override
-            public void onMusicLoadFail() {
-
-            }
-        });
-
+        }
 
     }
 
@@ -122,5 +119,37 @@ public class MusicTracksActivity extends BaseActivity {
     @Override
     public void onSearchSubmit(String text) {
 
+    }
+
+    @Override
+    public void onConvertViewClicked(int position) {
+        MusicInfo info = arrayList.get(position);
+        cursor = MusicUtils.getMusicInfo(this, false, MediaStore.Audio.Media._ID + "=?"
+                , new String[]{String.valueOf(info.getMusicId())});
+
+        if (cursor.getCount() == 0) {
+            return;
+        }
+        if (cursor instanceof TrackBrowserActivity.NowPlayingCursor) {
+            if (MusicUtils.sService != null) {
+                try {
+                    MusicUtils.sService.setQueuePosition(position);
+                    return;
+                } catch (RemoteException ex) {
+                }
+            }
+        }
+        //播放音乐
+        MusicUtils.playAll(this, cursor);
+
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+       // 解绑服务
+        MusicUtils.unbindFromService(token);
     }
 }

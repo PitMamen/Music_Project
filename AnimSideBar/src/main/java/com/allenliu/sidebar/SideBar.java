@@ -105,7 +105,7 @@ public class SideBar extends TextView {
         textPaint.setTextAlign(Paint.Align.CENTER);
         bigTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         bigTextPaint.setColor(getCurrentTextColor());
-        bigTextPaint.setTextSize(getTextSize()+getTextSize() * (scaleTime+2) );
+        bigTextPaint.setTextSize(getTextSize()+getTextSize() * (scaleTime+1) );
         bigTextPaint.setTextAlign(Paint.Align.CENTER);
         scaleTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         scaleTextPaint.setColor(getCurrentTextColor());
@@ -208,20 +208,6 @@ public class SideBar extends TextView {
                 else
                     canvas.drawText(letters[i], drawX, singleTextH + itemH * i, scaleTextPaint);
 
-//抛物线实现，没有动画效果，太生硬了
-                  /*  canvas.save();
-                    canvas.translate(w-getPaddingRight(),0);
-                    double y1 = singleTextH + itemH * (index - scaleItemCount);
-                    double y2 = singleTextH + itemH * (index + scaleItemCount);
-                   double topY = y;
-                   double topX = -scaleWidth;
-                double p = topX / ((topY - y1) * (topY - y2));
-                   for (int j = 1; j <= scaleItemCount; j++) {
-                        double currentY=singleTextH + itemH * i;
-                       canvas.drawText(letters[i], (float) (p * (currentY - y1) * (currentY - y2)), singleTextH + itemH * i, scaleTextPaint);
-                   }
-                   canvas.restore();*/
-                //    }
             }
         }
     }
