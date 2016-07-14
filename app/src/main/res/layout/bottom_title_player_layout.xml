@@ -2,27 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/bottom_title_bar"
     android:layout_width="match_parent"
-<<<<<<< HEAD
     android:layout_height="65dp"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-=======
-    android:layout_height="64dp"
-    android:orientation="vertical"
 
-    >
-
-    <ProgressBar
-        android:id="@+id/pro_music_schedule"
-        android:layout_width="fill_parent"
-        android:layout_height="3dp"
-        android:background="@drawable/progressbar_home"
-        android:max="100"
-        android:progress="90" />
->>>>>>> 6586a43a1dd9d2a548c127c9699d45e3e9b48420
 
         <ProgressBar
             android:id="@+id/pro_music_schedule"
@@ -89,7 +75,6 @@
             android:layout_marginTop="10dp"
             android:layout_toLeftOf="@id/iv_music_next"
             android:src="@drawable/pause_btn_selector" />
-
 
 
     </RelativeLayout>
