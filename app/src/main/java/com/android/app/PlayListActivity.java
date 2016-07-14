@@ -13,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.allenliu.sidebar.ISideBarSelectCallBack;
+import com.allenliu.sidebar.SideBar;
 import com.dlighttech.music.adapter.ContentAdapter;
 import com.dlighttech.music.database.DataBaseManager;
 import com.dlighttech.music.model.ContentItem;
@@ -32,12 +34,15 @@ public class PlayListActivity extends BaseActivity
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
     private ContentAdapter mAdapter;
     private ArrayList<SongList> songLists;
+    private SideBar sideBar;
 
 
     @Override
     public void onCreateView() {
         super.setTitleText("播放列表");
         mListView = (ListView) findViewById(R.id.lv_music_detail);
+
+        sideBar = (SideBar) findViewById(R.id.navigation_bar);
 
         DataChangedWatcher.getInstance().registerObserver(this);
 
@@ -47,7 +52,6 @@ public class PlayListActivity extends BaseActivity
         View footView = getLayoutInflater().inflate(R.layout.content_layout, null);
         ImageView ivThumb = (ImageView) footView.findViewById(R.id.thumb_imageView_content);
         ImageView ivOpera = (ImageView) footView.findViewById(R.id.operate_imageView_content);
-        ivOpera.setVisibility(View.GONE);
         TextView tvName = (TextView) footView.findViewById(R.id.title_content);
         TextView tvContent = (TextView) footView.findViewById(R.id.content_content);
         tvContent.setVisibility(View.GONE);
@@ -67,6 +71,19 @@ public class PlayListActivity extends BaseActivity
 
         mListView.addFooterView(footView);
         mListView.setAdapter(mAdapter);
+
+
+
+        sideBar.setOnStrSelectCallBack(new ISideBarSelectCallBack() {
+            @Override
+            public void onSelectStr(int position, String selectStr) {
+
+              //  Toast.makeText(PlayListActivity.this,"按键导航操作...",Toast.LENGTH_SHORT).show();
+
+
+
+            }
+        });
 
     }
 

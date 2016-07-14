@@ -833,11 +833,12 @@ public class MusicUtils {
             sService.open(list, force_shuffle ? -1 : position);
             sService.play();
         } catch (RemoteException ex) {
-        } finally {
+        }
+    /*    finally {
             Intent intent = new Intent("com.android.music.PLAYBACK_VIEWER")
                     .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             context.startActivity(intent);
-        }
+        }*/
     }
 
     public static void clearQueue() {
@@ -1896,6 +1897,26 @@ public class MusicUtils {
             , String[] selectionArgs) {
 
         Cursor c = null;
+
+
+        long[] ids = new long[3];
+        selectionArgs = new String[ids.length];
+
+
+        for(int i =0 ; i<ids.length;i++){
+
+           selection+= MediaStore.Audio.Media._ID+"=?";
+           if(i == ids.length-1){
+               selection="";
+           }else{
+               selection=" or ";
+           }
+
+            selectionArgs[i] = ids.toString();
+        }
+
+
+
 
         ContentResolver resolver = ctx.getContentResolver();
         if (resolver != null) {

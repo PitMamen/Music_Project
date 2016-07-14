@@ -1,5 +1,6 @@
 package com.dlighttech.music.database;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -25,7 +26,6 @@ public class DataBaseManager {
     private DataBaseManager(Context context) {
         mDataBase = new SongListDataBase(context, 1);
     }
-
     public static DataBaseManager getInstance(Context context) {
         if (dbManager == null) {
             synchronized (DataBaseManager.class) {
@@ -36,6 +36,11 @@ public class DataBaseManager {
         }
         return dbManager;
     }
+
+
+
+
+
 
 
     /**

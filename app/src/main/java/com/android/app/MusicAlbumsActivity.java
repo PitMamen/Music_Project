@@ -1,9 +1,11 @@
 package com.android.app;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.RemoteException;
 import android.provider.MediaStore;
+import android.view.View;
 import android.widget.ListView;
 
 import com.allenliu.sidebar.SideBar;
@@ -16,7 +18,7 @@ import java.util.ArrayList;
 /**
  * Created by pengxinkai001 on 2016/6/24.
  */
-public class MusicAlbumsActivity extends BaseActivity  implements ContentAdapter.OnConvertViewClicked{
+public class MusicAlbumsActivity extends BaseActivity  implements ContentAdapter.OnConvertViewClicked,ContentAdapter.OnOperateClicked{
 
     private ListView mListview;
     private ArrayList<ContentItem> items = new ArrayList<ContentItem>();
@@ -66,35 +68,26 @@ public class MusicAlbumsActivity extends BaseActivity  implements ContentAdapter
             ContentItem item;
             if (bitmap != null) {
 
-                item = new ContentItem(bitmap, R.drawable.more_title_selected, musicAlbums, musicAblumscount + "首");
+                item = new ContentItem(bitmap, R.drawable.c_right, musicAlbums, musicAblumscount + "首");
 
             } else {
-                item = new ContentItem(R.drawable.singer, R.drawable.more_title_selected, musicAlbums, musicAblumscount + "首");
+                item = new ContentItem(R.drawable.singer, R.drawable.c_right, musicAlbums, musicAblumscount + "首");
             }
 
             items.add(item);
 
-            MusicUtils.bindToService(this);
+          //  MusicUtils.bindToService(this);
 
         }
 
 
     }
 
-    @Override
-    public void onSearchTextChanged(String text) {
-
-    }
-
-    @Override
-    public void onSearchSubmit(String text) {
-
-    }
 
     @Override
     public void onConvertViewClicked(int position) {
 
-        MusicInfo info = arrayList.get(position);
+      /*  MusicInfo info = arrayList.get(position);
         cursor = MusicUtils.getMusicInfo(this, false, MediaStore.Audio.Media._ID + "=?"
                 , new String[]{String.valueOf(info.getMusicId())});
 
@@ -111,10 +104,36 @@ public class MusicAlbumsActivity extends BaseActivity  implements ContentAdapter
             }
         }
         MusicUtils.playAll(this, cursor);
-
+*/
 
 
     }
+
+
+    @Override
+    public void onOperateClicked(int position, View v) {
+
+        Intent intent = new Intent(MusicAlbumsActivity.this,MediaPlaybackActivity.class);
+        startActivity(intent);
+
+
+    }
+
+
+
+
+
+
+    @Override
+    public void onSearchTextChanged(String text) {
+
+    }
+
+    @Override
+    public void onSearchSubmit(String text) {
+
+    }
+
 
 
     @Override
@@ -122,6 +141,8 @@ public class MusicAlbumsActivity extends BaseActivity  implements ContentAdapter
         super.onDestroy();
 
         //解绑服务
-        MusicUtils.unbindFromService(token);
+     //   MusicUtils.unbindFromService(token);
     }
+
+
 }
