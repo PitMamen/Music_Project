@@ -13,9 +13,8 @@ import com.dlighttech.music.model.Song;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 
-public class MusicRecentActivity extends BaseActivity {
+public class MusicRecentActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked {
 
 
     private ArrayList<MusicInfo> mMusicInfos = new ArrayList<MusicInfo>();
@@ -44,33 +43,29 @@ public class MusicRecentActivity extends BaseActivity {
             Toast.makeText(this, "最近播放还没有音乐", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        String[] selectionArgs = new String[songs.size()];
+        StringBuilder selection = new StringBuilder();
         for (int i = 0; i < songs.size(); i++) {
             Song song = songs.get(i);
+            selection.append(MediaStore.Audio.Media._ID + "=?");
+            selection.append(i == songs.size() - 1 ? "" : " or ");
+            selectionArgs[i] = String.valueOf(song.getId());
+        }
 
-            String selection = MediaStore.Audio.Media._ID + "=?";
-            String[] selectionArgs = {String.valueOf(song.getId())};
+        mMusicInfos = MusicUtils.getMusicInfo(this, selection.toString(), selectionArgs, false);
 
-            MusicInfo info = MusicUtils.getMusicInfoByArgs(this, false, selection, selectionArgs);
-            mMusicInfos.add(info);
-
+        for (int i = 0; i < mMusicInfos.size(); i++) {
+            MusicInfo info = mMusicInfos.get(i);
             Bitmap bm = MusicUtils.getArtwork(this, info.getMusicId(), info.getAlbumId(), true);
 
             ContentItem item = new ContentItem(bm
                     , R.drawable.more_title_selected
-                    , song.getName()
-                    , song.getSinger());
+                    , info.getMusicName()
+                    , info.getSinger());
             mItems.add(item);
-
         }
     }
 
-    @Override
-    public void update(Observable observable, Object data) {
-
-
-        super.update(observable, data);
-    }
 
     @Override
     public void onSearchTextChanged(String text) {
@@ -80,5 +75,10 @@ public class MusicRecentActivity extends BaseActivity {
     @Override
     public void onSearchSubmit(String text) {
 
+    }
+
+    @Override
+    public void onConvertViewClicked(int position) {
+        super.playCursor(mMusicInfos, false, position);
     }
 }

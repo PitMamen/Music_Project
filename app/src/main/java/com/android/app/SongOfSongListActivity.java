@@ -52,20 +52,30 @@ public class SongOfSongListActivity extends BaseActivity
 
         int id = getIntent().getIntExtra("id", 0);
         mSongs = DataBaseManager.getInstance(this).getSongByListId(id);
-        if (mSongs != null && mSongs.size() > 0) {
-            for (int i = 0; i < mSongs.size(); i++) {
-                Song song = mSongs.get(i);
-                ContentItem item = new ContentItem(R.drawable.singer
-                        , R.drawable.more_title_selected
-                        , song.getName()
-                        , song.getSinger());
+        if (mSongs == null || mSongs.size() == 0) {
+            return;
+        }
+        StringBuilder selection = new StringBuilder();
+        String[] selectionArgs = new String[mSongs.size()];
 
-                mItems.add(item);
+        for (int i = 0; i < mSongs.size(); i++) {
+            Song song = mSongs.get(i);
 
-                MusicInfo info = MusicUtils.getMusicInfoByArgs(this, false
-                        , MediaStore.Audio.Media._ID + "=?", new String[]{String.valueOf(song.getId())});
-                mMusicInfos.add(info);
-            }
+            selection.append(MediaStore.Audio.Media._ID + "=?");
+            selection.append(i == mSongs.size() - 1 ? "" : " or ");
+            selectionArgs[i] = String.valueOf(song.getId());
+
+        }
+        mMusicInfos = MusicUtils.getMusicInfo(this, selection.toString(), selectionArgs, false);
+
+        for (int i = 0; i < mMusicInfos.size(); i++) {
+            MusicInfo info = mMusicInfos.get(i);
+
+            ContentItem item = new ContentItem(R.drawable.singer
+                    , R.drawable.more_title_selected
+                    , info.getMusicName()
+                    , info.getSinger());
+            mItems.add(item);
         }
 
 

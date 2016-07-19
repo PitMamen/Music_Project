@@ -50,7 +50,7 @@ public class ContentAdapter extends BaseAdapter {
     private OnOperateClicked mOnOperate;
     private OnThumbClicked mOnthumb;
     private ListPopupWindow popupWindow;
-    private ArrayList<MusicInfo> mMusicInfos;
+    private List<MusicInfo> mMusicInfos;
     private boolean isHidden = false;
     private boolean isMenu = false;
     private int mChoice = 0;
@@ -458,7 +458,7 @@ public class ContentAdapter extends BaseAdapter {
 //    public void setMenu(boolean menu) {
 //        isMenu = menu;
 //    }
-    public void setMusicInfos(ArrayList<MusicInfo> infos) {
+    public void setMusicInfos(List<MusicInfo> infos) {
         this.mMusicInfos = infos;
     }
 

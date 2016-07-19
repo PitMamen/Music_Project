@@ -31,7 +31,7 @@ import com.android.music.IMediaPlaybackService;
 import com.dlighttech.music.model.MusicInfo;
 import com.dlighttech.music.util.PreferencesUtils;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -99,18 +99,18 @@ public abstract class BaseActivity extends Activity
     @Override
     public void update(Observable observable, Object data) {
         mPercentage = 0;
+        mProgressHandler.removeMessages(PLAY);
 
         if (data instanceof Integer) {
-            mProgressHandler.removeMessages(PLAY);
             mPercentage = (int) data;
-            mProgressHandler.sendEmptyMessageDelayed(PLAY, 1000);
+            isPause = false;
+            Message.obtain(mProgressHandler, PLAY).sendToTarget();
         }
-
-        if (data instanceof Boolean) {
-            mProgressHandler.removeMessages(PAUSE);
-            isPause = (boolean) data;
-            mProgressHandler.sendEmptyMessage(PAUSE);
-        }
+//        if (data instanceof Boolean) {
+//            mProgressHandler.removeMessages(PAUSE);
+//            isPause = (boolean) data;
+//            mProgressHandler.sendEmptyMessage(PAUSE);
+//        }
         updateView();
     }
 
@@ -213,7 +213,7 @@ public abstract class BaseActivity extends Activity
                 return;
             Bitmap bm = MusicUtils.getArtwork(this, MusicUtils.getCurrentAudioId()
                     , MusicUtils.getCurrentAlbumId(), true);
-//            bm = CommonUtils.createCircleImage(bm, DisplayUtils.dip2px(this, 40));
+
             mImageViewIcon.setImageBitmap(bm);
 
             tvMusicName.setText(mService.getTrackName());
@@ -256,13 +256,16 @@ public abstract class BaseActivity extends Activity
     protected void doPauseResume() {
         try {
             if (mService != null) {
+                mProgressHandler.removeMessages(PAUSE);
+                mProgressHandler.removeMessages(PLAY);
+
                 if (mService.isPlaying()) {
-                    mProgressHandler.removeMessages(PAUSE);
                     mService.pause();
+                    isPause = true;
                     Message.obtain(mProgressHandler, PAUSE).sendToTarget();
                 } else {
-                    mProgressHandler.removeMessages(PLAY);
                     mService.play();
+                    isPause = false;
                     Message.obtain(mProgressHandler, PLAY).sendToTarget();
                 }
                 setPauseButtonImage();
@@ -286,7 +289,7 @@ public abstract class BaseActivity extends Activity
      * @param isOrder
      * @param position
      */
-    protected void playCursor(ArrayList<MusicInfo> mMusicList, boolean isOrder, int position) {
+    protected void playCursor(List<MusicInfo> mMusicList, boolean isOrder, int position) {
 
         if (mMusicList == null || mMusicList.size() == 0) {
             return;
@@ -325,7 +328,9 @@ public abstract class BaseActivity extends Activity
 
         MusicUtils.playAll(this, mTrackCursor, position);
 
-        DataChangedWatcher.getInstance().update();
+        mProgressHandler.removeMessages(PLAY);
+        Message.obtain(mProgressHandler, PLAY).sendToTarget();
+        updateView();
     }
 
     protected void setupService() {
@@ -410,7 +415,6 @@ public abstract class BaseActivity extends Activity
             @Override
             public void onClick(View v) {
                 mProgressHandler.removeMessages(PLAY);
-
                 Intent intent = new Intent(BaseActivity.this, MediaPlaybackActivity.class);
                 startActivity(intent);
             }
@@ -441,8 +445,8 @@ public abstract class BaseActivity extends Activity
 
     private static final int PLAY = 0;
     private static final int PAUSE = 1;
+    private static final int STOP = 2;
     private boolean isPause = false;
-//    private static final int PLAYING = 2;
 
 
     private Handler mProgressHandler = new Handler(Looper.getMainLooper()) {
@@ -463,8 +467,24 @@ public abstract class BaseActivity extends Activity
                 case PAUSE:
                     isPause = true;
                     break;
+                case STOP:
+                    mPercentage = 0;
+                    mProgressHandler.removeMessages(PLAY);
+                    updateView();
+                    break;
                 default:
                     break;
+            }
+
+            // 如果progress到1000并且播放模式为普通模式，则重置progress并更新视图
+            try {
+                if (mPercentage == 1000) {
+                    if (mService.getRepeatMode() == MediaPlaybackService.REPEAT_NONE) {
+                        mProgressHandler.sendEmptyMessage(STOP);
+                    }
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
         }
     };
@@ -476,7 +496,6 @@ public abstract class BaseActivity extends Activity
             Log.d("TAG", "当前时间：" + MusicUtils.makeTimeString(this, mService.position() / 1000));
             mCurrTime = mService.position();
             mDuration = mService.duration();
-
             mPercentage = (int) (mCurrTime * 1000.0F / mDuration);
             Log.d("TAG", "百分比：" + mPercentage);
             mProgressBar.setProgress(mPercentage);

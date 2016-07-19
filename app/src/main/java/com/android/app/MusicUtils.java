@@ -1824,7 +1824,6 @@ public class MusicUtils {
                     String order = isOrder ? MediaStore.Audio.Media.DATE_ADDED + " desc"
                             : MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
 
-
                     c = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
                             , null, selection, selectionArgs, order);
 
@@ -1856,7 +1855,6 @@ public class MusicUtils {
                         int albumId = c.getInt(c
                                 .getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
                         Bitmap albumImage = getArtwork(ctx, id, albumId);
-
 
                         albumImage = ThumbnailUtils.extractThumbnail(albumImage
                                 , DisplayUtils.dip2px(ctx, 20)
