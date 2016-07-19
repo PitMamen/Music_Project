@@ -1700,8 +1700,10 @@ public class MusicUtils {
 
                         MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
-                                , albumImage, albumName, albumMusicNumber, path, size);
+                                , albumImage, albumName, albumMusicNumber, path, size,artistId);
+
                         info.setAlbumId(albumId);
+
                         musicInfos.add(info);
                         listener.onMusicLoading();
                     }
@@ -1793,7 +1795,7 @@ public class MusicUtils {
 
                         MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
-                                , albumImage, albumName, albumMusicNumber, path, size);
+                                , albumImage, albumName, albumMusicNumber, path, size,artistId);
                         info.setAlbumId(albumId);
 
                         musicInfos.add(info);
@@ -1881,8 +1883,10 @@ public class MusicUtils {
 
                         MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
-                                , albumImage, albumName, albumMusicNumber, path, size);
+                                , albumImage, albumName, albumMusicNumber, path, size,artistId);
+
                         info.setAlbumId(albumId);
+
                         return info;
                     }
                 }
@@ -1997,8 +2001,11 @@ public class MusicUtils {
 
                 MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                         , totalTime, MusicInfo.MusicState.NORMAL
-                        , albumImage, albumName, albumMusicNumber, path, size);
+                        , albumImage, albumName, albumMusicNumber, path, size,artistId);
+                Log.d("TAG", info.toString());
+
                 info.setAlbumId(albumId);
+
                 musicInfos.add(info);
             }
             return musicInfos;

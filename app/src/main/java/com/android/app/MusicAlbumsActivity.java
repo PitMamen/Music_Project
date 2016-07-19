@@ -50,22 +50,6 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
     @Override
     public void onCreateData() {
 
-        // 获取所有歌曲的专辑
-
-//        long[] songIds = MusicUtils.getAllSongs(this);
-//        StringBuilder selection = new StringBuilder();
-//        String[] selectionArgs = new String[songIds.length];
-
-
-//        MusicUtils.getSongListForAlbum()
-
-//        for (int j = 0; j < songIds.length; j++) {
-//            // 获取当前专辑下的所有歌曲
-//            selection.append(MediaStore.Audio.Media._ID + "=?");
-//            selection.append(j == songIds.length - 1 ? "" : " or ");
-//
-//            selectionArgs[j] = String.valueOf(songIds[j]);
-//        }
 
         arrayList = MusicUtils.getMusicInfo(this, false);
         String albumName = "";
@@ -82,10 +66,10 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
             }
             ContentItem item = new ContentItem(bitmap, R.drawable.c_right
                     , info.getMusicAlbumsName(), songsIds.length + "首");
-            items.add(item);
+
 
             albumName = info.getMusicAlbumsName();
-
+            items.add(item);
         }
 
 
