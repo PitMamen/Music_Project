@@ -104,7 +104,6 @@ public class MusicInfo implements Serializable, Parcelable {
     }
 
     protected MusicInfo(Parcel in) {
-
         musicId = in.readInt();
         singer = in.readString();
         singermusicCount = in.readInt();
@@ -116,6 +115,8 @@ public class MusicInfo implements Serializable, Parcelable {
         musicAlbumsNumber = in.readInt();
         musicPath = in.readString();
         musicSize = in.readLong();
+        artistId = in.readLong();
+        albumId = in.readLong();
     }
 
     public static final Creator<MusicInfo> CREATOR = new Creator<MusicInfo>() {
@@ -280,6 +281,7 @@ public class MusicInfo implements Serializable, Parcelable {
         dest.writeString(musicPath);
         dest.writeLong(musicSize);
         dest.writeLong(artistId);
+        dest.writeLong(albumId);
 
     }
 

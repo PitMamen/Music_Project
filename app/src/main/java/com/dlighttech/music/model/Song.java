@@ -10,7 +10,16 @@ public class Song {
     private int songListId;
     private String singer;
     private String songPath;
+    private long albumId;
     private long time;
+
+    public long getAlbumId() {
+        return albumId;
+    }
+
+    public void setAlbumId(long albumId) {
+        this.albumId = albumId;
+    }
 
     public long getTime() {
         return time;

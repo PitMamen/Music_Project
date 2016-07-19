@@ -34,7 +34,6 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
 //    private List<String> mScanMusics = new ArrayList<String>();
 //    private int mMusicCount = 0;
 
-
     /**
      * 中间布局的三个textview点击事件
      */
@@ -149,9 +148,7 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
 
     @Override
     public void onInitView() {
-
         setContentView(R.layout.music_home_page_layout);
-
     }
 
     @Override
@@ -199,7 +196,6 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
     public void onSearchSubmit(String text) {
         Log.d("TAG", text);
     }
-
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

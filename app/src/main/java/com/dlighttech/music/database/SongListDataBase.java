@@ -37,6 +37,7 @@ public class SongListDataBase extends SQLiteOpenHelper {
     public static final String RECENT_TABLE = "recent";
     public static final String RECENT_DATE = "recent_date";
     public static final String MUSIC_ID = "music_id";
+    public static final String ALBUM_ID = "album_id";
 
 
     public SongListDataBase(Context context, int version) {
@@ -58,6 +59,7 @@ public class SongListDataBase extends SQLiteOpenHelper {
         sb = new StringBuilder();
         sb.append("create table " + SONG_TABLE + "(");
         sb.append(_ID + " integer primary key autoincrement");
+        sb.append("," + MUSIC_ID + " integer");
         sb.append("," + SONG_NAME + " text");
         sb.append("," + SINGER + " text");
         sb.append("," + SONG_PATH + " text");
@@ -70,6 +72,7 @@ public class SongListDataBase extends SQLiteOpenHelper {
         sb.append("create table " + RECENT_TABLE + "(");
         sb.append(_ID + " integer primary key autoincrement");
         sb.append("," + MUSIC_ID + " integer");
+        sb.append("," + ALBUM_ID + " integer");
         sb.append("," + SONG_NAME + " text");
         sb.append("," + SINGER + " text");
         sb.append("," + RECENT_DATE + " integer");

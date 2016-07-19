@@ -24,11 +24,9 @@ import com.dlighttech.music.util.PreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.Observable;
-import java.util.Observer;
 
 public class PlayListActivity extends BaseActivity
-        implements ContentAdapter.OnConvertViewClicked
-        , Observer {
+        implements ContentAdapter.OnConvertViewClicked {
 
     private ListView mListView;
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
@@ -73,13 +71,11 @@ public class PlayListActivity extends BaseActivity
         mListView.setAdapter(mAdapter);
 
 
-
         sideBar.setOnStrSelectCallBack(new ISideBarSelectCallBack() {
             @Override
             public void onSelectStr(int position, String selectStr) {
 
-              //  Toast.makeText(PlayListActivity.this,"按键导航操作...",Toast.LENGTH_SHORT).show();
-
+                //  Toast.makeText(PlayListActivity.this,"按键导航操作...",Toast.LENGTH_SHORT).show();
 
 
             }
@@ -232,17 +228,15 @@ public class PlayListActivity extends BaseActivity
 
     @Override
     public void update(Observable observable, Object data) {
+        super.update(observable, data);
         // 通知观察者更新 song count
         if (data instanceof SongList) {
             SongList list = (SongList) data;
-            boolean isSuccess = DataBaseManager.getInstance(this)
+            DataBaseManager.getInstance(this)
                     .updateCountBySongList(list);
-            if (isSuccess) {
-                Log.d("TAG", "song list count update success! count ===" + list.getCount());
-                updateAdapter();
-            }
+            updateAdapter();
+            Log.d("TAG", "song list count update success! count ===" + list.getCount());
         }
-
     }
 }
 

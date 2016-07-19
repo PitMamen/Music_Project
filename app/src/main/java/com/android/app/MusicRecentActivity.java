@@ -1,5 +1,6 @@
 package com.android.app;
 
+import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -12,6 +13,7 @@ import com.dlighttech.music.model.Song;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 public class MusicRecentActivity extends BaseActivity {
 
@@ -25,7 +27,7 @@ public class MusicRecentActivity extends BaseActivity {
     @Override
     public void onCreateView() {
         mListView = (ListView) findViewById(R.id.lv_recent_list);
-        mAdapter = new ContentAdapter(this,mItems,true);
+        mAdapter = new ContentAdapter(this, mItems, true);
         mAdapter.setMusicInfos(mMusicInfos);
         mListView.setAdapter(mAdapter);
     }
@@ -42,26 +44,32 @@ public class MusicRecentActivity extends BaseActivity {
             Toast.makeText(this, "最近播放还没有音乐", Toast.LENGTH_SHORT).show();
             return;
         }
-        String[] selectionArgs = new String[songs.size()];
-        StringBuilder selection = new StringBuilder();
+
         for (int i = 0; i < songs.size(); i++) {
             Song song = songs.get(i);
 
-            selection.append(MediaStore.Audio.Media._ID + "=?");
-            selection.append(i == songs.size() - 1 ? "" : " or ");
-            selectionArgs[i] = String.valueOf(song.getId());
-        }
+            String selection = MediaStore.Audio.Media._ID + "=?";
+            String[] selectionArgs = {String.valueOf(song.getId())};
 
-        mMusicInfos = MusicUtils.getMusicInfo(this, selection.toString(), selectionArgs, false);
-        for (int i = 0; i < mMusicInfos.size(); i++) {
-            MusicInfo info = mMusicInfos.get(i);
+            MusicInfo info = MusicUtils.getMusicInfoByArgs(this, false, selection, selectionArgs);
+            mMusicInfos.add(info);
 
-            ContentItem item = new ContentItem(info.getMusicAlbumsImage()
+            Bitmap bm = MusicUtils.getArtwork(this, info.getMusicId(), info.getAlbumId(), true);
+
+            ContentItem item = new ContentItem(bm
                     , R.drawable.more_title_selected
-                    , info.getMusicName()
-                    , info.getSinger());
+                    , song.getName()
+                    , song.getSinger());
             mItems.add(item);
+
         }
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+
+
+        super.update(observable, data);
     }
 
     @Override
