@@ -1,6 +1,5 @@
 package com.android.app;
 
-import android.provider.MediaStore;
 import android.widget.ListView;
 
 import com.dlighttech.music.adapter.ContentAdapter;
@@ -77,24 +76,6 @@ public class MusicListActivity extends BaseActivity
     @Override
     public void onConvertViewClicked(int position) {
         // 当点击了listView item将在底部布局中播放音乐
-        playMusic(position);
-    }
-
-    private void playMusic(int position) {
-        if (mMusicList == null || mMusicList.size() == 0) {
-            return;
-        }
-        StringBuilder mSelection = new StringBuilder();
-        String[] mSelectionArgs = new String[mMusicList.size()];
-        // 由于需要下一曲的播放所以需要将当前目录下的歌曲以游标的形式传递给Service
-        for (int i = 0; i < mMusicList.size(); i++) {
-
-            mSelection.append(MediaStore.Audio.Media._ID + "=?");
-            mSelection.append(i == mMusicList.size() - 1 ? "" : " or ");
-
-            mSelectionArgs[i] = String.valueOf(mMusicList.get(i).getMusicId());
-        }
-        super.playCursor(mSelection.toString(), mSelectionArgs, false, position);
-//        Log.d("TAG", mSelection.toString());
+        super.playCursor(mMusicList,false,position);
     }
 }

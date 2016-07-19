@@ -72,7 +72,7 @@ public class SongListDataBase extends SQLiteOpenHelper {
         sb.append("," + MUSIC_ID + " integer");
         sb.append("," + SONG_NAME + " text");
         sb.append("," + SINGER + " text");
-        sb.append("," + RECENT_DATE + " date");
+        sb.append("," + RECENT_DATE + " integer");
         sb.append(")");
         db.execSQL(sb.toString());
     }

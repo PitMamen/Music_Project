@@ -34,7 +34,6 @@ import com.dlighttech.music.util.PreferencesUtils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -512,17 +511,30 @@ public class ContentAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * 保存最近播放的歌曲
+     *
+     * @param position
+     */
     private void saveRecent(int position) {
         if (mMusicInfos == null || mMusicInfos.size() == 0) return;
         MusicInfo info = mMusicInfos.get(position);
         if (info == null) return;
+        // 如果点击播放的id在数据库中存在，则不再添加
+        if (DataBaseManager.getInstance(mContext).isExistsRecentSong(info.getMusicId())) {
+            boolean isDel = DataBaseManager.getInstance(mContext).deleteRecent(info.getMusicId());
+            Log.d("TAG", "删除重复最近歌曲===" + isDel);
+        }
+
         Song song = new Song();
         song.setId(info.getMusicId());
         song.setName(info.getMusicName());
         song.setSinger(info.getSinger());
-        song.setDate(new Date());
+        song.setTime(System.currentTimeMillis());
+
         if (DataBaseManager.getInstance(mContext).insertRecent(song)) {
             Log.d("TAG", "Save recent successful!!");
+            Log.d("TAG", song.toString());
         }
     }
 
