@@ -120,28 +120,10 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     @Override
     public void onConvertViewClicked(int position) {
 
-        playMusic(position);
+        super.playCursor(arrayList,false,position);
 
     }
 
-    private void playMusic(int position) {
-        StringBuilder mselection = new StringBuilder();
-        String[] mSelectionArgs = new String[arrayList.size()];
-        for (int i = 0; i < arrayList.size(); i++) {
-
-            mselection.append(MediaStore.Audio.Media._ID + "=?");
-            mselection.append(i == arrayList.size() - 1 ? "" : "or");
-
-            mSelectionArgs[i] = String.valueOf(arrayList.get(i).getMusicId());
-        }
-
-        super.playCursor(mselection.toString(),mSelectionArgs,false,position);
-
-
-        Log.i("MusicTracksActivity+", mselection.toString());
-
-
-    }
 
 
     @Override

@@ -114,29 +114,10 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
 
     @Override
     public void onConvertViewClicked(int position) {
+        super.playCursor(arrayList,false,position);
 
-        playmusic(position);
 
-
-    }
-         //播放音乐
-    private void playmusic(int position) {
-
-        if (arrayList == null || arrayList.size() == 0) {
-            return;
-        }
-        StringBuilder selector = new StringBuilder();
-
-        String[] selectorArgs = new String[arrayList.size()];
-
-        for (int i = 0; i < arrayList.size(); i++) {
-
-            selector.append(MediaStore.Audio.Media._ID + "=?");
-            selector.append(i == arrayList.size() - 1 ? "" : "or");
-
-           selectorArgs[i]= String.valueOf(arrayList.get(i).getMusicId());
-        }
-            super.playCursor(selector.toString(),selectorArgs,false,position);
 
     }
+
 }

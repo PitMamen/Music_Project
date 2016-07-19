@@ -157,27 +157,11 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
         MusicUtils.playAll(this, cursor);*/
 
 
-        palyMusic(position);
+        super.playCursor(arrayList, false, position);
 
 
     }
 
-    private void palyMusic(int position) {
-
-        StringBuilder mSelecte = new StringBuilder();
-        String[] mselectsArgs = new String[arrayList.size()];
-
-        for (int i = 0; i < arrayList.size(); i++) {
-
-            mSelecte.append(MediaStore.Audio.Media._ID + "=?");
-            mSelecte.append(i == arrayList.size() - 1 ? "" : "or");
-
-            mselectsArgs[i] = String.valueOf(arrayList.get(i).getMusicId());
-        }
-
-        super.playCursor(mSelecte.toString(), mselectsArgs, false, position);
-
-    }
 
 
 }
