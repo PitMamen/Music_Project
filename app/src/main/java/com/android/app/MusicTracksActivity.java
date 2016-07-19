@@ -4,7 +4,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.RemoteException;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -102,10 +101,6 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
                 item = new ContentItem(R.drawable.singer, R.drawable.more_title_selected, musicName, musicSinger);
             }
             mItems.add(item);
-
-            //绑定服务
-            token = MusicUtils.bindToService(this);
-
         }
 
     }
@@ -144,12 +139,4 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
 
     }
 
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-       // 解绑服务
-        MusicUtils.unbindFromService(token);
-    }
 }

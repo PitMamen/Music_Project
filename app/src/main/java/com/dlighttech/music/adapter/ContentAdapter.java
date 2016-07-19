@@ -34,6 +34,7 @@ import com.dlighttech.music.util.PreferencesUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -464,6 +465,7 @@ public class ContentAdapter extends BaseAdapter {
     private MusicInfo getMusicInfo() {
         if (mMusicInfos == null || mMusicInfos.size() == 0) {
             throw new IllegalArgumentException("Music info array not be null and size more than 0!");
+//            return null;
         }
 
         return mMusicInfos.get(mSelectPostion);
@@ -500,11 +502,27 @@ public class ContentAdapter extends BaseAdapter {
                     break;
                 case R.id.content_layout:
                     if (mOnConvertView != null) {
+                        // 保存当前点击的歌曲，存入最近播放的表中
+                        saveRecent(position);
                         mOnConvertView.onConvertViewClicked(position);
                     }
                     break;
                 default:
             }
+        }
+    }
+
+    private void saveRecent(int position) {
+        if (mMusicInfos == null || mMusicInfos.size() == 0) return;
+        MusicInfo info = mMusicInfos.get(position);
+        if (info == null) return;
+        Song song = new Song();
+        song.setId(info.getMusicId());
+        song.setName(info.getMusicName());
+        song.setSinger(info.getSinger());
+        song.setDate(new Date());
+        if (DataBaseManager.getInstance(mContext).insertRecent(song)) {
+            Log.d("TAG", "Save recent successful!!");
         }
     }
 

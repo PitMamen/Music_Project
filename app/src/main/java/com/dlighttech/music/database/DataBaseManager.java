@@ -452,4 +452,77 @@ public class DataBaseManager {
         }
         return newSongLists;
     }
+
+
+    /**
+     * 插入一条数据，最近播放
+     *
+     * @param song
+     * @return
+     */
+    public boolean insertRecent(Song song) {
+        synchronized (mDataBase) {
+            SQLiteDatabase database = null;
+            try {
+                database = mDataBase.getReadableDatabase();
+                String sql = "insert into " + SongListDataBase.RECENT_TABLE
+                        + "(" + SongListDataBase.MUSIC_ID
+                        + "," + SongListDataBase.SONG_NAME
+                        + "," + SongListDataBase.SINGER
+                        + "," + SongListDataBase.RECENT_DATE
+                        + ")"
+                        + " values (?,?,?,?)";
+                Object[] bindArgs = new Object[]{song.getId(), song.getName()
+                        , song.getSinger(), song.getDate()};
+                database.execSQL(sql, bindArgs);
+                return true;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            } finally {
+                if (database != null)
+                    database.close();
+            }
+        }
+    }
+
+    /**
+     * 获取全部最近播放的列表,降序排列
+     *
+     * @return
+     */
+    public ArrayList<Song> getAllRecentSong() {
+        synchronized (mDataBase) {
+            SQLiteDatabase database = null;
+            Cursor c = null;
+            try {
+                ArrayList<Song> songs = new ArrayList<Song>();
+
+                database = mDataBase.getReadableDatabase();
+                String sql = "select * from " + SongListDataBase.RECENT_TABLE
+                        +" order by "+SongListDataBase.RECENT_DATE+" desc";
+
+                c = database.rawQuery(sql, null);
+                while (c.moveToNext()) {
+                    int songId = c.getInt(c.getColumnIndexOrThrow(SongListDataBase.MUSIC_ID));
+                    String songName = c.getString(c.getColumnIndexOrThrow(SongListDataBase.SONG_NAME));
+                    String singer = c.getString(c.getColumnIndexOrThrow(SongListDataBase.SINGER));
+                    Song song = new Song();
+                    song.setId(songId);
+                    song.setName(songName);
+                    song.setSinger(singer);
+                    songs.add(song);
+                }
+                return songs;
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            } finally {
+                if (c != null) c.close();
+                if (database != null) database.close();
+            }
+            return null;
+        }
+    }
+
+
 }

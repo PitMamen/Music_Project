@@ -18,7 +18,7 @@
     package="com.android.app">
 
     <uses-sdk
-        android:minSdkVersion="21"
+        android:minSdkVersion="19"
         android:targetSdkVersion="23" />
 
     <original-package android:name="com.android.app" />
@@ -380,7 +380,8 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".PlayListActivity" />
         <activity android:name=".SongOfSongListActivity" />
-        <activity android:name=".LastUpdatedActivity"></activity>
+        <activity android:name=".LastUpdatedActivity" />
+        <activity android:name=".MusicRecentActivity"></activity>
     </application>
 
 </manifest>

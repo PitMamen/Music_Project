@@ -1,7 +1,6 @@
 package com.android.app;
 
 import android.provider.MediaStore;
-import android.util.Log;
 import android.widget.ListView;
 
 import com.dlighttech.music.adapter.ContentAdapter;
@@ -9,7 +8,6 @@ import com.dlighttech.music.model.ContentItem;
 import com.dlighttech.music.model.MusicInfo;
 import com.dlighttech.music.util.PreferencesUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class MusicListActivity extends BaseActivity
@@ -47,28 +45,20 @@ public class MusicListActivity extends BaseActivity
                 .putData(PreferencesUtils.IS_SONG_LIST_DEL_KEY, false);
 
         item = (ContentItem) getIntent().getSerializableExtra("item");
-        ArrayList<MusicInfo> musicInfos = getIntent().getParcelableArrayListExtra("musicInfos");
 
+        ArrayList<MusicInfo> musicInfos = getIntent().getParcelableArrayListExtra("musicInfos");
         for (int i = 0; i < musicInfos.size(); i++) {
             MusicInfo info = musicInfos.get(i);
-            File musicFile = new File(info.getMusicPath());
-            if (musicFile.exists()) {
-                String parent = musicFile.getParent();
-                if (parent.equals(item.getContent())) {
-                    mMusicList.add(info);
-                }
+            String newPath =info.getMusicPath().substring(0,info.getMusicPath().lastIndexOf("/"));
+            if(newPath.equals(item.getContent())){
+                ContentItem newItem = new ContentItem(info.getMusicAlbumsImage()
+                        , R.drawable.more_title_selected
+                        , info.getMusicName()
+                        , info.getSinger());
+                mItems.add(newItem);
+                mMusicList.add(info);
             }
-        }
 
-        // 设置音乐数据
-        for (int i = 0; i < mMusicList.size(); i++) {
-            MusicInfo info = mMusicList.get(i);
-
-            ContentItem newItem = new ContentItem(info.getMusicAlbumsImage()
-                    , R.drawable.more_title_selected
-                    , info.getMusicName()
-                    , info.getSinger());
-            mItems.add(newItem);
         }
     }
 
@@ -91,6 +81,9 @@ public class MusicListActivity extends BaseActivity
     }
 
     private void playMusic(int position) {
+        if (mMusicList == null || mMusicList.size() == 0) {
+            return;
+        }
         StringBuilder mSelection = new StringBuilder();
         String[] mSelectionArgs = new String[mMusicList.size()];
         // 由于需要下一曲的播放所以需要将当前目录下的歌曲以游标的形式传递给Service
@@ -102,6 +95,6 @@ public class MusicListActivity extends BaseActivity
             mSelectionArgs[i] = String.valueOf(mMusicList.get(i).getMusicId());
         }
         super.playCursor(mSelection.toString(), mSelectionArgs, false, position);
-        Log.d("TAG", mSelection.toString());
+//        Log.d("TAG", mSelection.toString());
     }
 }
