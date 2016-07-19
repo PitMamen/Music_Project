@@ -1906,26 +1906,6 @@ public class MusicUtils {
 
         Cursor c = null;
 
-
-        long[] ids = new long[3];
-        selectionArgs = new String[ids.length];
-
-
-        for(int i =0 ; i<ids.length;i++){
-
-           selection+= MediaStore.Audio.Media._ID+"=?";
-           if(i == ids.length-1){
-               selection="";
-           }else{
-               selection=" or ";
-           }
-
-            selectionArgs[i] = ids.toString();
-        }
-
-
-
-
         ContentResolver resolver = ctx.getContentResolver();
         if (resolver != null) {
             String order = isOrder ? MediaStore.Audio.Media.DATE_ADDED + " desc"
