@@ -29,6 +29,15 @@ public class SongListDataBase extends SQLiteOpenHelper {
     public static final String SONG_PATH = "song_path";
     public static final String SONG_LIST_ID = "song_list_id";
 
+    /**
+     * 最近播放表
+     * id，歌曲名称，歌手引用歌单表
+     *
+     */
+    public static final String RECENT_TABLE = "recent";
+    public static final String RECENT_DATE = "recent_date";
+    public static final String MUSIC_ID = "music_id";
+
 
     public SongListDataBase(Context context, int version) {
         super(context, DATABASE_NAME, null, version);
@@ -53,6 +62,17 @@ public class SongListDataBase extends SQLiteOpenHelper {
         sb.append("," + SINGER + " text");
         sb.append("," + SONG_PATH + " text");
         sb.append("," + SONG_LIST_ID + " integer");
+        sb.append(")");
+        db.execSQL(sb.toString());
+
+
+        sb = new StringBuilder();
+        sb.append("create table " + RECENT_TABLE + "(");
+        sb.append(_ID + " integer primary key autoincrement");
+        sb.append("," + MUSIC_ID + " integer");
+        sb.append("," + SONG_NAME + " text");
+        sb.append("," + SINGER + " text");
+        sb.append("," + RECENT_DATE + " date");
         sb.append(")");
         db.execSQL(sb.toString());
     }

@@ -102,10 +102,6 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
                 item = new ContentItem(R.drawable.singer, R.drawable.more_title_selected, musicName, musicSinger);
             }
             mItems.add(item);
-
-            //绑定服务
-            token = MusicUtils.bindToService(this);
-
         }
 
     }

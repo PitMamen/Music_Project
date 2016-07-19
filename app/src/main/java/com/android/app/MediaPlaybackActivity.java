@@ -117,6 +117,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         mAlbumArtWorker = new Worker("album art worker");
@@ -221,6 +222,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
         mViewPager.setAdapter(mPagerAdapter);
     }
 
+
     private PagerAdapter mPagerAdapter = new PagerAdapter() {
         @Override
         public int getCount() {
@@ -260,6 +262,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
         if (vv != null) return (TextView) vv;
         return null;
     }
+
 
     public boolean onTouch(View v, MotionEvent event) {
         int action = event.getAction();
@@ -470,6 +473,8 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
         public void onStartTrackingTouch(SeekBar bar) {
             mLastSeekEventTime = 0;
             mFromTouch = true;
+            DataChangedWatcher.getInstance().update(bar.getProgress());
+//            Log.d("TAG","bar.getProgress()==="+bar.getProgress());
         }
 
         public void onProgressChanged(SeekBar bar, int progress, boolean fromuser) {
@@ -597,6 +602,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
         long next = refreshNow();
         queueNextRefresh(next);
     }
+
 
     @Override
     public void onNewIntent(Intent intent) {
@@ -1061,10 +1067,8 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
             if (mService != null) {
                 if (mService.isPlaying()) {
                     mService.pause();
-                    updateState();
                 } else {
                     mService.play();
-                    updateState();
                 }
                 refreshNow();
                 setPauseButtonImage();
@@ -1079,6 +1083,11 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
     private void updateState() {
         DataChangedWatcher.getInstance().update();
     }
+
+    private void updateState(boolean isPause) {
+        DataChangedWatcher.getInstance().update(isPause);
+    }
+
 
     private void toggleShuffle() {
         if (mService == null) {
@@ -1135,7 +1144,6 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
             updateState();
         } catch (RemoteException ex) {
         }
-
     }
 
     private void showToast(int resid) {
@@ -1222,7 +1230,6 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
         if (mService == null) return;
         try {
             switch (mService.getRepeatMode()) {
-
                 case MediaPlaybackService.REPEAT_ALL:
                     mRepeatButton.setImageResource(R.drawable.listloop_mode_playback);
                     break;
@@ -1307,7 +1314,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
 
                 int progress = (int) (1000 * pos / mDuration);
                 mProgress.setProgress(progress);
-
+//                Log.d("TAG", "百分比：" + progress);
 
                 if (mService.isPlaying()) {
                     mCurrentTime.setVisibility(View.VISIBLE);
@@ -1331,6 +1338,13 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
             }
             // return the number of milliseconds until the next full second, so
             // the counter can be updated at just the right time
+
+//            Log.d("TAG", "总时间：" + MusicUtils.makeTimeString(this, mService.duration() / 1000));
+//            Log.d("TAG", "当前时间：" + MusicUtils.makeTimeString(this, mService.position() / 1000));
+            // 通知BaseActivity更新进度条
+            int per = (int) (mService.position() * 1000F / mService.duration());
+            DataChangedWatcher.getInstance().update(per);
+
             return remaining;
         } catch (RemoteException ex) {
         }
@@ -1430,6 +1444,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
             }
         }
     };
+
 
     private static class AlbumSongIdWrapper {
         public long albumid;

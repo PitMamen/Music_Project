@@ -6,17 +6,17 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
 
         <ProgressBar
             android:id="@+id/pro_music_schedule"
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:background="@drawable/progress_horizontal"
             android:max="100"
-            android:progress="80" />
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:progressDrawable="@drawable/progressbar_home"
+            android:progress="10" />
     </LinearLayout>
 
     <RelativeLayout
@@ -75,8 +75,6 @@
             android:layout_marginTop="10dp"
             android:layout_toLeftOf="@id/iv_music_next"
             android:src="@drawable/pause_btn_selector" />
-
-
     </RelativeLayout>
 
 

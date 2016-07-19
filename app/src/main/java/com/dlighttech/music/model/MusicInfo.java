@@ -31,46 +31,50 @@ public class MusicInfo implements Serializable, Parcelable {
     //每个歌手拥有多少首歌曲
     private int singermusicCount;
     // 文件路径
-   private String musicPath;
+    private String musicPath;
     // 歌曲文件大小
     private long musicSize;
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof MusicInfo)) return false;
 
-        MusicInfo musicInfo = (MusicInfo) o;
+    private long albumId;
 
-        if (getMusicId() != musicInfo.getMusicId()) return false;
-        if (getCurrTime() != musicInfo.getCurrTime()) return false;
-        if (getTotalTime() != musicInfo.getTotalTime()) return false;
-        if (getMusicAlbumsNumber() != musicInfo.getMusicAlbumsNumber()) return false;
-        if (getSingermusicCount() != musicInfo.getSingermusicCount()) return false;
-        if (getMusicSize() != musicInfo.getMusicSize()) return false;
-        if (!getSinger().equals(musicInfo.getSinger())) return false;
-        if (!getMusicName().equals(musicInfo.getMusicName())) return false;
-        if (getState() != musicInfo.getState()) return false;
-        if (!getMusicAlbumsImage().equals(musicInfo.getMusicAlbumsImage())) return false;
-        if (!getMusicAlbumsName().equals(musicInfo.getMusicAlbumsName())) return false;
-        return getMusicPath().equals(musicInfo.getMusicPath());
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (!(o instanceof MusicInfo)) return false;
+//
+//        MusicInfo musicInfo = (MusicInfo) o;
+//
+//        if (getMusicId() != musicInfo.getMusicId()) return false;
+//        if (getCurrTime() != musicInfo.getCurrTime()) return false;
+//        if (getTotalTime() != musicInfo.getTotalTime()) return false;
+//        if (getMusicAlbumsNumber() != musicInfo.getMusicAlbumsNumber()) return false;
+//        if (getSingermusicCount() != musicInfo.getSingermusicCount()) return false;
+//        if (getMusicSize() != musicInfo.getMusicSize()) return false;
+//        if (!getSinger().equals(musicInfo.getSinger())) return false;
+//        if (!getMusicName().equals(musicInfo.getMusicName())) return false;
+//        if (getState() != musicInfo.getState()) return false;
+//        if (!getMusicAlbumsImage().equals(musicInfo.getMusicAlbumsImage())) return false;
+//        if (!getMusicAlbumsName().equals(musicInfo.getMusicAlbumsName())) return false;
+//        return getMusicPath().equals(musicInfo.getMusicPath());
+//
+//    }
 
-    }
-    @Override
-    public int hashCode() {
-        int result = getMusicId();
-        result = 31 * result + getSinger().hashCode();
-        result = 31 * result + getMusicName().hashCode();
-        result = 31 * result + (int) (getCurrTime() ^ (getCurrTime() >>> 32));
-        result = 31 * result + (int) (getTotalTime() ^ (getTotalTime() >>> 32));
-        result = 31 * result + getState().hashCode();
-        result = 31 * result + getMusicAlbumsImage().hashCode();
-        result = 31 * result + getMusicAlbumsName().hashCode();
-        result = 31 * result + getMusicAlbumsNumber();
-        result = 31 * result + getSingermusicCount();
-        result = 31 * result + getMusicPath().hashCode();
-        result = 31 * result + (int) (getMusicSize() ^ (getMusicSize() >>> 32));
-        return result;
-    }
+//    @Override
+//    public int hashCode() {
+//        int result = getMusicId();
+//        result = 31 * result + getSinger().hashCode();
+//        result = 31 * result + getMusicName().hashCode();
+//        result = 31 * result + (int) (getCurrTime() ^ (getCurrTime() >>> 32));
+//        result = 31 * result + (int) (getTotalTime() ^ (getTotalTime() >>> 32));
+//        result = 31 * result + getState().hashCode();
+//        result = 31 * result + getMusicAlbumsImage().hashCode();
+//        result = 31 * result + getMusicAlbumsName().hashCode();
+//        result = 31 * result + getMusicAlbumsNumber();
+//        result = 31 * result + getSingermusicCount();
+//        result = 31 * result + getMusicPath().hashCode();
+//        result = 31 * result + (int) (getMusicSize() ^ (getMusicSize() >>> 32));
+//        return result;
+//    }
 
     public MusicInfo() {
     }
@@ -119,6 +123,15 @@ public class MusicInfo implements Serializable, Parcelable {
             return new MusicInfo[size];
         }
     };
+
+
+    public long getAlbumId() {
+        return albumId;
+    }
+
+    public void setAlbumId(long albumId) {
+        this.albumId = albumId;
+    }
 
     public int getSingermusicCount() {
         return singermusicCount;
@@ -221,16 +234,18 @@ public class MusicInfo implements Serializable, Parcelable {
     public String toString() {
         return "MusicInfo{" +
                 "musicId=" + musicId +
-                ", singer='" + singer +
-                "singermusicCount" + singermusicCount +'\'' +
+                ", singer='" + singer + '\'' +
                 ", musicName='" + musicName + '\'' +
                 ", currTime=" + currTime +
                 ", totalTime=" + totalTime +
                 ", state=" + state +
                 ", musicAlbumsImage=" + musicAlbumsImage +
-                ", musicAlbumsName='" + musicAlbumsName + '\'' + "musicAlbumsNumber" + musicAlbumsNumber +
+                ", musicAlbumsName='" + musicAlbumsName + '\'' +
+                ", musicAlbumsNumber=" + musicAlbumsNumber +
+                ", singermusicCount=" + singermusicCount +
                 ", musicPath='" + musicPath + '\'' +
                 ", musicSize=" + musicSize +
+                ", albumId=" + albumId +
                 '}';
     }
 

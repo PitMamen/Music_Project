@@ -72,6 +72,9 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
                 e.printStackTrace();
             }
 
+            // 先删除所有数据库资源
+//            MusicUtils.deleteAllMusic(MusicHomeActivity.this);
+
             // 扫描音乐资源，更新到MediaStore数据库中
             MusicUtils.scanAll(MusicHomeActivity.this
                     , Environment.getExternalStorageDirectory().getAbsolutePath()
@@ -226,6 +229,11 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         } else if (position == 2) {
+            if (!isRefresh) {
+                Toast.makeText(MusicHomeActivity.this
+                        , "正在刷新中请稍候！", Toast.LENGTH_SHORT).show();
+                return;
+            }
             // 最近更新
             Intent intent = new Intent(MusicHomeActivity.this, LastUpdatedActivity.class);
             intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -233,8 +241,15 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
             startActivity(intent);
         } else if (position == 3) {
             // 最近播放
-
-
+            if (!isRefresh) {
+                Toast.makeText(MusicHomeActivity.this
+                        , "正在刷新中请稍候！", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Intent intent = new Intent(MusicHomeActivity.this, MusicRecentActivity.class);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
     }
 

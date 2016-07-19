@@ -2,6 +2,8 @@ package com.android.app;
 
 import com.dlighttech.music.database.DataBaseManager;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -13,7 +15,8 @@ import java.util.Observer;
 public class DataChangedWatcher extends Observable {
 
     private static DataChangedWatcher mWatcher = null;
-//    public  boolean isRegister = false;
+    //    public  boolean isRegister = false;
+    private static List<Observer> mObservers = new ArrayList<Observer>();
 
 
     private DataChangedWatcher() {
@@ -39,6 +42,7 @@ public class DataChangedWatcher extends Observable {
      */
     public void registerObserver(Observer o) {
         addObserver(o);
+        mObservers.add(o);
     }
 
     /**
@@ -48,6 +52,15 @@ public class DataChangedWatcher extends Observable {
      */
     public void unRegisterObserver(Observer o) {
         deleteObserver(o);
+        mObservers.remove(o);
+    }
+
+
+    public void removeAllObserver() {
+        for (int i = 0; i < mObservers.size(); i++) {
+            deleteObserver(mObservers.get(i));
+            mObservers.remove(i);
+        }
     }
 
     /**

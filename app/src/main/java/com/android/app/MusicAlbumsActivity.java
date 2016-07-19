@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.view.View;
+import android.util.Log;
 import android.widget.ListView;
 
 import com.allenliu.sidebar.SideBar;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 /**
  * Created by pengxinkai001 on 2016/6/24.
  */
-public class MusicAlbumsActivity extends BaseActivity  implements ContentAdapter.OnConvertViewClicked,ContentAdapter.OnOperateClicked{
+public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked ,ContentAdapter.OnOperateClicked{
 
     private ListView mListview;
     private ArrayList<ContentItem> items = new ArrayList<ContentItem>();
@@ -28,7 +29,7 @@ public class MusicAlbumsActivity extends BaseActivity  implements ContentAdapter
 
     private Cursor cursor;
 
-    private  MusicUtils.ServiceToken token;
+    private MusicUtils.ServiceToken token;
 
 
     @Override
@@ -41,12 +42,7 @@ public class MusicAlbumsActivity extends BaseActivity  implements ContentAdapter
     public void onCreateView() {
         super.setTitleText("Album");
         mListview = (ListView) findViewById(R.id.lv_music_detail);
-
-
         mListview.setAdapter(new ContentAdapter(this, items, false));
-
-
-
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
     }
 
@@ -54,58 +50,43 @@ public class MusicAlbumsActivity extends BaseActivity  implements ContentAdapter
     @Override
     public void onCreateData() {
 
+        // 获取所有歌曲的专辑
+
+//        long[] songIds = MusicUtils.getAllSongs(this);
+//        StringBuilder selection = new StringBuilder();
+//        String[] selectionArgs = new String[songIds.length];
+
+
+//        MusicUtils.getSongListForAlbum()
+
+//        for (int j = 0; j < songIds.length; j++) {
+//            // 获取当前专辑下的所有歌曲
+//            selection.append(MediaStore.Audio.Media._ID + "=?");
+//            selection.append(j == songIds.length - 1 ? "" : " or ");
+//
+//            selectionArgs[j] = String.valueOf(songIds[j]);
+//        }
 
         arrayList = MusicUtils.getMusicInfo(this, false);
-
+        String albumName = "";
         for (int i = 0; i < arrayList.size(); i++) {
 
             MusicInfo info = arrayList.get(i);
+            Log.d("TAG", info.toString());
 
-            String musicAlbums = info.getMusicAlbumsName();
-            int musicAblumscount = info.getMusicAlbumsNumber();
+            Bitmap bitmap = MusicUtils.getArtwork(this, info.getMusicId(), info.getAlbumId(), true);
+            long[] songsIds = MusicUtils.getSongListForAlbum(this, info.getAlbumId());
 
-            Bitmap bitmap = info.getMusicAlbumsImage();
-            ContentItem item;
-            if (bitmap != null) {
-
-                item = new ContentItem(bitmap, R.drawable.c_right, musicAlbums, musicAblumscount + "首");
-
+            if (info.getMusicAlbumsName().equals(albumName)) {
+                continue;
             }
-            else {
-                item = new ContentItem(R.drawable.singer, R.drawable.c_right, musicAlbums, musicAblumscount + "首");
-            }
-
+            ContentItem item = new ContentItem(bitmap, R.drawable.c_right
+                    , info.getMusicAlbumsName(), songsIds.length + "首");
             items.add(item);
 
-          //  MusicUtils.bindToService(this);
+            albumName = info.getMusicAlbumsName();
 
         }
-
-
-    }
-
-
-    @Override
-    public void onConvertViewClicked(int position) {
-
-      /*  MusicInfo info = arrayList.get(position);
-        cursor = MusicUtils.getMusicInfo(this, false, MediaStore.Audio.Media._ID + "=?"
-                , new String[]{String.valueOf(info.getMusicId())});
-
-        if (cursor.getCount() == 0) {
-            return;
-        }
-        if (cursor instanceof TrackBrowserActivity.NowPlayingCursor) {
-            if (MusicUtils.sService != null) {
-                try {
-                    MusicUtils.sService.setQueuePosition(position);
-                    return;
-                } catch (RemoteException ex) {
-                }
-            }
-        }
-        MusicUtils.playAll(this, cursor);
-*/
 
 
     }
@@ -120,11 +101,6 @@ public class MusicAlbumsActivity extends BaseActivity  implements ContentAdapter
 
     }
 
-
-
-
-
-
     @Override
     public void onSearchTextChanged(String text) {
 
@@ -136,14 +112,8 @@ public class MusicAlbumsActivity extends BaseActivity  implements ContentAdapter
     }
 
 
-
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void onConvertViewClicked(int position) {
 
-        //解绑服务
-     //   MusicUtils.unbindFromService(token);
     }
-
-
 }
