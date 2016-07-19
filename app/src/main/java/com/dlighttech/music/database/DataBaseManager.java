@@ -1,6 +1,5 @@
 package com.dlighttech.music.database;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -26,6 +25,7 @@ public class DataBaseManager {
     private DataBaseManager(Context context) {
         mDataBase = new SongListDataBase(context, 1);
     }
+
     public static DataBaseManager getInstance(Context context) {
         if (dbManager == null) {
             synchronized (DataBaseManager.class) {
@@ -36,11 +36,6 @@ public class DataBaseManager {
         }
         return dbManager;
     }
-
-
-
-
-
 
 
     /**
@@ -179,12 +174,13 @@ public class DataBaseManager {
             try {
                 database = mDataBase.getReadableDatabase();
                 String sql = "insert into " + SongListDataBase.SONG_TABLE
-                        + "(" + SongListDataBase.SONG_NAME
+                        + "(" + SongListDataBase.MUSIC_ID
+                        + "," + SongListDataBase.SONG_NAME
                         + "," + SongListDataBase.SINGER
                         + "," + SongListDataBase.SONG_PATH
                         + "," + SongListDataBase.SONG_LIST_ID
-                        + ") values (?,?,?,?)";
-                Object[] bindArgs = new Object[]{song.getName(), song.getSinger()
+                        + ") values (?,?,?,?,?)";
+                Object[] bindArgs = new Object[]{song.getId(), song.getName(), song.getSinger()
                         , song.getSongPath(), song.getSongListId()};
                 database.execSQL(sql, bindArgs);
                 return true;
@@ -289,7 +285,7 @@ public class DataBaseManager {
                         + " where " + SongListDataBase.SONG_LIST_ID + "=?";
                 c = database.rawQuery(sql, new String[]{String.valueOf(id)});
                 while (c.moveToNext()) {
-                    int songId = c.getInt(c.getColumnIndexOrThrow(SongListDataBase._ID));
+                    int songId = c.getInt(c.getColumnIndexOrThrow(SongListDataBase.MUSIC_ID));
                     String songName = c.getString(c.getColumnIndexOrThrow(SongListDataBase.SONG_NAME));
                     String singer = c.getString(c.getColumnIndexOrThrow(SongListDataBase.SINGER));
                     String songPath = c.getString(c.getColumnIndexOrThrow(SongListDataBase.SONG_PATH));
@@ -353,9 +349,9 @@ public class DataBaseManager {
             try {
                 database = mDataBase.getReadableDatabase();
                 String sql = "update " + SongListDataBase.SONG_LIST_TABLE
-                        + " set " + SongListDataBase.SONG_LIST_COUNT + "=?"
+                        + " set " + SongListDataBase.SONG_LIST_COUNT + "=" + (list.getCount() - 1)
                         + " where " + SongListDataBase._ID + "=?";
-                database.execSQL(sql, new Object[]{list.getCount(), list.getId()});
+                database.execSQL(sql, new Object[]{list.getId()});
                 return true;
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -472,12 +468,13 @@ public class DataBaseManager {
                 database = mDataBase.getReadableDatabase();
                 String sql = "insert into " + SongListDataBase.RECENT_TABLE
                         + "(" + SongListDataBase.MUSIC_ID
+                        + "," + SongListDataBase.ALBUM_ID
                         + "," + SongListDataBase.SONG_NAME
                         + "," + SongListDataBase.SINGER
                         + "," + SongListDataBase.RECENT_DATE
                         + ")"
-                        + " values (?,?,?,?)";
-                Object[] bindArgs = new Object[]{song.getId(), song.getName()
+                        + " values (?,?,?,?,?)";
+                Object[] bindArgs = new Object[]{song.getId(), song.getAlbumId(), song.getName()
                         , song.getSinger(), song.getTime()};
                 database.execSQL(sql, bindArgs);
                 return true;
@@ -568,12 +565,14 @@ public class DataBaseManager {
                 c = database.rawQuery(sql, null);
                 while (c.moveToNext()) {
                     int songId = c.getInt(c.getColumnIndexOrThrow(SongListDataBase.MUSIC_ID));
+                    int albumId = c.getInt(c.getColumnIndexOrThrow(SongListDataBase.ALBUM_ID));
                     String songName = c.getString(c.getColumnIndexOrThrow(SongListDataBase.SONG_NAME));
                     String singer = c.getString(c.getColumnIndexOrThrow(SongListDataBase.SINGER));
                     Song song = new Song();
                     song.setId(songId);
                     song.setName(songName);
                     song.setSinger(singer);
+                    song.setAlbumId(albumId);
                     songs.add(song);
                 }
                 return songs;

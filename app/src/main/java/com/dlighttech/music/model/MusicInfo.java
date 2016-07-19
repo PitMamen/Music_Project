@@ -110,6 +110,7 @@ public class MusicInfo implements Serializable, Parcelable {
         musicAlbumsNumber = in.readInt();
         musicPath = in.readString();
         musicSize = in.readLong();
+        albumId = in.readLong();
     }
 
     public static final Creator<MusicInfo> CREATOR = new Creator<MusicInfo>() {
@@ -267,7 +268,7 @@ public class MusicInfo implements Serializable, Parcelable {
         dest.writeInt(musicAlbumsNumber);
         dest.writeString(musicPath);
         dest.writeLong(musicSize);
-
+        dest.writeLong(albumId);
     }
 
     public enum MusicState {

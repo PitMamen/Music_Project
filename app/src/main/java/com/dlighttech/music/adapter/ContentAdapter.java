@@ -75,7 +75,7 @@ public class ContentAdapter extends BaseAdapter {
         if (activity instanceof OnOperateClicked) {
             mOnOperate = (OnOperateClicked) activity;
         }
-;
+        ;
     }
 
     public void setIsOperationHidden(boolean isHidden) {
@@ -261,6 +261,8 @@ public class ContentAdapter extends BaseAdapter {
                             }
 
                             Song song = new Song();
+                            song.setId(info.getMusicId());
+                            song.setAlbumId(info.getAlbumId());
                             song.setSongListId(songListId);
                             song.setName(info.getMusicName());
                             song.setSongPath(info.getMusicPath());
@@ -394,18 +396,17 @@ public class ContentAdapter extends BaseAdapter {
                 .deleteSongBySongListIdAndName(songListId, info.getMusicName());
         Log.d("TAG", "popupWindow Adapter song delete===" + isSuccess + " songListId===" + songListId);
         // 成功删除song表中的数据
-        if (isSuccess && songListId > 0) {
-            contentItems.remove(mSelectPostion);
-            Toast.makeText(mContext, info.getMusicName() + "删除ok！",
-                    Toast.LENGTH_SHORT).show();
-            notifyDataSetChanged();
-            // 获取当前songListId下有几首歌曲
-            SongList list = DataBaseManager.getInstance(mContext)
-                    .getSongListById(songListId);
-            list.setCount(list.getCount() - 1);
-            // 通知数据发生改变
-            DataChangedWatcher.getInstance().update(list);
-        }
+        contentItems.remove(mSelectPostion);
+        Toast.makeText(mContext, info.getMusicName() + "删除ok！",
+                Toast.LENGTH_SHORT).show();
+        // 获取当前songListId下有几首歌曲
+        SongList list = DataBaseManager.getInstance(mContext)
+                .getSongListById(songListId);
+
+        // 通知数据发生改变
+        DataChangedWatcher.getInstance().update(list);
+
+        notifyDataSetChanged();
     }
 
 
@@ -531,6 +532,7 @@ public class ContentAdapter extends BaseAdapter {
         song.setName(info.getMusicName());
         song.setSinger(info.getSinger());
         song.setTime(System.currentTimeMillis());
+        song.setAlbumId(info.getAlbumId());
 
         if (DataBaseManager.getInstance(mContext).insertRecent(song)) {
             Log.d("TAG", "Save recent successful!!");

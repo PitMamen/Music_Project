@@ -1701,6 +1701,7 @@ public class MusicUtils {
                         MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
                                 , albumImage, albumName, albumMusicNumber, path, size);
+                        info.setAlbumId(albumId);
                         musicInfos.add(info);
                         listener.onMusicLoading();
                     }
@@ -1813,8 +1814,6 @@ public class MusicUtils {
             , String selection
             , String[] selectionArgs) {
 
-        ArrayList<MusicInfo> musicInfos = new ArrayList<MusicInfo>();
-
         Cursor c = null;
         try {
             ContentResolver resolver = ctx.getContentResolver();
@@ -1885,7 +1884,7 @@ public class MusicUtils {
                         MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
                                 , albumImage, albumName, albumMusicNumber, path, size);
-
+                        info.setAlbumId(albumId);
                         return info;
                     }
                 }
@@ -2001,7 +2000,7 @@ public class MusicUtils {
                 MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                         , totalTime, MusicInfo.MusicState.NORMAL
                         , albumImage, albumName, albumMusicNumber, path, size);
-                Log.d("TAG", info.toString());
+                info.setAlbumId(albumId);
                 musicInfos.add(info);
             }
             return musicInfos;

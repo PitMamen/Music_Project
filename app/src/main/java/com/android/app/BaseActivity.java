@@ -354,7 +354,6 @@ public abstract class BaseActivity extends Activity
     protected void onDestroy() {
         super.onDestroy();
         unBindService();
-        DataChangedWatcher.getInstance().removeAllObserver();
     }
 
     @Override
