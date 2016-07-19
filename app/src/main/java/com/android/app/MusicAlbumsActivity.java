@@ -19,7 +19,7 @@ import java.util.ArrayList;
 /**
  * Created by pengxinkai001 on 2016/6/24.
  */
-public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked ,ContentAdapter.OnOperateClicked{
+public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked, ContentAdapter.OnOperateClicked {
 
     private ListView mListview;
     private ArrayList<ContentItem> items = new ArrayList<ContentItem>();
@@ -95,7 +95,7 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
     @Override
     public void onOperateClicked(int position, View v) {
 
-        Intent intent = new Intent(MusicAlbumsActivity.this,MediaPlaybackActivity.class);
+        Intent intent = new Intent(MusicAlbumsActivity.this, MediaPlaybackActivity.class);
         startActivity(intent);
 
 
@@ -114,6 +114,29 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
 
     @Override
     public void onConvertViewClicked(int position) {
+
+        playmusic(position);
+
+
+    }
+         //播放音乐
+    private void playmusic(int position) {
+
+        if (arrayList == null || arrayList.size() == 0) {
+            return;
+        }
+        StringBuilder selector = new StringBuilder();
+
+        String[] selectorArgs = new String[arrayList.size()];
+
+        for (int i = 0; i < arrayList.size(); i++) {
+
+            selector.append(MediaStore.Audio.Media._ID + "=?");
+            selector.append(i == arrayList.size() - 1 ? "" : "or");
+
+           selectorArgs[i]= String.valueOf(arrayList.get(i).getMusicId());
+        }
+            super.playCursor(selector.toString(),selectorArgs,false,position);
 
     }
 }

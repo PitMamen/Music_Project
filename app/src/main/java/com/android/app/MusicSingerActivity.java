@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.RemoteException;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -69,7 +70,29 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
     public void onCreateData() {
 
 
-        arrayList = MusicUtils.getMusicInfo(this, true);
+
+
+
+        arrayList = MusicUtils.getMusicInfo(this, false);
+        String singer = "";
+//        for (int i = 0; i < arrayList.size(); i++) {
+//
+//            MusicInfo info = arrayList.get(i);
+//            Log.d("TAG", info.toString());
+//
+//            Bitmap bitmap = MusicUtils.getArtwork(this, info.getMusicId(), info.getAlbumId(), true);
+//            long[] songsIds = MusicUtils.getSongListForAlbum(this, info.getMusicId());
+//
+//            if (info.getSinger().equals(singer)) {
+//                continue;
+//            }
+//            ContentItem item = new ContentItem(bitmap, R.drawable.more_title_selected
+//                    , info.getSinger(), songsIds.length + "首");
+//            items.add(item);
+//
+//            singer = info.getMusicName();
+//
+//        }
 
 
        for (int i = 0; i < arrayList.size(); i++) {
@@ -91,7 +114,7 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
             items.add(item);
 
             //绑定服务
-            MusicUtils.bindToService(this);
+            //MusicUtils.bindToService(this);
 
         }
 
@@ -157,13 +180,6 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
     }
 
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //解绑服务
-        MusicUtils.unbindFromService(token);
-
-    }
 }
 
 

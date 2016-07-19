@@ -120,28 +120,7 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     @Override
     public void onConvertViewClicked(int position) {
 
-
-
-
         playMusic(position);
-    /*    MusicInfo info = arrayList.get(position);
-        cursor = MusicUtils.getMusicInfo(this, false, MediaStore.Audio.Media._ID + "=?"
-                , new String[]{String.valueOf(info.getMusicId())});
-
-        if (cursor.getCount() == 0) {
-            return;
-        }
-        if (cursor instanceof TrackBrowserActivity.NowPlayingCursor) {
-            if (MusicUtils.sService != null) {
-                try {
-                    MusicUtils.sService.setQueuePosition(position);
-                    return;
-                } catch (RemoteException ex) {
-                }
-            }
-        }
-        //播放音乐
-        MusicUtils.playAll(this, cursor);*/
 
     }
 

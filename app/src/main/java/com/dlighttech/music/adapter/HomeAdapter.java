@@ -121,7 +121,7 @@ public class HomeAdapter extends BaseAdapter {
         TextView tvName;
 
         public ViewHolder(View itemView) {
-            ivLeft = (ImageView) itemView.findViewById(R.id.thumb_imageView_content);
+           ivLeft = (ImageView) itemView.findViewById(R.id.thumb_imageView_content);
             ivRight = (ImageView) itemView.findViewById(R.id.operate_imageView_content);
             tvName = (TextView) itemView.findViewById(R.id.title_content);
         }
