@@ -1,7 +1,5 @@
 package com.dlighttech.music.model;
 
-import java.util.Date;
-
 /**
  * Created by zhujiang on 16-6-23.
  */
@@ -12,14 +10,14 @@ public class Song {
     private int songListId;
     private String singer;
     private String songPath;
-    private Date date;
+    private long time;
 
-    public Date getDate() {
-        return date;
+    public long getTime() {
+        return time;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setTime(long time) {
+        this.time = time;
     }
 
     public int getId() {

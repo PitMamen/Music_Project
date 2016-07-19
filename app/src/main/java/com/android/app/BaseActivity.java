@@ -28,8 +28,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.music.IMediaPlaybackService;
+import com.dlighttech.music.model.MusicInfo;
 import com.dlighttech.music.util.PreferencesUtils;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -101,10 +103,10 @@ public abstract class BaseActivity extends Activity
         if (data instanceof Integer) {
             mProgressHandler.removeMessages(PLAY);
             mPercentage = (int) data;
-            mProgressHandler.sendEmptyMessageDelayed(PLAY,1000);
+            mProgressHandler.sendEmptyMessageDelayed(PLAY, 1000);
         }
 
-        if(data instanceof Boolean){
+        if (data instanceof Boolean) {
             mProgressHandler.removeMessages(PAUSE);
             isPause = (boolean) data;
             mProgressHandler.sendEmptyMessage(PAUSE);
@@ -281,15 +283,30 @@ public abstract class BaseActivity extends Activity
     /**
      * 子类调用，获取当前目录的歌曲列表开始播放音乐
      *
-     * @param selection
-     * @param selectionArgs
      * @param isOrder
      * @param position
      */
-    protected void playCursor(String selection, String[] selectionArgs
-            , boolean isOrder, int position) {
+    protected void playCursor(ArrayList<MusicInfo> mMusicList, boolean isOrder, int position) {
 
-        mTrackCursor = MusicUtils.getMusicInfo(this, isOrder, selection
+        if (mMusicList == null || mMusicList.size() == 0) {
+            return;
+        }
+        StringBuilder selection = new StringBuilder();
+        String[] selectionArgs = new String[mMusicList.size()];
+        // 由于需要下一曲的播放所以需要将当前目录下的歌曲以游标的形式传递给Service
+        for (int i = 0; i < mMusicList.size(); i++) {
+
+            selection.append(MediaStore.Audio.Media._ID + "=?");
+            selection.append(i == mMusicList.size() - 1 ? "" : " or ");
+
+            selectionArgs[i] = String.valueOf(mMusicList.get(i).getMusicId());
+        }
+        Log.d("TAG", selection.toString());
+
+        /* ====== */
+
+
+        mTrackCursor = MusicUtils.getMusicInfo(this, isOrder, selection.toString()
                 , selectionArgs);
 
         if (mTrackCursor.getCount() == 0) {
@@ -439,7 +456,7 @@ public abstract class BaseActivity extends Activity
                     if (!isPause) {
                         refreshProgress();
                         mProgressHandler.sendEmptyMessageDelayed(PLAY, 1000); //延迟1秒再次发送
-                    }else{
+                    } else {
                         mProgressHandler.removeMessages(PLAY);
                     }
                     isPause = false;

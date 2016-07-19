@@ -473,7 +473,7 @@ public class DataBaseManager {
                         + ")"
                         + " values (?,?,?,?)";
                 Object[] bindArgs = new Object[]{song.getId(), song.getName()
-                        , song.getSinger(), song.getDate()};
+                        , song.getSinger(), song.getTime()};
                 database.execSQL(sql, bindArgs);
                 return true;
             } catch (SQLException e) {
@@ -485,6 +485,64 @@ public class DataBaseManager {
             }
         }
     }
+
+    /**
+     * 删除一条数据，最近播放
+     *
+     * @param id
+     * @return
+     */
+    public boolean deleteRecent(int id) {
+        synchronized (mDataBase) {
+            SQLiteDatabase database = null;
+            try {
+                database = mDataBase.getReadableDatabase();
+                String sql = "delete from " + SongListDataBase.RECENT_TABLE
+                        + " where " + SongListDataBase.MUSIC_ID + "=?";
+                Object[] bindArgs = new Object[]{id};
+                database.execSQL(sql, bindArgs);
+                return true;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            } finally {
+                if (database != null)
+                    database.close();
+            }
+        }
+    }
+
+
+    /**
+     * 获取全部最近播放的列表,降序排列
+     *
+     * @return
+     */
+    public boolean isExistsRecentSong(int id) {
+        synchronized (mDataBase) {
+            SQLiteDatabase database = null;
+            Cursor c = null;
+            try {
+                database = mDataBase.getReadableDatabase();
+                String sql = "select count(*) from " + SongListDataBase.RECENT_TABLE
+                        + " where " + SongListDataBase.MUSIC_ID + "=?";
+
+                c = database.rawQuery(sql, new String[]{String.valueOf(id)});
+                c.moveToFirst();
+                int i = c.getInt(0);
+                if (i > 0) {
+                    return true;
+                }
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            } finally {
+                if (c != null) c.close();
+                if (database != null) database.close();
+            }
+            return false;
+        }
+    }
+
 
     /**
      * 获取全部最近播放的列表,降序排列
@@ -500,7 +558,7 @@ public class DataBaseManager {
 
                 database = mDataBase.getReadableDatabase();
                 String sql = "select * from " + SongListDataBase.RECENT_TABLE
-                        +" order by "+SongListDataBase.RECENT_DATE+" desc";
+                        + " order by " + SongListDataBase.RECENT_DATE + " desc";
 
                 c = database.rawQuery(sql, null);
                 while (c.moveToNext()) {

@@ -1,8 +1,6 @@
 package com.android.app;
 
 import android.graphics.Bitmap;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -106,22 +104,6 @@ public class LastUpdatedActivity extends BaseActivity implements ContentAdapter.
 
     @Override
     public void onConvertViewClicked(int position) {
-        if (infos != null && infos.size() > 0) {
-
-            StringBuilder mSelection = new StringBuilder();
-            String[] mSelectionArgs = new String[infos.size()];
-            // 由于需要下一曲的播放所以需要将当前目录下的歌曲以游标的形式传递给Service
-            for (int i = 0; i < infos.size(); i++) {
-
-                mSelection.append(MediaStore.Audio.Media._ID + "=?");
-                mSelection.append(i == infos.size() - 1 ? "" : " or ");
-                mSelectionArgs[i] = String.valueOf(infos.get(i).getMusicId());
-
-                Log.d("TAG",infos.get(i).getMusicName());
-
-            }
-
-            super.playCursor(mSelection.toString(), mSelectionArgs, true, position);
-        }
+        super.playCursor(infos, true, position);
     }
 }
