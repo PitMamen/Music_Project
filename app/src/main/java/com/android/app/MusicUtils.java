@@ -1700,7 +1700,7 @@ public class MusicUtils {
 
                         MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
-                                , albumImage, albumName, albumMusicNumber, path, size);
+                                , albumImage, albumName, albumMusicNumber, path, size,artistId);
                         musicInfos.add(info);
                         listener.onMusicLoading();
                     }
@@ -1792,7 +1792,7 @@ public class MusicUtils {
 
                         MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
-                                , albumImage, albumName, albumMusicNumber, path, size);
+                                , albumImage, albumName, albumMusicNumber, path, size,artistId);
                         info.setAlbumId(albumId);
 
                         musicInfos.add(info);
@@ -1884,7 +1884,7 @@ public class MusicUtils {
 
                         MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
-                                , albumImage, albumName, albumMusicNumber, path, size);
+                                , albumImage, albumName, albumMusicNumber, path, size,artistId);
 
                         return info;
                     }
@@ -1905,26 +1905,6 @@ public class MusicUtils {
             , String[] selectionArgs) {
 
         Cursor c = null;
-
-
-        long[] ids = new long[3];
-        selectionArgs = new String[ids.length];
-
-
-        for(int i =0 ; i<ids.length;i++){
-
-           selection+= MediaStore.Audio.Media._ID+"=?";
-           if(i == ids.length-1){
-               selection="";
-           }else{
-               selection=" or ";
-           }
-
-            selectionArgs[i] = ids.toString();
-        }
-
-
-
 
         ContentResolver resolver = ctx.getContentResolver();
         if (resolver != null) {
@@ -2020,7 +2000,7 @@ public class MusicUtils {
 
                 MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                         , totalTime, MusicInfo.MusicState.NORMAL
-                        , albumImage, albumName, albumMusicNumber, path, size);
+                        , albumImage, albumName, albumMusicNumber, path, size,artistId);
                 Log.d("TAG", info.toString());
                 musicInfos.add(info);
             }

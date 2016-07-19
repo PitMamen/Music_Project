@@ -68,37 +68,15 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
 
     @Override
     public void onCreateData() {
-
-
-
-
-
         arrayList = MusicUtils.getMusicInfo(this, false);
-        String singer = "";
-//        for (int i = 0; i < arrayList.size(); i++) {
-//
-//            MusicInfo info = arrayList.get(i);
-//            Log.d("TAG", info.toString());
-//
-//            Bitmap bitmap = MusicUtils.getArtwork(this, info.getMusicId(), info.getAlbumId(), true);
-//            long[] songsIds = MusicUtils.getSongListForAlbum(this, info.getMusicId());
-//
-//            if (info.getSinger().equals(singer)) {
-//                continue;
-//            }
-//            ContentItem item = new ContentItem(bitmap, R.drawable.more_title_selected
-//                    , info.getSinger(), songsIds.length + "首");
-//            items.add(item);
-//
-//            singer = info.getMusicName();
-//
-//        }
 
 
-       for (int i = 0; i < arrayList.size(); i++) {
+
+//        MusicUtils.getMusicInfo(this,false,);
+        for (int i = 0; i < arrayList.size(); i++) {
             MusicInfo info = arrayList.get(i);
 
-            String musicsiner = info.getSinger();
+            String musicsiner = info.getSinger()  ;
 
 
             int musiccount = info.getSingermusicCount();
@@ -118,10 +96,14 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
 
         }
 
+        }
 
 
 
-    }
+
+
+
+
 
     @Override
     public void onSearchTextChanged(String text) {
