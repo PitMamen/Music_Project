@@ -71,8 +71,8 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
 
         arrayList = MusicUtils.getMusicInfo(this, true);
 
-        for (int i = 0; i < arrayList.size(); i++) {
 
+       for (int i = 0; i < arrayList.size(); i++) {
             MusicInfo info = arrayList.get(i);
 
             String musicsiner = info.getSinger();
@@ -95,6 +95,9 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
 
         }
 
+
+
+
     }
 
     @Override
@@ -111,7 +114,7 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
     @Override
     public void onConvertViewClicked(int position) {
 
-        MusicInfo info = arrayList.get(position);
+        /*MusicInfo info = arrayList.get(position);
         cursor = MusicUtils.getMusicInfo(this, false, MediaStore.Audio.Media._ID + "=?"
                 , new String[]{String.valueOf(info.getMusicId())});
 
@@ -128,8 +131,28 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
             }
         }
         //播放音乐
-        MusicUtils.playAll(this, cursor);
+        MusicUtils.playAll(this, cursor);*/
 
+
+        palyMusic(position);
+
+
+    }
+
+    private void palyMusic(int position) {
+
+        StringBuilder mSelecte = new StringBuilder();
+        String[] mselectsArgs = new String[arrayList.size()];
+
+        for (int i = 0; i < arrayList.size(); i++) {
+
+            mSelecte.append(MediaStore.Audio.Media._ID + "=?");
+            mSelecte.append(i == arrayList.size() - 1 ? "" : "or");
+
+            mselectsArgs[i] = String.valueOf(arrayList.get(i).getMusicId());
+        }
+
+        super.playCursor(mSelecte.toString(), mselectsArgs, false, position);
 
     }
 
@@ -137,8 +160,8 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
     @Override
     protected void onDestroy() {
         super.onDestroy();
-             //解绑服务
-       MusicUtils.unbindFromService(token);
+        //解绑服务
+        MusicUtils.unbindFromService(token);
 
     }
 }

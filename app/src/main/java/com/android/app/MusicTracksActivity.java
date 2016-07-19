@@ -29,7 +29,7 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     private ListView lv_music_detail;
     private SideBar sb_navigation_bar;
     private Cursor cursor;
-    private  MusicUtils.ServiceToken token;
+    private MusicUtils.ServiceToken token;
 
     private ContentAdapter mAdapter;
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
@@ -123,7 +123,12 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
 
     @Override
     public void onConvertViewClicked(int position) {
-        MusicInfo info = arrayList.get(position);
+
+
+
+
+        playMusic(position);
+    /*    MusicInfo info = arrayList.get(position);
         cursor = MusicUtils.getMusicInfo(this, false, MediaStore.Audio.Media._ID + "=?"
                 , new String[]{String.valueOf(info.getMusicId())});
 
@@ -140,7 +145,26 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
             }
         }
         //播放音乐
-        MusicUtils.playAll(this, cursor);
+        MusicUtils.playAll(this, cursor);*/
+
+    }
+
+    private void playMusic(int position) {
+        StringBuilder mselection = new StringBuilder();
+        String[] mSelectionArgs = new String[arrayList.size()];
+        for (int i = 0; i < arrayList.size(); i++) {
+
+            mselection.append(MediaStore.Audio.Media._ID + "=?");
+            mselection.append(i == arrayList.size() - 1 ? "" : "or");
+
+            mSelectionArgs[i] = String.valueOf(arrayList.get(i).getMusicId());
+        }
+
+        super.playCursor(mselection.toString(),mSelectionArgs,false,position);
+
+
+        Log.i("MusicTracksActivity+", mselection.toString());
+
 
     }
 
@@ -149,7 +173,7 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     protected void onDestroy() {
         super.onDestroy();
 
-       // 解绑服务
+        // 解绑服务
         MusicUtils.unbindFromService(token);
     }
 }

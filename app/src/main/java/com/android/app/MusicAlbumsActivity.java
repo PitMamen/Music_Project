@@ -70,7 +70,8 @@ public class MusicAlbumsActivity extends BaseActivity  implements ContentAdapter
 
                 item = new ContentItem(bitmap, R.drawable.c_right, musicAlbums, musicAblumscount + "首");
 
-            } else {
+            }
+            else {
                 item = new ContentItem(R.drawable.singer, R.drawable.c_right, musicAlbums, musicAblumscount + "首");
             }
 

@@ -75,7 +75,7 @@ public class ContentAdapter extends BaseAdapter {
         if (activity instanceof OnOperateClicked) {
             mOnOperate = (OnOperateClicked) activity;
         }
-
+;
     }
 
     public void setIsOperationHidden(boolean isHidden) {
