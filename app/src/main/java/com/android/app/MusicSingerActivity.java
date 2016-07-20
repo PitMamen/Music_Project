@@ -12,6 +12,7 @@ import com.allenliu.sidebar.SideBar;
 import com.dlighttech.music.adapter.ContentAdapter;
 import com.dlighttech.music.model.ContentItem;
 import com.dlighttech.music.model.MusicInfo;
+import com.dlighttech.music.util.CommonUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -59,7 +60,7 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
         mListview.setAdapter(mdapter);
 
         int count = mdapter.getCount();
-        tv_music_number.setText("共" + count + "首");
+        tv_music_number.setText("共" + count + "名艺术家");
 
 
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
@@ -72,37 +73,86 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
 
 
 
-//        MusicUtils.getMusicInfo(this,false,);
+        String singer = null;
+
+
         for (int i = 0; i < arrayList.size(); i++) {
+
+//            arrayList = (ArrayList<MusicInfo>) CommonUtils.removeDuplicate(arrayList);
+
             MusicInfo info = arrayList.get(i);
 
-            String musicsiner = info.getSinger()  ;
-
-
-            int musiccount = info.getSingermusicCount();
-
+            //Bitmap bitmap = MusicUtils.getArtwork(this, info.getMusicId(), info.getArtistId());
             Bitmap bitmap = info.getMusicAlbumsImage();
+
+
+            long[] songsId = MusicUtils.getSongListForArtist(this, info.getArtistId());
+
+            if (info.getSinger().equals(singer)) {
+                continue;
+            }
 
             ContentItem item;
             if (bitmap != null) {
-                item = new ContentItem(bitmap, R.drawable.more_title_selected, musicsiner, musiccount + "首");
-            } else {
-                item = new ContentItem(R.drawable.singer, R.drawable.more_title_selected, musicsiner, musiccount + "首");
-            }
-            items.add(item);
+                item = new ContentItem(bitmap, R.drawable.more_title_selected, info.getSinger(), songsId.length + "首");
+                items.add(item);
 
-            //绑定服务
-            //MusicUtils.bindToService(this);
+            } //else {
+//                item = new ContentItem(R.drawable.singer, R.drawable.more_title_selected, info.getSinger(), songsId.length + "首");
+//            }
+
+            singer = info.getSinger();
+
+
 
         }
 
-        }
+
+//        String albumName = "";
+//        for (int i = 0; i < arrayList.size(); i++) {
+//
+//            MusicInfo info = arrayList.get(i);
+//            Log.d("TAG", info.toString());
+//
+//            Bitmap bitmap = MusicUtils.getArtwork(this, info.getMusicId(), info.getAlbumId(), true);
+//            long[] songsIds = MusicUtils.getSongListForAlbum(this, info.getAlbumId());
+//
+//            if (info.getMusicAlbumsName().equals(albumName)) {
+//                continue;
+//            }
+//            ContentItem item = new ContentItem(bitmap, R.drawable.c_right
+//                    , info.getMusicAlbumsName(), songsIds.length + "首");
+//
+//
+//            albumName = info.getMusicAlbumsName();
+//            items.add(item);
+//        }
 
 
+//        for (int i = 0; i < arrayList.size(); i++) {
+//            MusicInfo info = arrayList.get(i);
+//
+//            String musicsiner = info.getSinger()  ;
+//
+//
+//            int musiccount = info.getSingermusicCount();
+//
+//            Bitmap bitmap = info.getMusicAlbumsImage();
+//
+//            ContentItem item;
+//            if (bitmap != null) {
+//                item = new ContentItem(bitmap, R.drawable.more_title_selected, musicsiner, musiccount + "首");
+//            } else {
+//                item = new ContentItem(R.drawable.singer, R.drawable.more_title_selected, musicsiner, musiccount + "首");
+//            }
+//            items.add(item);
+//
+//            //绑定服务
+//            //MusicUtils.bindToService(this);
+//
+//        }
 
-
-
-
+    }
 
 
     @Override
@@ -143,7 +193,6 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
 
 
     }
-
 
 
 }

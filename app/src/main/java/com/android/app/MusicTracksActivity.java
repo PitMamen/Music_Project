@@ -84,7 +84,7 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     public void onCreateData() {
 
 
-        arrayList = MusicUtils.getMusicInfo(this, false);
+        arrayList = MusicUtils.getMusicInfo(this, true);
 
         for (int i = 0; i < arrayList.size(); i++) {
 

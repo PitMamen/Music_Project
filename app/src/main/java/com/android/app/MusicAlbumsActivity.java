@@ -15,6 +15,8 @@ import com.dlighttech.music.model.ContentItem;
 import com.dlighttech.music.model.MusicInfo;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by pengxinkai001 on 2016/6/24.
@@ -52,8 +54,10 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
 
 
         arrayList = MusicUtils.getMusicInfo(this, false);
+
+        Set<MusicInfo> hashset = new HashSet<>(arrayList);
         String albumName = "";
-        for (int i = 0; i < arrayList.size(); i++) {
+        for (int i = 0; i < hashset.size(); i++) {
 
             MusicInfo info = arrayList.get(i);
             Log.d("TAG", info.toString());
