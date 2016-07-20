@@ -1072,6 +1072,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
                 }
                 refreshNow();
                 setPauseButtonImage();
+                updateState();
             }
         } catch (RemoteException ex) {
         }
@@ -1081,13 +1082,13 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
      * 通过观察者模式通知BaseActivity更新底部视图
      */
     private void updateState() {
-        DataChangedWatcher.getInstance().update();
+        try {
+            int per = (int) (mService.position() * 1000F / mService.duration());
+            DataChangedWatcher.getInstance().update(per);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
-
-    private void updateState(boolean isPause) {
-        DataChangedWatcher.getInstance().update(isPause);
-    }
-
 
     private void toggleShuffle() {
         if (mService == null) {
@@ -1314,7 +1315,9 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
 
                 int progress = (int) (1000 * pos / mDuration);
                 mProgress.setProgress(progress);
-//                Log.d("TAG", "百分比：" + progress);
+                Log.d("TAG", "detail百分比：" + progress);
+                Log.d("TAG", "detail总时间：" + MusicUtils.makeTimeString(this, mService.duration() / 1000));
+                Log.d("TAG", "detail当前时间：" + MusicUtils.makeTimeString(this, mService.position() / 1000));
 
                 if (mService.isPlaying()) {
                     mCurrentTime.setVisibility(View.VISIBLE);
@@ -1339,16 +1342,17 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
             // return the number of milliseconds until the next full second, so
             // the counter can be updated at just the right time
 
-//            Log.d("TAG", "总时间：" + MusicUtils.makeTimeString(this, mService.duration() / 1000));
-//            Log.d("TAG", "当前时间：" + MusicUtils.makeTimeString(this, mService.position() / 1000));
-            // 通知BaseActivity更新进度条
-            int per = (int) (mService.position() * 1000F / mService.duration());
-            DataChangedWatcher.getInstance().update(per);
-
             return remaining;
         } catch (RemoteException ex) {
         }
         return 500;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // 通知BaseActivity更新进度条
+        updateState();
     }
 
     private final Handler mHandler = new Handler() {
@@ -1371,7 +1375,6 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
                         e.printStackTrace();
                     }
 
-                    //====
 
                     mAlbum.getDrawable().setDither(true);
                     break;
