@@ -487,7 +487,6 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
                     mService.seek(mPosOverride);
                 } catch (RemoteException ex) {
                 }
-
                 // trackball event, allow progress updates
                 if (!mFromTouch) {
                     refreshNow();
