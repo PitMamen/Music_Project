@@ -94,12 +94,13 @@ public abstract class BaseActivity extends Activity
     protected void onResume() {
         super.onResume();
 
+
     }
 
     @Override
     public void update(Observable observable, Object data) {
         mPercentage = 0;
-        mProgressHandler.removeMessages(PLAY);
+        removeAllMsg();
 
         if (data instanceof Integer) {
             mPercentage = (int) data;
@@ -256,8 +257,7 @@ public abstract class BaseActivity extends Activity
     protected void doPauseResume() {
         try {
             if (mService != null) {
-                mProgressHandler.removeMessages(PAUSE);
-                mProgressHandler.removeMessages(PLAY);
+                removeAllMsg();
 
                 if (mService.isPlaying()) {
                     mService.pause();
@@ -269,6 +269,7 @@ public abstract class BaseActivity extends Activity
                     Message.obtain(mProgressHandler, PLAY).sendToTarget();
                 }
                 setPauseButtonImage();
+                updateView();
             }
         } catch (RemoteException ex) {
         }
@@ -328,23 +329,25 @@ public abstract class BaseActivity extends Activity
 
         MusicUtils.playAll(this, mTrackCursor, position);
 
-        mProgressHandler.removeMessages(PLAY);
+        removeAllMsg();
         Message.obtain(mProgressHandler, PLAY).sendToTarget();
         updateView();
     }
 
-    protected void setupService() {
-        mToken = MusicUtils.bindToService(this, new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                mService = IMediaPlaybackService.Stub.asInterface(service);
-            }
+    private ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mService = IMediaPlaybackService.Stub.asInterface(service);
+        }
 
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                finish();
-            }
-        });
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            finish();
+        }
+    };
+
+    protected void setupService() {
+        mToken = MusicUtils.bindToService(this, conn);
     }
 
     /**
@@ -357,20 +360,21 @@ public abstract class BaseActivity extends Activity
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         unBindService();
+        super.onDestroy();
     }
+
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (mService == null) {
+        if (getService() == null) {
             return;
         }
         try {
             // 将音乐id 、 专辑id、歌曲名称、歌手、当前时间缓存下来，以便初始化时使用
             PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
-                    .putData(PreferencesUtils.IS_PLAYING, mService.isPlaying());
+                    .putData(PreferencesUtils.IS_PLAYING, getService().isPlaying());
 
             PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
                     .putData(PreferencesUtils.SONG_ID, MusicUtils.getCurrentAudioId());
@@ -379,15 +383,19 @@ public abstract class BaseActivity extends Activity
                     .putData(PreferencesUtils.ALBUM_ID, MusicUtils.getCurrentAlbumId());
 
             PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
-                    .putData(PreferencesUtils.MUSIC_NAME, mService.getTrackName());
+                    .putData(PreferencesUtils.MUSIC_NAME, getService().getTrackName());
 
             PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
-                    .putData(PreferencesUtils.SINGER, mService.getArtistName());
+                    .putData(PreferencesUtils.SINGER, getService().getArtistName());
+
+
+            PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
+                    .putData(PreferencesUtils.CURR_TIME, getService().position());
+
+            PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
+                    .putData(PreferencesUtils.TOTAL_TIME, getService().duration());
 
             Log.d("TAG", "updateview百分比：" + mPercentage);
-
-            PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
-                    .putData(PreferencesUtils.CURR_TIME, mPercentage);
 
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -414,9 +422,10 @@ public abstract class BaseActivity extends Activity
         mImageViewIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mProgressHandler.removeMessages(PLAY);
+                removeAllMsg();
                 Intent intent = new Intent(BaseActivity.this, MediaPlaybackActivity.class);
                 startActivity(intent);
+                getService();
             }
         });
     }
@@ -434,7 +443,7 @@ public abstract class BaseActivity extends Activity
             if (mService == null) return;
             try {
                 mService.next();
-                mProgressHandler.removeMessages(PLAY);
+                removeAllMsg();
                 Message.obtain(mProgressHandler, PLAY).sendToTarget();
                 updateView();
             } catch (RemoteException ex) {
@@ -446,6 +455,7 @@ public abstract class BaseActivity extends Activity
     private static final int PLAY = 0;
     private static final int PAUSE = 1;
     private static final int STOP = 2;
+    private static final int NEXT = 3;
     private boolean isPause = false;
 
 
@@ -457,48 +467,85 @@ public abstract class BaseActivity extends Activity
             switch (msg.what) {
                 case PLAY:
                     if (!isPause) {
+                        removeAllMsg();
                         refreshProgress();
-                        mProgressHandler.sendEmptyMessageDelayed(PLAY, 1000); //延迟1秒再次发送
-                    } else {
-                        mProgressHandler.removeMessages(PLAY);
+                        mProgressHandler.sendEmptyMessageDelayed(PLAY
+                                , 1000L); //延迟1秒再次发送
                     }
+
+//                    try {
+//                        // 如果音乐播放完毕并且播放模式为普通模式，则播放下一曲
+//                        if (mPercentage == 0) {
+//                            if (getService().getRepeatMode() == MediaPlaybackService.REPEAT_NONE) {
+//                                Message.obtain(mProgressHandler, NEXT).sendToTarget();
+//                            }
+//                        }
+//
+//                    } catch (RemoteException e) {
+//                        e.printStackTrace();
+//                    }
+
                     isPause = false;
                     break;
                 case PAUSE:
                     isPause = true;
                     break;
                 case STOP:
-                    mPercentage = 0;
-                    mProgressHandler.removeMessages(PLAY);
-                    updateView();
+                    stopPlay();
+                    break;
+                case NEXT:
+                    playNextOrCurr();
                     break;
                 default:
                     break;
             }
 
-            // 如果progress到1000并且播放模式为普通模式，则重置progress并更新视图
-            try {
-                if (mPercentage == 1000) {
-                    if (mService.getRepeatMode() == MediaPlaybackService.REPEAT_NONE) {
-                        mProgressHandler.sendEmptyMessage(STOP);
-                    }
-                }
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+
         }
     };
 
+    private void playNextOrCurr() {
+        mPercentage = 0;
+        removeAllMsg();
+        Message.obtain(mProgressHandler, PLAY).sendToTarget();
+        updateView();
+        Log.d("TAG", "haha");
+    }
+
+    private void stopPlay() {
+        mPercentage = 0;
+        removeAllMsg();
+        Message.obtain(mProgressHandler, STOP).sendToTarget();
+        updateView();
+    }
+
+    private void removeAllMsg() {
+        mProgressHandler.removeMessages(PLAY);
+        mProgressHandler.removeMessages(PAUSE);
+        mProgressHandler.removeMessages(NEXT);
+        mProgressHandler.removeMessages(STOP);
+    }
+
+    private String uriPath="";
+
     private void refreshProgress() {
+        if (getService() == null) {
+            return;
+        }
         // 开始计算当前音乐播放的时间以及位置
         try {
+            mCurrTime = getService().position();
+            mDuration = getService().duration();
+            mPercentage = (int) (mCurrTime * 1000.0F / mDuration);
+            mProgressBar.setProgress(mPercentage);
             Log.d("TAG", "总时间：" + MusicUtils.makeTimeString(this, mService.duration() / 1000));
             Log.d("TAG", "当前时间：" + MusicUtils.makeTimeString(this, mService.position() / 1000));
-            mCurrTime = mService.position();
-            mDuration = mService.duration();
-            mPercentage = (int) (mCurrTime * 1000.0F / mDuration);
-            Log.d("TAG", "百分比：" + mPercentage);
-            mProgressBar.setProgress(mPercentage);
+            Log.d("TAG", "当前百分比：" + mPercentage);
+            if (!uriPath.equals(getService().getPath())) {
+                updateView();
+                uriPath = getService().getPath();
+            }
+            Log.d("TAG", "路径：" + getService().getPath());
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -542,13 +589,18 @@ public abstract class BaseActivity extends Activity
 
         mProgressBar.setMax(1000);
 
-        int progress = PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
-                .getInteger(PreferencesUtils.CURR_TIME);
+        long curr = PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
+                .getLong(PreferencesUtils.CURR_TIME);
 
-        mProgressBar.setProgress(progress);
+        long total = PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
+                .getLong(PreferencesUtils.TOTAL_TIME);
+
+        mPercentage = curr <= 0 || total <= 0 ? 0 : (int) (curr * 1000F / total);
+        mProgressBar.setProgress(mPercentage);
 
         boolean isPlaying = PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
                 .getBoolean(PreferencesUtils.IS_PLAYING);
+
         if (isPlaying) {
             mImageViewPause.setImageResource(R.drawable.pause_btn_selector);
         } else {
@@ -556,6 +608,49 @@ public abstract class BaseActivity extends Activity
         }
 
         mImageViewNext.setImageResource(R.drawable.next_btn_selector);
+
+        removeAllMsg();
+        Message.obtain(mProgressHandler, PLAY).sendToTarget();
+//        try {
+//            long songId = MusicUtils.getCurrentAudioId();
+//
+//            long albumId = MusicUtils.getCurrentAlbumId();
+//
+//            Bitmap bm = MusicUtils.getArtwork(this, songId, albumId, true);
+//            mImageViewIcon.setImageBitmap(bm);
+//
+//            String musicName = getService().getTrackName();
+//            musicName = TextUtils.isEmpty(musicName)
+//                    ? MediaStore.UNKNOWN_STRING : musicName;
+//
+//            tvMusicName.setText(musicName);
+//
+//
+//            String singer = getService().getArtistName();
+//
+//            singer = TextUtils.isEmpty(singer) ? MediaStore.UNKNOWN_STRING
+//                    : singer;
+//
+//            tvMusicAuthor.setText(singer);
+//
+//            mProgressBar.setMax(1000);
+//
+//            int progress = (int) (getService().position() * 1000F / getService().duration());
+//
+//            mProgressBar.setProgress(progress);
+//
+//            boolean isPlaying = getService().isPlaying();
+//
+//            if (isPlaying) {
+//                mImageViewPause.setImageResource(R.drawable.pause_btn_selector);
+//            } else {
+//                mImageViewPause.setImageResource(R.drawable.play_btn_selector);
+//            }
+//
+//            mImageViewNext.setImageResource(R.drawable.next_btn_selector);
+//        } catch (RemoteException e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**

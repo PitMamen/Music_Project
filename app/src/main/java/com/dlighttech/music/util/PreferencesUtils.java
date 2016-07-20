@@ -22,6 +22,7 @@ public class PreferencesUtils {
     public static final String ALBUM_ID = "album_id";
     public static final String IS_PLAYING = "is_playing";
     public static final String CURR_TIME = "curr_time";
+    public static final String TOTAL_TIME = "total_time";
 
 
     private PreferencesUtils() {
