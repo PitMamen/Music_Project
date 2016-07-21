@@ -333,6 +333,7 @@ public class MusicUtils {
         }
         for (int i = 0; i < len; i++) {
             list[i] = cursor.getLong(colidx);
+//            Log.d("TAG", "index===" + i + " , id=====" + list[i]);
             cursor.moveToNext();
         }
         return list;
@@ -831,6 +832,7 @@ public class MusicUtils {
             if (position < 0) {
                 position = 0;
             }
+
             sService.open(list, force_shuffle ? -1 : position);
             sService.play();
         } catch (RemoteException ex) {
@@ -1700,7 +1702,7 @@ public class MusicUtils {
 
                         MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
-                                , albumImage, albumName, albumMusicNumber, path, size,artistId);
+                                , albumImage, albumName, albumMusicNumber, path, size, artistId);
 
                         info.setAlbumId(albumId);
 
@@ -1795,7 +1797,7 @@ public class MusicUtils {
 
                         MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
-                                , albumImage, albumName, albumMusicNumber, path, size,artistId);
+                                , albumImage, albumName, albumMusicNumber, path, size, artistId);
                         info.setAlbumId(albumId);
 
                         musicInfos.add(info);
@@ -1883,7 +1885,7 @@ public class MusicUtils {
 
                         MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
-                                , albumImage, albumName, albumMusicNumber, path, size,artistId);
+                                , albumImage, albumName, albumMusicNumber, path, size, artistId);
 
                         info.setAlbumId(albumId);
 
@@ -2001,7 +2003,7 @@ public class MusicUtils {
 
                 MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                         , totalTime, MusicInfo.MusicState.NORMAL
-                        , albumImage, albumName, albumMusicNumber, path, size,artistId);
+                        , albumImage, albumName, albumMusicNumber, path, size, artistId);
                 Log.d("TAG", info.toString());
 
                 info.setAlbumId(albumId);

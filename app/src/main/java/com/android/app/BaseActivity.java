@@ -31,9 +31,8 @@ import com.android.music.IMediaPlaybackService;
 import com.dlighttech.music.model.MusicInfo;
 import com.dlighttech.music.util.PreferencesUtils;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * 所有activity都需要继承该类，需要在继承的activity布局文件中include R.layout.home_title_layout的自定义actionBar布局，
@@ -41,8 +40,7 @@ import java.util.Observer;
  */
 public abstract class BaseActivity extends Activity
         implements View.OnClickListener
-        , SearchView.OnQueryTextListener
-        , Observer {
+        , SearchView.OnQueryTextListener {
 
     private SearchView mSearchView;
     private EditText mSearchEditText;
@@ -58,62 +56,74 @@ public abstract class BaseActivity extends Activity
     private long mDuration;
     private long mCurrTime;
     private int mPercentage;
-
-//    private static final int PLAYING = 0;
-//    private static final int PAUSE = 1;
-//    private static final int START = 2;
-//    private static final int NEXT = 3;
-
-
+    private Handler mProgressHandler;
+    private static List<Activity> mActivitys;
 //    private Handler mHandler = new Handler(Looper.getMainLooper()) {
-//
-//        @Override
-//        public void handleMessage(Message msg) {
-//            super.handleMessage(msg);
-//            switch (msg.what) {
-//                case PLAYING:
-//                    Log.d("TAG", "playing!!");
-//                    updateView();
-//                    break;
-//                case PAUSE:
-//                    Log.d("TAG", "pause!!");
-//                    break;
-//                case START:
-//                    Log.d("TAG", "start!!");
-//                    break;
-//                case NEXT:
-//                    Log.d("TAG", "next!!");
-//                    break;
-//
-//            }
-//        }
-//    };
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-
+    private void removeAllActivity() {
+        if (mActivitys == null || mActivitys.size() == 0) {
+            return;
+        }
+        for (Activity activity : mActivitys) {
+            activity.finish();
+        }
+        mActivitys.clear();
     }
 
-    @Override
-    public void update(Observable observable, Object data) {
-        mPercentage = 0;
-        removeAllMsg();
 
-        if (data instanceof Integer) {
-            mPercentage = (int) data;
-            isPause = false;
-            Message.obtain(mProgressHandler, PLAY).sendToTarget();
+    private void removeCurrActivity() {
+        if (mActivitys == null || mActivitys.size() == 0) {
+            return;
         }
+        mActivitys.remove(this);
+        finish();
+    }
+
+//    @Override
+//    public void update(Observable observable, Object data) {
+//        mPercentage = 0;
+//        if (data instanceof Integer) {
+//            mPercentage = (int) data;
+//            isPause = false;
+//            removeAllMsg();
+//            Message.obtain(mProgressHandler, PLAY).sendToTarget();
+//        }
+
 //        if (data instanceof Boolean) {
 //            mProgressHandler.removeMessages(PAUSE);
 //            isPause = (boolean) data;
 //            mProgressHandler.sendEmptyMessage(PAUSE);
 //        }
-        updateView();
-    }
+//        updateView();
+//    }
+
+    //    };
+//        }
+//            }
+//
+//                    break;
+//                    Log.d("TAG", "next!!");
+//                case NEXT:
+//                    break;
+//                    Log.d("TAG", "start!!");
+//                case START:
+//                    break;
+//                    Log.d("TAG", "pause!!");
+//                case PAUSE:
+//                    break;
+//                    updateView();
+//                    Log.d("TAG", "playing!!");
+//                case PLAYING:
+//            switch (msg.what) {
+//            super.handleMessage(msg);
+//        public void handleMessage(Message msg) {
+//        @Override
+//
+//    private static final int NEXT = 3;
+//    private static final int START = 2;
+//    private static final int PAUSE = 1;
+//    private static final int PLAYING = 0;
 
     protected IMediaPlaybackService getService() {
         if (mService == null) {
@@ -129,25 +139,25 @@ public abstract class BaseActivity extends Activity
      * @param ivRepeat
      */
     protected void cycleRepeat(ImageView ivRepeat) {
-        if (mService == null) {
+        if (getService() == null) {
             return;
         }
         try {
-            if (!mService.isPlaying()) {
+            if (!getService().isPlaying()) {
                 return;
             }
-            int mode = mService.getRepeatMode();
+            int mode = getService().getRepeatMode();
             if (mode == MediaPlaybackService.REPEAT_NONE) {
-                mService.setRepeatMode(MediaPlaybackService.REPEAT_ALL);
+                getService().setRepeatMode(MediaPlaybackService.REPEAT_ALL);
                 showToast(R.string.repeat_all_notif);
             } else if (mode == MediaPlaybackService.REPEAT_ALL) {
-                mService.setRepeatMode(MediaPlaybackService.REPEAT_CURRENT);
-                if (mService.getShuffleMode() != MediaPlaybackService.SHUFFLE_NONE) {
-                    mService.setShuffleMode(MediaPlaybackService.SHUFFLE_NONE);
+                getService().setRepeatMode(MediaPlaybackService.REPEAT_CURRENT);
+                if (getService().getShuffleMode() != MediaPlaybackService.SHUFFLE_NONE) {
+                    getService().setShuffleMode(MediaPlaybackService.SHUFFLE_NONE);
                 }
                 showToast(R.string.repeat_current_notif);
             } else {
-                mService.setRepeatMode(MediaPlaybackService.REPEAT_NONE);
+                getService().setRepeatMode(MediaPlaybackService.REPEAT_NONE);
                 showToast(R.string.repeat_off_notif);
             }
             setRepeatButtonImage(ivRepeat);
@@ -157,9 +167,9 @@ public abstract class BaseActivity extends Activity
     }
 
     protected void setRepeatButtonImage(ImageView mRepeatButton) {
-        if (mService == null) return;
+        if (getService() == null) return;
         try {
-            switch (mService.getRepeatMode()) {
+            switch (getService().getRepeatMode()) {
 
                 case MediaPlaybackService.REPEAT_ALL:
                     mRepeatButton.setImageResource(R.drawable.listloop_mode_playback);
@@ -180,9 +190,9 @@ public abstract class BaseActivity extends Activity
      * 设置是否重复播放歌曲
      */
     private void setShuffleButtonImage(ImageView mShuffleButton) {
-        if (mService == null) return;
+        if (getService() == null) return;
         try {
-            switch (mService.getShuffleMode()) {
+            switch (getService().getShuffleMode()) {
                 case MediaPlaybackService.SHUFFLE_NONE:
                     mShuffleButton.setImageResource(R.drawable.ic_mp_shuffle_off_btn);
                     break;
@@ -210,17 +220,17 @@ public abstract class BaseActivity extends Activity
 
     protected void updateView() {
         try {
-            if (mService == null)
+            if (getService() == null)
                 return;
             Bitmap bm = MusicUtils.getArtwork(this, MusicUtils.getCurrentAudioId()
                     , MusicUtils.getCurrentAlbumId(), true);
 
             mImageViewIcon.setImageBitmap(bm);
 
-            tvMusicName.setText(mService.getTrackName());
-            tvMusicAuthor.setText(mService.getArtistName());
+            tvMusicName.setText(getService().getTrackName());
+            tvMusicAuthor.setText(getService().getArtistName());
 
-            mImageViewPause.setImageResource(mService.isPlaying()
+            mImageViewPause.setImageResource(getService().isPlaying()
                     ? R.drawable.pause_btn_selector : R.drawable.play_btn_selector);
 
             mProgressBar.setProgress(mPercentage);
@@ -237,9 +247,9 @@ public abstract class BaseActivity extends Activity
         super.onCreate(savedInstanceState);
 
         // 注册观察者
-        DataChangedWatcher.getInstance().registerObserver(this);
-        // 父类方法，用于设置播放的服务
-        setupService();
+//        DataChangedWatcher.getInstance().registerObserver(this);
+        // 设置handler
+        setupHandler();
         // 设置contentView
         onInitView();
         // 初始化数据需要子类重写
@@ -250,21 +260,91 @@ public abstract class BaseActivity extends Activity
         initBottomBar();
         // 初始化View需要子类重写,
         onCreateView();
+        // 将activity添加到集合中
+        addActivity();
+    }
 
+    private void addActivity() {
+        if (mActivitys == null) {
+            mActivitys = new ArrayList<Activity>();
+        }
+        mActivitys.add(this);
+    }
+
+//    /**
+//     * 发送一个消息，如果当前正在播放移除消息，否则开始发送一个消息
+//     * 用于处理activity点击进入列表或者点击返回按键时，发送重复的message
+//     */
+//    protected void sendMessage() {
+//        try {
+//            if (getService().isPlaying()) {
+//                removeAllMsg();
+//            } else {
+//                playNextOrCurr();
+//            }
+//        } catch (RemoteException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    private void setupHandler() {
+        if (mProgressHandler == null) {
+            mProgressHandler = new Handler(Looper.getMainLooper()) {
+
+                @Override
+                public void handleMessage(Message msg) {
+                    super.handleMessage(msg);
+                    switch (msg.what) {
+                        case PLAY:
+                            if (!isPause) {
+                                removeAllMsg();
+                                refreshProgress();
+                                mProgressHandler.sendEmptyMessageDelayed(PLAY
+                                        , 1000L); //延迟1秒再次发送
+                            }
+//                    try {
+//                        // 如果音乐播放完毕并且播放模式为普通模式，则播放下一曲
+//                        if (mPercentage == 0) {
+//                            if (getService().getRepeatMode() == MediaPlaybackService.REPEAT_NONE) {
+//                                Message.obtain(mProgressHandler, NEXT).sendToTarget();
+//                            }
+//                        }
+//
+//                    } catch (RemoteException e) {
+//                        e.printStackTrace();
+//                    }
+
+                            isPause = false;
+                            break;
+                        case PAUSE:
+                            isPause = true;
+                            break;
+                        case STOP:
+                            stopPlay();
+                            break;
+                        case NEXT:
+                            playNextOrCurr();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            };
+        }
     }
 
 
     protected void doPauseResume() {
         try {
-            if (mService != null) {
+            if (getService() != null) {
                 removeAllMsg();
 
-                if (mService.isPlaying()) {
-                    mService.pause();
+                if (getService().isPlaying()) {
+                    getService().pause();
                     isPause = true;
                     Message.obtain(mProgressHandler, PAUSE).sendToTarget();
                 } else {
-                    mService.play();
+                    getService().play();
                     isPause = false;
                     Message.obtain(mProgressHandler, PLAY).sendToTarget();
                 }
@@ -277,7 +357,7 @@ public abstract class BaseActivity extends Activity
 
     private void setPauseButtonImage() {
         try {
-            mImageViewPause.setImageResource(mService.isPlaying()
+            mImageViewPause.setImageResource(getService().isPlaying()
                     ? R.drawable.pause_btn_selector : R.drawable.play_btn_selector);
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -306,7 +386,6 @@ public abstract class BaseActivity extends Activity
             selectionArgs[i] = String.valueOf(mMusicList.get(i).getMusicId());
         }
         Log.d("TAG", selection.toString());
-
         /* ====== */
 
 
@@ -328,26 +407,32 @@ public abstract class BaseActivity extends Activity
         }
 
         MusicUtils.playAll(this, mTrackCursor, position);
-
-        removeAllMsg();
-        Message.obtain(mProgressHandler, PLAY).sendToTarget();
         updateView();
     }
 
-    private ServiceConnection conn = new ServiceConnection() {
+    private boolean isPlay = false;
+
+    private ServiceConnection mConn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mService = IMediaPlaybackService.Stub.asInterface(service);
+//                    Log.d("haha", "conn===" + mConn.toString());
+//                    Log.d("haha", "server===" + mService.toString());
+            Log.d("TAG", "服务链接成功！！！！！！！");
+            removeAllMsg();
+            Message.obtain(mProgressHandler, PLAY).sendToTarget();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            Log.d("TAG", "服务断开链接！！！！！！！");
             finish();
         }
     };
 
+
     protected void setupService() {
-        mToken = MusicUtils.bindToService(this, conn);
+        mToken = MusicUtils.bindToService(this, mConn);
     }
 
     /**
@@ -356,22 +441,42 @@ public abstract class BaseActivity extends Activity
      */
     protected void unBindService() {
         MusicUtils.unbindFromService(mToken);
+        Log.d("TAG", "服务被销毁了！！！！！！");
     }
 
     @Override
     protected void onDestroy() {
         unBindService();
+        if (mActivitys.size() == 0) {
+            mService = null;
+            mToken = null;
+            mConn = null;
+            mActivitys = null;
+        }
         super.onDestroy();
     }
 
 
     @Override
+    protected void onStart() {
+        // 父类方法，用于设置播放的服务
+        setupService();
+        super.onStart();
+    }
+
+    @Override
     protected void onPause() {
+        // 当前activity不可见时
+        saveMusic();
         super.onPause();
-        if (getService() == null) {
-            return;
-        }
+    }
+
+    private void saveMusic() {
         try {
+            if (getService() == null) {
+                return;
+            }
+
             // 将音乐id 、 专辑id、歌曲名称、歌手、当前时间缓存下来，以便初始化时使用
             PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
                     .putData(PreferencesUtils.IS_PLAYING, getService().isPlaying());
@@ -425,7 +530,6 @@ public abstract class BaseActivity extends Activity
                 removeAllMsg();
                 Intent intent = new Intent(BaseActivity.this, MediaPlaybackActivity.class);
                 startActivity(intent);
-                getService();
             }
         });
     }
@@ -440,12 +544,10 @@ public abstract class BaseActivity extends Activity
 
     private View.OnClickListener mNextListener = new View.OnClickListener() {
         public void onClick(View v) {
-            if (mService == null) return;
+            if (getService() == null) return;
             try {
-                mService.next();
-                removeAllMsg();
-                Message.obtain(mProgressHandler, PLAY).sendToTarget();
-                updateView();
+                getService().next();
+                playNextOrCurr();
             } catch (RemoteException ex) {
 
             }
@@ -459,74 +561,26 @@ public abstract class BaseActivity extends Activity
     private boolean isPause = false;
 
 
-    private Handler mProgressHandler = new Handler(Looper.getMainLooper()) {
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case PLAY:
-                    if (!isPause) {
-                        removeAllMsg();
-                        refreshProgress();
-                        mProgressHandler.sendEmptyMessageDelayed(PLAY
-                                , 1000L); //延迟1秒再次发送
-                    }
-
-//                    try {
-//                        // 如果音乐播放完毕并且播放模式为普通模式，则播放下一曲
-//                        if (mPercentage == 0) {
-//                            if (getService().getRepeatMode() == MediaPlaybackService.REPEAT_NONE) {
-//                                Message.obtain(mProgressHandler, NEXT).sendToTarget();
-//                            }
-//                        }
-//
-//                    } catch (RemoteException e) {
-//                        e.printStackTrace();
-//                    }
-
-                    isPause = false;
-                    break;
-                case PAUSE:
-                    isPause = true;
-                    break;
-                case STOP:
-                    stopPlay();
-                    break;
-                case NEXT:
-                    playNextOrCurr();
-                    break;
-                default:
-                    break;
-            }
-
-
-        }
-    };
-
-    private void playNextOrCurr() {
-        mPercentage = 0;
+    protected void playNextOrCurr() {
         removeAllMsg();
         Message.obtain(mProgressHandler, PLAY).sendToTarget();
         updateView();
-        Log.d("TAG", "haha");
     }
 
     private void stopPlay() {
         mPercentage = 0;
         removeAllMsg();
-        Message.obtain(mProgressHandler, STOP).sendToTarget();
         updateView();
     }
 
-    private void removeAllMsg() {
+    protected void removeAllMsg() {
         mProgressHandler.removeMessages(PLAY);
         mProgressHandler.removeMessages(PAUSE);
         mProgressHandler.removeMessages(NEXT);
         mProgressHandler.removeMessages(STOP);
     }
 
-    private String uriPath="";
+    private String uriPath = "";
 
     private void refreshProgress() {
         if (getService() == null) {
@@ -538,14 +592,16 @@ public abstract class BaseActivity extends Activity
             mDuration = getService().duration();
             mPercentage = (int) (mCurrTime * 1000.0F / mDuration);
             mProgressBar.setProgress(mPercentage);
-            Log.d("TAG", "总时间：" + MusicUtils.makeTimeString(this, mService.duration() / 1000));
-            Log.d("TAG", "当前时间：" + MusicUtils.makeTimeString(this, mService.position() / 1000));
-            Log.d("TAG", "当前百分比：" + mPercentage);
+//            Log.d("TAG", "总时间：" + MusicUtils.makeTimeString(this, mService.duration() / 1000));
+            Log.d("TAG", "activity =====" + this.toString() + "=======当前时间："
+                    + MusicUtils.makeTimeString(this, getService().position() / 1000));
+//            Log.d("TAG", "当前百分比：" + mPercentage);
+            if (TextUtils.isEmpty(getService().getPath())) return;
             if (!uriPath.equals(getService().getPath())) {
                 updateView();
                 uriPath = getService().getPath();
             }
-            Log.d("TAG", "路径：" + getService().getPath());
+//            Log.d("TAG", "路径：" + getService().getPath());
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -608,49 +664,10 @@ public abstract class BaseActivity extends Activity
         }
 
         mImageViewNext.setImageResource(R.drawable.next_btn_selector);
-
-        removeAllMsg();
-        Message.obtain(mProgressHandler, PLAY).sendToTarget();
-//        try {
-//            long songId = MusicUtils.getCurrentAudioId();
-//
-//            long albumId = MusicUtils.getCurrentAlbumId();
-//
-//            Bitmap bm = MusicUtils.getArtwork(this, songId, albumId, true);
-//            mImageViewIcon.setImageBitmap(bm);
-//
-//            String musicName = getService().getTrackName();
-//            musicName = TextUtils.isEmpty(musicName)
-//                    ? MediaStore.UNKNOWN_STRING : musicName;
-//
-//            tvMusicName.setText(musicName);
-//
-//
-//            String singer = getService().getArtistName();
-//
-//            singer = TextUtils.isEmpty(singer) ? MediaStore.UNKNOWN_STRING
-//                    : singer;
-//
-//            tvMusicAuthor.setText(singer);
-//
-//            mProgressBar.setMax(1000);
-//
-//            int progress = (int) (getService().position() * 1000F / getService().duration());
-//
-//            mProgressBar.setProgress(progress);
-//
-//            boolean isPlaying = getService().isPlaying();
-//
-//            if (isPlaying) {
-//                mImageViewPause.setImageResource(R.drawable.pause_btn_selector);
-//            } else {
-//                mImageViewPause.setImageResource(R.drawable.play_btn_selector);
-//            }
-//
-//            mImageViewNext.setImageResource(R.drawable.next_btn_selector);
-//        } catch (RemoteException e) {
-//            e.printStackTrace();
-//        }
+//        if (getService() == null) return;
+//        removeAllMsg();
+//        Message.obtain(mProgressHandler, PLAY).sendToTarget();
+//        Log.d("TAG", "haha");
     }
 
     /**
@@ -744,20 +761,21 @@ public abstract class BaseActivity extends Activity
                 openSearchView();
                 break;
             case R.id.btn_return:
-                finish();
+                removeAllMsg();
+                removeCurrActivity();
                 break;
 
         }
     }
 
-
     @Override
     public void onBackPressed() {
+        removeAllMsg();
         // 当点击返回键位时触发 false 表示当前search显示出来，否则不显示
         if (!mSearchView.isIconified()) {
             toggleSearchView();
         } else {
-            finish();
+            removeCurrActivity();
         }
     }
 

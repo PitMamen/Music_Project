@@ -14,8 +14,11 @@ import com.dlighttech.music.util.PreferencesUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+import java.util.Observer;
 
-public class LastUpdatedActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked {
+public class LastUpdatedActivity extends BaseActivity
+        implements ContentAdapter.OnConvertViewClicked
+        , Observer {
 
     private ListView mListView;
     private ContentAdapter mAdapter;
@@ -52,7 +55,6 @@ public class LastUpdatedActivity extends BaseActivity implements ContentAdapter.
 
     @Override
     public void update(Observable observable, Object data) {
-        super.update(observable, data);
         setRepeatButtonImage(ivPlaymode);
     }
 
@@ -68,6 +70,8 @@ public class LastUpdatedActivity extends BaseActivity implements ContentAdapter.
     @Override
     public void onCreateData() {
 
+        DataChangedWatcher.getInstance().registerObserver(this);
+
         PreferencesUtils.getInstance(this, PreferencesUtils.SONG_LIST)
                 .putData(PreferencesUtils.IS_SONG_LIST_DEL_KEY, false);
 
@@ -77,14 +81,9 @@ public class LastUpdatedActivity extends BaseActivity implements ContentAdapter.
                 MusicInfo info = infos.get(i);
                 String name = info.getMusicName();
                 String singer = info.getSinger();
-                Bitmap bitmap = info.getMusicAlbumsImage();
+                Bitmap bitmap = MusicUtils.getArtwork(this, info.getMusicId(), info.getAlbumId());
                 ContentItem item;
-                if (bitmap != null) {
-                    item = new ContentItem(bitmap, R.drawable.more_title_selected, name, singer);
-                } else {
-                    item = new ContentItem(R.drawable.albums_list, R.drawable.more_title_selected, name, singer);
-                }
-
+                item = new ContentItem(bitmap, R.drawable.more_title_selected, name, singer);
                 mItems.add(item);
                 this.infos.add(info);
             }

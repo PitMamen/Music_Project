@@ -199,6 +199,7 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        super.removeAllMsg();
         if (position == 0) {
             // 文件夹
             // 判断当前是否正在刷新中
@@ -249,8 +250,4 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 }
