@@ -38,6 +38,7 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
         mListView = (ListView) findViewById(R.id.lv_music_detail);
 
         mAdapter = new ContentAdapter(this, mItems, true);
+        super.setSongCount(mAdapter.getCount());
 
         mAdapter.setMusicInfos(arrayList);
 

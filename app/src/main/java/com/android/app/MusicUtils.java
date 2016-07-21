@@ -1990,7 +1990,6 @@ public class MusicUtils {
 
             while (c.moveToNext()) {
                 long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
-
                 Log.d(TAG, "专辑Id==== " + id);
                 String album = c.getString(c.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
                 Song song = new Song();
