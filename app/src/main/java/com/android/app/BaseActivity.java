@@ -266,6 +266,10 @@ public abstract class BaseActivity extends Activity
 
             mProgressBar.setProgress(mPercentage);
 
+            int resId = PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
+                    .getInteger(PreferencesUtils.PLAY_MODE_RES);
+            ivPlaymode.setImageResource(resId <= 0 ? mPlayModeResId : resId);
+
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -525,9 +529,7 @@ public abstract class BaseActivity extends Activity
 
     @Override
     protected void onResume() {
-        int resId = PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
-                .getInteger(PreferencesUtils.PLAY_MODE_RES);
-        ivPlaymode.setImageResource(resId <= 0 ? mPlayModeResId : resId);
+        updateView();
         super.onResume();
     }
 
@@ -830,6 +832,10 @@ public abstract class BaseActivity extends Activity
     }
 
     protected void setTitleText(String text) {
+        tvTitle.setText(text);
+    }
+
+    protected void setTitleText(int text) {
         tvTitle.setText(text);
     }
 

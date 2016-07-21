@@ -338,7 +338,8 @@ public class MusicUtils {
         }
         return list;
     }
-              //当前歌曲数
+
+    //当前歌曲数
     public static long[] getSongListForArtist(Context context, long id) {
         final String[] ccols = new String[]{MediaStore.Audio.Media._ID};
         String where = MediaStore.Audio.Media.ARTIST_ID + "=" + id + " AND " +
@@ -1914,11 +1915,14 @@ public class MusicUtils {
             String order = isOrder ? MediaStore.Audio.Media.DATE_ADDED + " desc"
                     : MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
 
-            if (!TextUtils.isEmpty(selection)
+            if (!TextUtils.isEmpty(selection) && selectionArgs == null) {
+                c = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                        , null, selection, null, order);
+            } else if (!TextUtils.isEmpty(selection)
                     && selectionArgs != null && selectionArgs.length > 0) {
                 c = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
                         , null, selection, selectionArgs, order);
-            } else {
+            } else if (TextUtils.isEmpty(selection) && selectionArgs == null) {
                 c = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
                         , null, null, null, order);
             }
@@ -1974,6 +1978,7 @@ public class MusicUtils {
         return null;
 
     }
+
     //獲取所有专辑
     public static ArrayList<Song> getAllAlbums(Context ctx) {
         Cursor c = null;
@@ -1986,7 +1991,7 @@ public class MusicUtils {
             while (c.moveToNext()) {
                 long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
 
-                Log.d(TAG, "专辑Id==== "+id);
+                Log.d(TAG, "专辑Id==== " + id);
                 String album = c.getString(c.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
                 Song song = new Song();
                 song.setAlbumId(id);
@@ -2004,6 +2009,7 @@ public class MusicUtils {
         return null;
 
     }
+
     /**
      * 根据条件返回歌曲信息
      *

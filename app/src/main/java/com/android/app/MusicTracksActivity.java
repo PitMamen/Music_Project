@@ -2,6 +2,7 @@ package com.android.app;
 
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.ListView;
 
@@ -13,8 +14,8 @@ import java.util.ArrayList;
 
 public class MusicTracksActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked {
 
-    private ListView lv_music_detail;
-//    private SideBar sb_navigation_bar;
+    private ListView mListView;
+    //    private SideBar sb_navigation_bar;
     private Cursor cursor;
     private MusicUtils.ServiceToken token;
 
@@ -34,23 +35,16 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     public void onCreateView() {
         super.setVisiblePlayMode(true);
         super.setTitleText("Music");
-
-
-        lv_music_detail = (ListView) findViewById(R.id.lv_music_detail);
+        mListView = (ListView) findViewById(R.id.lv_music_detail);
 
         mAdapter = new ContentAdapter(this, mItems, true);
 
         mAdapter.setMusicInfos(arrayList);
 
-        lv_music_detail.setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
 
-        int count = mAdapter.getCount();
-
-
-
-
-
-
+        super.setVisiblePlayMode(true);
+        super.setSongCount(mAdapter.getCount());
 
     }
 
@@ -84,26 +78,26 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
 
     @Override
     public void onSearchTextChanged(String text) {
-        Log.d("TAG1",text);
-
-
-
+        Log.d("TAG1", text);
+        String selection = MediaStore.Audio.Media.TITLE + " like '%" + text + "%'";
+        arrayList = MusicUtils.getMusicInfo(this,selection,null,false);
+        if(arrayList==null || arrayList.size()==0){
+            return;
+        }
+        Log.d("TAG1", ""+arrayList.size());
     }
 
     @Override
     public void onSearchSubmit(String text) {
-        Log.d("TAG1",text);
+        Log.d("TAG1", text);
     }
-
 
 
     @Override
     public void onConvertViewClicked(int position) {
-
         super.playCursor(arrayList, false, position);
 
     }
-
 
 
 }
