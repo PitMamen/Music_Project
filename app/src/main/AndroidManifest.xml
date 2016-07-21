@@ -381,6 +381,7 @@
         <activity android:name=".PlayListActivity" />
         <activity android:name=".SongOfSongListActivity" />
         <activity android:name=".LastUpdatedActivity" />
+        <activity android:name=".MusicSingerContentActivity"/>
         <activity android:name=".MusicRecentActivity"></activity>
     </application>
 

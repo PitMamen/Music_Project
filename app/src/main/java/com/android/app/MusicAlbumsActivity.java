@@ -18,9 +18,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by pengxinkai001 on 2016/6/24.
- */
 public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked, ContentAdapter.OnOperateClicked {
 
     private ListView mListview;
@@ -65,7 +62,7 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
             long[] songsIds = MusicUtils.getSongListForAlbum(this, info.getAlbumId());
 
             if (info.getMusicAlbumsName().equals(albumName)) {
-                return;
+                continue;
             }
             ContentItem item = null;
 

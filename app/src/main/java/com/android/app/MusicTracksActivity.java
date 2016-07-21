@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -18,9 +19,6 @@ import com.dlighttech.music.model.MusicInfo;
 
 import java.util.ArrayList;
 
-/**
- * Created by pengxinkai001 on 2016/6/23.
- */
 public class MusicTracksActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked {
 
     private ImageButton ib_music_back;
@@ -47,12 +45,6 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     public void onCreateView() {
         super.setTitleText("Music");
 
-        iv_music_icon = (ImageView) findViewById(R.id.iv_mode_icon);
-
-        tv_paly_mode = (TextView) findViewById(R.id.tv_play_mode);
-
-        tv_music_number = (TextView) findViewById(R.id.tv_music_num);
-
 
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
         lv_music_detail = (ListView) findViewById(R.id.lv_music_detail);
@@ -63,9 +55,15 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
         lv_music_detail.setAdapter(mAdapter);
 
 
-        int count = mAdapter.getCount();
+        View head = getLayoutInflater().inflate(R.layout.listview_head_layout, null);
 
-        tv_music_number.setText("共" + count + "首");
+        tv_music_number = (TextView) head.findViewById(R.id.tv_song_count);
+        tv_paly_mode = (TextView) head.findViewById(R.id.tv_play_mode);
+        iv_music_icon = (ImageView) head.findViewById(R.id.play_mode_icon);
+
+        tv_music_number.setText(String.valueOf(mAdapter.getCount()));
+
+        lv_music_detail.addHeaderView(head);
 
 
         sb_navigation_bar.setOnStrSelectCallBack(new ISideBarSelectCallBack() {
@@ -120,10 +118,9 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     @Override
     public void onConvertViewClicked(int position) {
 
-        super.playCursor(arrayList,false,position);
+        super.playCursor(arrayList, false, position);
 
     }
-
 
 
     @Override

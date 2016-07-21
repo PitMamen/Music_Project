@@ -338,7 +338,7 @@ public class MusicUtils {
         }
         return list;
     }
-
+              //当前歌曲数
     public static long[] getSongListForArtist(Context context, long id) {
         final String[] ccols = new String[]{MediaStore.Audio.Media._ID};
         String where = MediaStore.Audio.Media.ARTIST_ID + "=" + id + " AND " +
@@ -1703,7 +1703,7 @@ public class MusicUtils {
                         MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
                                 , albumImage, albumName, albumMusicNumber, path, size, artistId);
-
+                        info.setArtistId(artistId);
                         info.setAlbumId(albumId);
 
                         musicInfos.add(info);
@@ -1799,7 +1799,7 @@ public class MusicUtils {
                                 , totalTime, MusicInfo.MusicState.NORMAL
                                 , albumImage, albumName, albumMusicNumber, path, size, artistId);
                         info.setAlbumId(albumId);
-
+                        info.setArtistId(artistId);
                         musicInfos.add(info);
                     }
                 }
@@ -1886,7 +1886,7 @@ public class MusicUtils {
                         MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
                                 , albumImage, albumName, albumMusicNumber, path, size, artistId);
-
+                        info.setArtistId(artistId);
                         info.setAlbumId(albumId);
 
                         return info;
@@ -2050,7 +2050,7 @@ public class MusicUtils {
                         , totalTime, MusicInfo.MusicState.NORMAL
                         , albumImage, albumName, albumMusicNumber, path, size, artistId);
                 Log.d("TAG", info.toString());
-
+                info.setArtistId(artistId);
                 info.setAlbumId(albumId);
 
                 musicInfos.add(info);

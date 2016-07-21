@@ -592,16 +592,6 @@ public abstract class BaseActivity extends Activity
             mDuration = getService().duration();
             mPercentage = (int) (mCurrTime * 1000.0F / mDuration);
             mProgressBar.setProgress(mPercentage);
-<<<<<<< HEAD
-            Log.d("TAG", "总时间：" + MusicUtils.makeTimeString(this, mService.duration() / 1000));
-            Log.d("TAG", "当前时间：" + MusicUtils.makeTimeString(this, mService.position() / 1000));
-            Log.d("TAG", "当前百分比：" + mPercentage);
-            /*if (!uriPath.equals(getService().getPath())) {
-                updateView();
-                uriPath = getService().getPath();
-            }*/
-            Log.d("TAG", "路径：" + getService().getPath());
-=======
 //            Log.d("TAG", "总时间：" + MusicUtils.makeTimeString(this, mService.duration() / 1000));
             Log.d("TAG", "activity =====" + this.toString() + "=======当前时间："
                     + MusicUtils.makeTimeString(this, getService().position() / 1000));
@@ -612,7 +602,6 @@ public abstract class BaseActivity extends Activity
                 uriPath = getService().getPath();
             }
 //            Log.d("TAG", "路径：" + getService().getPath());
->>>>>>> 46ea14f823faa8cf26726fa14ab402972959ecd8
         } catch (RemoteException e) {
             e.printStackTrace();
         }
