@@ -53,11 +53,10 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
     public void onCreateData() {
 
 
-        arrayList = MusicUtils.getMusicInfo(this, false);
+        arrayList = MusicUtils.getMusicInfo(this, true);
 
-        Set<MusicInfo> hashset = new HashSet<>(arrayList);
-        String albumName = "";
-        for (int i = 0; i < hashset.size(); i++) {
+        String albumName = null;
+        for (int i = 0; i < arrayList.size(); i++) {
 
             MusicInfo info = arrayList.get(i);
             Log.d("TAG", info.toString());
@@ -66,14 +65,20 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
             long[] songsIds = MusicUtils.getSongListForAlbum(this, info.getAlbumId());
 
             if (info.getMusicAlbumsName().equals(albumName)) {
-                continue;
+                return;
             }
-            ContentItem item = new ContentItem(bitmap, R.drawable.c_right
-                    , info.getMusicAlbumsName(), songsIds.length + "首");
+            ContentItem item = null;
 
-
+            if (bitmap != null) {
+                item = new ContentItem(bitmap, R.drawable.c_right
+                        , info.getMusicAlbumsName(), songsIds.length + "首");
+            } else {
+                item = new ContentItem(R.drawable.singer, R.drawable.c_right, info.getMusicAlbumsName(), songsIds.length + "首");
+            }
             albumName = info.getMusicAlbumsName();
             items.add(item);
+
+
         }
 
 
@@ -102,8 +107,7 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
 
     @Override
     public void onConvertViewClicked(int position) {
-        super.playCursor(arrayList,false,position);
-
+        super.playCursor(arrayList, false, position);
 
 
     }

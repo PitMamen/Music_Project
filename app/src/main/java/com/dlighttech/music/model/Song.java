@@ -12,6 +12,24 @@ public class Song {
     private String songPath;
     private long albumId;
     private long time;
+    private long artistId;
+    private  int musicCount;
+
+    public int getMusicCount() {
+        return musicCount;
+    }
+
+    public void setMusicCount(int musicCount) {
+        this.musicCount = musicCount;
+    }
+
+    public long getArtistId() {
+        return artistId;
+    }
+
+    public void setArtistId(long artistId) {
+        this.artistId = artistId;
+    }
 
     public long getAlbumId() {
         return albumId;
@@ -76,7 +94,8 @@ public class Song {
                 ", name='" + name + '\'' +
                 ", songListId=" + songListId +
                 ", singer='" + singer + '\'' +
-                ", songPath='" + songPath + '\'' +
+                ", songPath='" + songPath + '\'' +"musicCount"+musicCount+
                 '}';
     }
+
 }

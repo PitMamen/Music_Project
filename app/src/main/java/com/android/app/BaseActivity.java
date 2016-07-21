@@ -541,10 +541,10 @@ public abstract class BaseActivity extends Activity
             Log.d("TAG", "总时间：" + MusicUtils.makeTimeString(this, mService.duration() / 1000));
             Log.d("TAG", "当前时间：" + MusicUtils.makeTimeString(this, mService.position() / 1000));
             Log.d("TAG", "当前百分比：" + mPercentage);
-            if (!uriPath.equals(getService().getPath())) {
+            /*if (!uriPath.equals(getService().getPath())) {
                 updateView();
                 uriPath = getService().getPath();
-            }
+            }*/
             Log.d("TAG", "路径：" + getService().getPath());
         } catch (RemoteException e) {
             e.printStackTrace();

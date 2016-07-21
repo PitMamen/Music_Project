@@ -1700,7 +1700,7 @@ public class MusicUtils {
 
                         MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
-                                , albumImage, albumName, albumMusicNumber, path, size,artistId);
+                                , albumImage, albumName, albumMusicNumber, path, size, artistId);
 
                         info.setAlbumId(albumId);
 
@@ -1795,7 +1795,7 @@ public class MusicUtils {
 
                         MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
-                                , albumImage, albumName, albumMusicNumber, path, size,artistId);
+                                , albumImage, albumName, albumMusicNumber, path, size, artistId);
                         info.setAlbumId(albumId);
 
                         musicInfos.add(info);
@@ -1883,7 +1883,7 @@ public class MusicUtils {
 
                         MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
-                                , albumImage, albumName, albumMusicNumber, path, size,artistId);
+                                , albumImage, albumName, albumMusicNumber, path, size, artistId);
 
                         info.setAlbumId(albumId);
 
@@ -1925,6 +1925,51 @@ public class MusicUtils {
         return null;
     }
 
+    public static long getArtistId(Context ctx, long songId) {
+        Cursor c = null;
+        try {
+            ContentResolver resolver = ctx.getContentResolver();
+            c = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null
+                    , MediaStore.Audio.Media._ID + "=? and " + MediaStore.Audio.Media.IS_MUSIC + "=1"
+                    , new String[]{String.valueOf(songId)}, null);
+            boolean isFirst = c.moveToFirst();
+            if (!isFirst) return -1;
+            return c.getLong(c.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST_ID));
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) c.close();
+        }
+        return -1;
+    }
+
+    public static ArrayList<Song> getAllArtist(Context ctx) {
+        Cursor c = null;
+        ArrayList<Song> songs = new ArrayList<Song>();
+        try {
+            ContentResolver resolver = ctx.getContentResolver();
+            c = resolver.query(MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI, null
+                    , null, null, null);
+
+            while (c.moveToNext()) {
+                long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Audio.Artists._ID));
+                String artist = c.getString(c.getColumnIndexOrThrow(MediaStore.Audio.Artists.ARTIST));
+                Song song = new Song();
+                song.setArtistId(id);
+                song.setSinger(artist);
+                songs.add(song);
+            }
+            return songs;
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) c.close();
+        }
+
+
+        return null;
+
+    }
 
     /**
      * 根据条件返回歌曲信息
@@ -2001,7 +2046,7 @@ public class MusicUtils {
 
                 MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                         , totalTime, MusicInfo.MusicState.NORMAL
-                        , albumImage, albumName, albumMusicNumber, path, size,artistId);
+                        , albumImage, albumName, albumMusicNumber, path, size, artistId);
                 Log.d("TAG", info.toString());
 
                 info.setAlbumId(albumId);
@@ -2046,6 +2091,7 @@ public class MusicUtils {
 
                     String path = c.getString(c
                             .getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+
 
                     Song song = new Song();
                     song.setId(id);
