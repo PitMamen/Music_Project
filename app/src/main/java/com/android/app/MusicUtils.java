@@ -333,6 +333,7 @@ public class MusicUtils {
         }
         for (int i = 0; i < len; i++) {
             list[i] = cursor.getLong(colidx);
+//            Log.d("TAG", "index===" + i + " , id=====" + list[i]);
             cursor.moveToNext();
         }
         return list;
@@ -831,6 +832,7 @@ public class MusicUtils {
             if (position < 0) {
                 position = 0;
             }
+
             sService.open(list, force_shuffle ? -1 : position);
             sService.play();
         } catch (RemoteException ex) {

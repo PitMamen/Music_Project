@@ -24,9 +24,11 @@ import com.dlighttech.music.util.PreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.Observer;
 
 public class PlayListActivity extends BaseActivity
-        implements ContentAdapter.OnConvertViewClicked {
+        implements ContentAdapter.OnConvertViewClicked
+        ,Observer{
 
     private ListView mListView;
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
@@ -228,7 +230,6 @@ public class PlayListActivity extends BaseActivity
 
     @Override
     public void update(Observable observable, Object data) {
-        super.update(observable, data);
         // 通知观察者更新 song count
         if (data instanceof SongList) {
             SongList list = (SongList) data;
