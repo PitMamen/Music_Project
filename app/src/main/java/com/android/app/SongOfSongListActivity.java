@@ -26,9 +26,13 @@ public class SongOfSongListActivity extends BaseActivity
     @Override
     public void onCreateView() {
         mListView = (ListView) findViewById(R.id.lv_song_of_list);
+        String title = getIntent().getStringExtra("songListName");
+        super.setTitleText(title);
         mAdapter = new ContentAdapter(this, mItems, true);
         mAdapter.setMusicInfos(mMusicInfos);
         mListView.setAdapter(mAdapter);
+        super.setVisiblePlayMode(true);
+        super.setSongCount(mAdapter.getCount());
     }
 
 //    private MusicInfo getCurrMusicInfo() {
@@ -90,7 +94,6 @@ public class SongOfSongListActivity extends BaseActivity
     public void onSearchSubmit(String text) {
 
     }
-
 
 
     @Override

@@ -26,9 +26,12 @@ public class MusicRecentActivity extends BaseActivity implements ContentAdapter.
     @Override
     public void onCreateView() {
         mListView = (ListView) findViewById(R.id.lv_recent_list);
+        super.setTitleText("最近播放");
         mAdapter = new ContentAdapter(this, mItems, true);
         mAdapter.setMusicInfos(mMusicInfos);
         mListView.setAdapter(mAdapter);
+        super.setVisiblePlayMode(true);
+        super.setSongCount(mAdapter.getCount());
     }
 
     @Override
@@ -76,7 +79,6 @@ public class MusicRecentActivity extends BaseActivity implements ContentAdapter.
     public void onSearchSubmit(String text) {
 
     }
-
 
 
     @Override

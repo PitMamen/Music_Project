@@ -30,6 +30,8 @@ public class MusicListActivity extends BaseActivity
         mAdapter = new ContentAdapter(this, mItems, true);
         mAdapter.setMusicInfos(mMusicList);
         mListView.setAdapter(mAdapter);
+        super.setVisiblePlayMode(true);
+        super.setSongCount(mAdapter.getCount());
     }
 
     @Override
@@ -48,8 +50,8 @@ public class MusicListActivity extends BaseActivity
         ArrayList<MusicInfo> musicInfos = getIntent().getParcelableArrayListExtra("musicInfos");
         for (int i = 0; i < musicInfos.size(); i++) {
             MusicInfo info = musicInfos.get(i);
-            String newPath =info.getMusicPath().substring(0,info.getMusicPath().lastIndexOf("/"));
-            if(newPath.equals(item.getContent())){
+            String newPath = info.getMusicPath().substring(0, info.getMusicPath().lastIndexOf("/"));
+            if (newPath.equals(item.getContent())) {
                 ContentItem newItem = new ContentItem(info.getMusicAlbumsImage()
                         , R.drawable.more_title_selected
                         , info.getMusicName()
@@ -73,11 +75,9 @@ public class MusicListActivity extends BaseActivity
     }
 
 
-
-
     @Override
     public void onConvertViewClicked(int position) {
         // 当点击了listView item将在底部布局中播放音乐
-        super.playCursor(mMusicList,false,position);
+        super.playCursor(mMusicList, false, position);
     }
 }
