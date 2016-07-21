@@ -2,13 +2,9 @@ package com.android.app;
 
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.util.Log;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.allenliu.sidebar.ISideBarSelectCallBack;
-import com.allenliu.sidebar.SideBar;
 import com.dlighttech.music.adapter.ContentAdapter;
 import com.dlighttech.music.model.ContentItem;
 import com.dlighttech.music.model.MusicInfo;
@@ -17,11 +13,8 @@ import java.util.ArrayList;
 
 public class MusicTracksActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked {
 
-    private ImageButton ib_music_back;
-    private TextView tv_title, tv_paly_mode, tv_music_number;
-    private ImageView iv_music_search, iv_music_icon;
     private ListView lv_music_detail;
-    private SideBar sb_navigation_bar;
+//    private SideBar sb_navigation_bar;
     private Cursor cursor;
     private MusicUtils.ServiceToken token;
 
@@ -43,11 +36,8 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
         super.setTitleText("Music");
 
 
-        sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
         lv_music_detail = (ListView) findViewById(R.id.lv_music_detail);
-        tv_music_number = (TextView) findViewById(R.id.tv_song_count);
-        tv_paly_mode = (TextView) findViewById(R.id.tv_play_mode);
-        iv_music_icon = (ImageView)findViewById(R.id.play_mode_icon);
+
         mAdapter = new ContentAdapter(this, mItems, true);
 
         mAdapter.setMusicInfos(arrayList);
@@ -56,17 +46,10 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
 
         int count = mAdapter.getCount();
 
-        tv_music_number.setText(count+"");
 
 
 
-        sb_navigation_bar.setOnStrSelectCallBack(new ISideBarSelectCallBack() {
-            @Override
-            public void onSelectStr(int position, String selectStr) {
 
-
-            }
-        });
 
 
     }
@@ -101,12 +84,15 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
 
     @Override
     public void onSearchTextChanged(String text) {
+        Log.d("TAG1",text);
+
+
 
     }
 
     @Override
     public void onSearchSubmit(String text) {
-
+        Log.d("TAG1",text);
     }
 
 
@@ -119,11 +105,5 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     }
 
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
 
-        // 解绑服务
-        MusicUtils.unbindFromService(token);
-    }
 }

@@ -48,7 +48,7 @@ public class DirFileActivity extends BaseActivity implements ContentAdapter.OnCo
                 String dirPath = FileUtils.getFileParent(singFile);
                 if (!mDirs.contains(dirPath)) {
                     ContentItem item = new ContentItem(R.drawable.folder_list
-                            , R.drawable.more_title
+                            , R.drawable.more_title_selected2
                             , new File(dirPath).getName()
                             , dirPath);
                     mItems.add(item);

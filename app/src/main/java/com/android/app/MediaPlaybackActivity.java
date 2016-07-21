@@ -463,9 +463,13 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(Intent.ACTION_EDIT);
-            intent.setDataAndType(Uri.EMPTY, "vnd.android.cursor.dir/track");
-            intent.putExtra("playlist", "nowplaying");
+//            Intent intent = new Intent(Intent.ACTION_EDIT);
+//            intent.setDataAndType(Uri.EMPTY, "vnd.android.cursor.dir/track");
+//            intent.putExtra("playlist", "nowplaying");
+//            startActivity(intent);
+            Intent intent = new Intent(MediaPlaybackActivity.this, MusicTracksActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
             startActivity(intent);
         }
     };
@@ -505,11 +509,16 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
 
     private View.OnClickListener mQueueListener = new View.OnClickListener() {
         public void onClick(View v) {
-            startActivity(
-                    new Intent(Intent.ACTION_EDIT)
-                            .setDataAndType(Uri.EMPTY, "vnd.android.cursor.dir/track")
-                            .putExtra("playlist", "nowplaying")
-            );
+//            startActivity(
+//                    new Intent(Intent.ACTION_EDIT)
+//                            .setDataAndType(Uri.EMPTY, "vnd.android.cursor.dir/track")
+//                            .putExtra("playlist", "nowplaying")
+//            );
+            Intent intent = new Intent(MediaPlaybackActivity.this, MusicTracksActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            startActivity(intent);
+
         }
     };
 

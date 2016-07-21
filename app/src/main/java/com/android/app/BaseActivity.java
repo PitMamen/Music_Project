@@ -525,9 +525,9 @@ public abstract class BaseActivity extends Activity
 
     @Override
     protected void onResume() {
-       int resId = PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
+        int resId = PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
                 .getInteger(PreferencesUtils.PLAY_MODE_RES);
-        ivPlaymode.setImageResource(resId<=0 ? mPlayModeResId :resId);
+        ivPlaymode.setImageResource(resId <= 0 ? mPlayModeResId : resId);
         super.onResume();
     }
 
@@ -617,10 +617,10 @@ public abstract class BaseActivity extends Activity
         tvCount.setText(String.valueOf(songCount));
 
 
-       int resId= PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
+        int resId = PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
                 .getInteger(PreferencesUtils.PLAY_MODE_RES);
 
-        ivPlaymode.setImageResource(resId<=0 ? mPlayModeResId : resId);
+        ivPlaymode.setImageResource(resId <= 0 ? mPlayModeResId : resId);
         ivPlaymode.setOnClickListener(mRepeatClick);
 
     }
@@ -857,7 +857,14 @@ public abstract class BaseActivity extends Activity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_search:
-                openSearchView();
+                if (this instanceof MusicTracksActivity) {
+                    openSearchView();
+                } else {
+                    Intent intent = new Intent(this, MusicTracksActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                    startActivity(intent);
+                }
                 break;
             case R.id.btn_return:
                 removeAllMsg();
