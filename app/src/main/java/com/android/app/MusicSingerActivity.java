@@ -46,18 +46,12 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
 
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
         mListview = (ListView) findViewById(R.id.lv_music_detail);
-//        tv_song_count = (TextView) findViewById(R.id.tv_song_count);
-//        tv_song_model = (TextView) findViewById(R.id.tv_play_mode);
-//        playModel = (ImageView)findViewById(R.id.play_mode_icon);
 
-        madapter = new ContentAdapter(this, items, true);
+        madapter = new ContentAdapter(this, items, false);
         madapter.setMusicInfos(arrayList);
         mListview.setAdapter(madapter);
         super.setVisiblePlayMode(true);
         super.setSongCount(madapter.getCount());
-//        int count = madapter.getCount();
-//
-//        tv_song_count.setText(count+"");
 
 
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
@@ -86,7 +80,7 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
             String singername = song.getSinger();
             int musicCount = MusicUtils.getSongListForArtist(this, song.getArtistId()).length;
 
-            ContentItem item = new ContentItem(bm, R.drawable.more_title_selected, singername, musicCount + "首");
+            ContentItem item = new ContentItem(bm, R.drawable.c_right, singername, musicCount + "首");
 
             items.add(item);
 

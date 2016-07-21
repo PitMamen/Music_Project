@@ -3,6 +3,7 @@ package com.android.app;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -11,6 +12,7 @@ import com.allenliu.sidebar.SideBar;
 import com.dlighttech.music.adapter.ContentAdapter;
 import com.dlighttech.music.model.ContentItem;
 import com.dlighttech.music.model.MusicInfo;
+import com.dlighttech.music.model.Song;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -24,9 +26,9 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
     private SideBar sb_navigation_bar;
     private ArrayList<MusicInfo> arrayList;
 
-    private Cursor cursor;
 
-    private MusicUtils.ServiceToken token;
+    private ArrayList<Song> songs;
+    private  MusicInfo info;
 
 
     @Override
@@ -49,7 +51,52 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
     public void onCreateData() {
 
 
-        arrayList = MusicUtils.getMusicInfo(this, true);
+        songs = MusicUtils.getAllAlbums(this);
+
+
+        for (int i = 0; i < songs.size(); i++) {
+            // 获取所有歌手的id
+            Song song = songs.get(i);
+
+            Log.d("haha", "專輯 id ====" + song.getAlbumId());
+         //   Log.d("haha", "歌手 ====" + song.getSinger());
+            // 根据歌手id获取所有该歌手的音乐信息
+            info = MusicUtils.getMusicInfoByArgs(this, false, MediaStore.Audio.Media.ALBUM_ID + " =?"
+                    , new String[]{String.valueOf(song.getAlbumId())});
+
+          /*  Log.d("HaHa", "專輯==="+info.getMusicAlbumsName()+"歌曲==="+info.getMusicAlbumsNumber());
+
+
+
+//            Bitmap bm = MusicUtils.getArtwork(this, info.getMusicId(), info.getAlbumId());
+
+            String singername = song.getSinger();
+            int musicCount = MusicUtils.getSongListForArtist(this,song.getAlbumId()).length;
+
+            ContentItem item = new ContentItem(R.drawable.singer, R.drawable.c_right, singername, musicCount + "首");
+
+            items.add(item);*/
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*arrayList = MusicUtils.getMusicInfo(this, true);
 
         String albumName = null;
         for (int i = 0; i < arrayList.size(); i++) {
@@ -75,7 +122,7 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
             items.add(item);
 
 
-        }
+        }*/
 
 
     }

@@ -13,7 +13,16 @@ public class Song {
     private long albumId;
     private long time;
     private long artistId;
-    private  int musicCount;
+    private int musicCount;
+    private String albumName;
+
+    public String getAlbumName() {
+        return albumName;
+    }
+
+    public void setAlbumName(String albumName) {
+        this.albumName = albumName;
+    }
 
     public int getMusicCount() {
         return musicCount;
@@ -94,8 +103,9 @@ public class Song {
                 ", name='" + name + '\'' +
                 ", songListId=" + songListId +
                 ", singer='" + singer + '\'' +
-                ", songPath='" + songPath + '\'' +"musicCount"+musicCount+
+                ", songPath='" + songPath + '\'' + "musicCount" + musicCount +
                 '}';
     }
+
 
 }
