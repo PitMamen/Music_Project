@@ -20,8 +20,8 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
 
     private ListView mListview;
     private SideBar sb_navigation_bar;
-    private TextView tv_song_count, tv_song_model;
-    private ImageView playModel;
+//    private TextView tv_song_count, tv_song_model;
+//    private ImageView playModel;
 
     private ContentAdapter madapter;
 
@@ -40,23 +40,24 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
 
     @Override
     public void onCreateView() {
-        super.setVisiblePlayMode(true);
+
         super.setTitleText("Singer");
 
 
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
         mListview = (ListView) findViewById(R.id.lv_music_detail);
-        tv_song_count = (TextView) findViewById(R.id.tv_song_count);
-        tv_song_model = (TextView) findViewById(R.id.tv_play_mode);
-        playModel = (ImageView)findViewById(R.id.play_mode_icon);
+//        tv_song_count = (TextView) findViewById(R.id.tv_song_count);
+//        tv_song_model = (TextView) findViewById(R.id.tv_play_mode);
+//        playModel = (ImageView)findViewById(R.id.play_mode_icon);
 
         madapter = new ContentAdapter(this, items, true);
         madapter.setMusicInfos(arrayList);
         mListview.setAdapter(madapter);
-
-        int count = madapter.getCount();
-
-        tv_song_count.setText(count+"");
+        super.setVisiblePlayMode(true);
+        super.setSongCount(madapter.getCount());
+//        int count = madapter.getCount();
+//
+//        tv_song_count.setText(count+"");
 
 
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);

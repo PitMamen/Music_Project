@@ -453,6 +453,7 @@ public abstract class BaseActivity extends Activity
             Log.d("TAG", "服务链接成功！！！！！！！");
             removeAllMsg();
             Message.obtain(mProgressHandler, PLAY).sendToTarget();
+            setRepeatButtonImage();
         }
 
         @Override
@@ -461,6 +462,30 @@ public abstract class BaseActivity extends Activity
             finish();
         }
     };
+
+
+    private void setRepeatButtonImage() {
+        if (mService == null) return;
+        int resId = -1;
+        try {
+            switch (mService.getRepeatMode()) {
+                case MediaPlaybackService.REPEAT_ALL:
+                    resId = R.drawable.listloop_mode_playback;
+                    break;
+                case MediaPlaybackService.REPEAT_CURRENT:
+                    resId = R.drawable.singleloop_mode_playback;
+                    break;
+                default:
+                    resId = R.drawable.ic_mp_repeat_off_btn;
+                    break;
+            }
+            ivPlaymode.setImageResource(resId);
+            PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
+                    .putData(PreferencesUtils.PLAY_MODE_RES, resId);
+            ivPlaymode.setBackground(null);
+        } catch (RemoteException ex) {
+        }
+    }
 
 
     protected void setupService() {
@@ -500,9 +525,9 @@ public abstract class BaseActivity extends Activity
 
     @Override
     protected void onResume() {
-        mPlayModeResId = PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
+       int resId = PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
                 .getInteger(PreferencesUtils.PLAY_MODE_RES);
-        ivPlaymode.setImageResource(mPlayModeResId);
+        ivPlaymode.setImageResource(resId<=0 ? mPlayModeResId :resId);
         super.onResume();
     }
 
@@ -592,10 +617,10 @@ public abstract class BaseActivity extends Activity
         tvCount.setText(String.valueOf(songCount));
 
 
-        mPlayModeResId = PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
+       int resId= PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
                 .getInteger(PreferencesUtils.PLAY_MODE_RES);
 
-        ivPlaymode.setImageResource(mPlayModeResId);
+        ivPlaymode.setImageResource(resId<=0 ? mPlayModeResId : resId);
         ivPlaymode.setOnClickListener(mRepeatClick);
 
     }
