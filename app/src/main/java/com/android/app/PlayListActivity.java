@@ -28,7 +28,7 @@ import java.util.Observer;
 
 public class PlayListActivity extends BaseActivity
         implements ContentAdapter.OnConvertViewClicked
-        ,Observer{
+        , Observer {
 
     private ListView mListView;
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
@@ -202,10 +202,9 @@ public class PlayListActivity extends BaseActivity
     }
 
 
-
-
     @Override
     public void onConvertViewClicked(int position) {
+        super.removeAllMsg();
         // 当点击一个item时获取当前歌单的id，根据id获取该歌单下的所有歌曲
         ContentItem item = mItems.get(position);
         SongList list = songLists.get(position);
@@ -225,7 +224,7 @@ public class PlayListActivity extends BaseActivity
         Intent intent = new Intent(PlayListActivity.this, SongOfSongListActivity.class);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
+        intent.putExtra("songListName",list.getName());
         intent.putExtra("id", list.getId());
         startActivity(intent);
     }
