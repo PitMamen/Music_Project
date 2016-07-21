@@ -1945,6 +1945,8 @@ public class MusicUtils {
         return -1;
     }
 
+
+    //獲取所有歌手
     public static ArrayList<Song> getAllArtist(Context ctx) {
         Cursor c = null;
         ArrayList<Song> songs = new ArrayList<Song>();
@@ -1972,7 +1974,36 @@ public class MusicUtils {
         return null;
 
     }
+    //獲取所有专辑
+    public static ArrayList<Song> getAllAlbums(Context ctx) {
+        Cursor c = null;
+        ArrayList<Song> songs = new ArrayList<Song>();
+        try {
+            ContentResolver resolver = ctx.getContentResolver();
+            c = resolver.query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, null
+                    , null, null, null);
 
+            while (c.moveToNext()) {
+                long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
+
+                Log.d(TAG, "专辑Id==== "+id);
+                String album = c.getString(c.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
+                Song song = new Song();
+                song.setAlbumId(id);
+                song.setAlbumName(album);
+                songs.add(song);
+            }
+            return songs;
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) c.close();
+        }
+
+
+        return null;
+
+    }
     /**
      * 根据条件返回歌曲信息
      *

@@ -205,6 +205,9 @@ public class PlayListActivity extends BaseActivity
     @Override
     public void onConvertViewClicked(int position) {
         super.removeAllMsg();
+        if (songLists == null || songLists.size() == 0) {
+            return;
+        }
         // 当点击一个item时获取当前歌单的id，根据id获取该歌单下的所有歌曲
         ContentItem item = mItems.get(position);
         SongList list = songLists.get(position);
