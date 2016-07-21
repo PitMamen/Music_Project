@@ -77,6 +77,8 @@ public class MusicRecentActivity extends BaseActivity implements ContentAdapter.
 
     }
 
+
+
     @Override
     public void onConvertViewClicked(int position) {
         super.playCursor(mMusicInfos, false, position);

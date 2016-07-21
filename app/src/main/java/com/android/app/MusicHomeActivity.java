@@ -197,6 +197,8 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
         Log.d("TAG", text);
     }
 
+
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         super.removeAllMsg();

@@ -2,9 +2,6 @@ package com.android.app;
 
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.os.RemoteException;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -14,11 +11,6 @@ import com.dlighttech.music.model.ContentItem;
 import com.dlighttech.music.model.MusicInfo;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 /**
  * Created by pengxinkai001 on 2016/6/24.
@@ -114,6 +106,8 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
     public void onSearchSubmit(String text) {
 
     }
+
+
 
 
     @Override

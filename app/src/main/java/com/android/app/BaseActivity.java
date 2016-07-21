@@ -45,7 +45,7 @@ public abstract class BaseActivity extends Activity
     private SearchView mSearchView;
     private EditText mSearchEditText;
     private TextView tvHomeTitle, tvTitle, tvMusicName, tvMusicAuthor;
-    private RelativeLayout mTitleLayout, mSearchButtonLayout;
+    private RelativeLayout mTitleLayout, mSearchButtonLayout, mPlayModeLayout;
     private ImageButton mReturnButton;
     private LinearLayout mActionBar, mBottomtitl;
     private ImageView mImageViewIcon, mImageViewPause, mImageViewNext, mImageViewsearch;
@@ -58,8 +58,22 @@ public abstract class BaseActivity extends Activity
     private int mPercentage;
     private Handler mProgressHandler;
     private static List<Activity> mActivitys;
-//    private Handler mHandler = new Handler(Looper.getMainLooper()) {
 
+    // 是否显示playMode状态栏
+    private boolean isVisible = false;
+    private TextView tvPlayMode, tvCount;
+    private ImageView ivPlaymode;
+    private int songCount = 0;
+    private int mPlayModeResId = R.drawable.ic_mp_repeat_off_btn;
+
+
+    protected void setVisiblePlayMode(boolean isVisible) {
+        this.isVisible = isVisible;
+    }
+
+    protected void setSongCount(int count) {
+        this.songCount = count;
+    }
 
     private void removeAllActivity() {
         if (mActivitys == null || mActivitys.size() == 0) {
@@ -72,6 +86,15 @@ public abstract class BaseActivity extends Activity
     }
 
 
+//    @Override
+//    public void update(Observable observable, Object data) {
+//        if (data instanceof Integer) {
+//            Log.d("haha", "base update===" + data.toString());
+//            mPlayModeResId = (int) data;
+//        }
+//
+//    }
+
     private void removeCurrActivity() {
         if (mActivitys == null || mActivitys.size() == 0) {
             return;
@@ -82,6 +105,13 @@ public abstract class BaseActivity extends Activity
 
 //    @Override
 //    public void update(Observable observable, Object data) {
+
+//        if (data instanceof ImageView) {
+//            ImageView iv = (ImageView) data;
+//            cycleRepeat(iv);
+//        }
+
+
 //        mPercentage = 0;
 //        if (data instanceof Integer) {
 //            mPercentage = (int) data;
@@ -89,7 +119,7 @@ public abstract class BaseActivity extends Activity
 //            removeAllMsg();
 //            Message.obtain(mProgressHandler, PLAY).sendToTarget();
 //        }
-
+//
 //        if (data instanceof Boolean) {
 //            mProgressHandler.removeMessages(PAUSE);
 //            isPause = (boolean) data;
@@ -131,6 +161,7 @@ public abstract class BaseActivity extends Activity
         }
         return mService;
     }
+
 
     /**
      * 子类调用用于控制当前音乐播放模式
@@ -245,7 +276,6 @@ public abstract class BaseActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // 注册观察者
 //        DataChangedWatcher.getInstance().registerObserver(this);
         // 设置handler
@@ -260,6 +290,8 @@ public abstract class BaseActivity extends Activity
         initBottomBar();
         // 初始化View需要子类重写,
         onCreateView();
+        // 初始化 play mode 状态栏，如果需要则显示，否则不显示
+        initPlayMode();
         // 将activity添加到集合中
         addActivity();
     }
@@ -446,14 +478,16 @@ public abstract class BaseActivity extends Activity
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
         unBindService();
+        if (mActivitys == null) return;
         if (mActivitys.size() == 0) {
             mService = null;
             mToken = null;
             mConn = null;
             mActivitys = null;
         }
-        super.onDestroy();
+
     }
 
 
@@ -462,6 +496,14 @@ public abstract class BaseActivity extends Activity
         // 父类方法，用于设置播放的服务
         setupService();
         super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        mPlayModeResId = PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
+                .getInteger(PreferencesUtils.PLAY_MODE_RES);
+        ivPlaymode.setImageResource(mPlayModeResId);
+        super.onResume();
     }
 
     @Override
@@ -500,7 +542,7 @@ public abstract class BaseActivity extends Activity
             PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
                     .putData(PreferencesUtils.TOTAL_TIME, getService().duration());
 
-            Log.d("TAG", "updateview百分比：" + mPercentage);
+//            Log.d("TAG", "updateview百分比：" + mPercentage);
 
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -533,6 +575,38 @@ public abstract class BaseActivity extends Activity
             }
         });
     }
+
+    private void initPlayMode() {
+        mPlayModeLayout = (RelativeLayout) findViewById(R.id.head_layout);
+
+        if (mPlayModeLayout == null) {
+            throw new IllegalArgumentException("you must be load play mode layout!!!!!");
+        }
+
+        mPlayModeLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+
+        tvPlayMode = (TextView) mPlayModeLayout.findViewById(R.id.tv_play_mode);
+        tvCount = (TextView) mPlayModeLayout.findViewById(R.id.tv_song_count);
+        ivPlaymode = (ImageView) mPlayModeLayout.findViewById(R.id.play_mode_icon);
+
+        tvCount.setText(String.valueOf(songCount));
+
+
+        mPlayModeResId = PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
+                .getInteger(PreferencesUtils.PLAY_MODE_RES);
+
+        ivPlaymode.setImageResource(mPlayModeResId);
+        ivPlaymode.setOnClickListener(mRepeatClick);
+
+    }
+
+
+    private View.OnClickListener mRepeatClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            cycleRepeat((ImageView) v);
+        }
+    };
 
 
     private View.OnClickListener mPauseAndStartListener = new View.OnClickListener() {

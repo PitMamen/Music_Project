@@ -202,6 +202,8 @@ public class PlayListActivity extends BaseActivity
     }
 
 
+
+
     @Override
     public void onConvertViewClicked(int position) {
         // 当点击一个item时获取当前歌单的id，根据id获取该歌单下的所有歌曲
@@ -230,6 +232,7 @@ public class PlayListActivity extends BaseActivity
 
     @Override
     public void update(Observable observable, Object data) {
+//        super.update(observable,data);
         // 通知观察者更新 song count
         if (data instanceof SongList) {
             SongList list = (SongList) data;

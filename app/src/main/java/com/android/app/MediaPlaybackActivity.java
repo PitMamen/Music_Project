@@ -72,6 +72,7 @@ import com.android.app.MusicUtils.ServiceToken;
 import com.android.music.IMediaPlaybackService;
 import com.dlighttech.music.ui.LrcView;
 import com.dlighttech.music.util.PathFromUriUtil;
+import com.dlighttech.music.util.PreferencesUtils;
 
 import java.util.ArrayList;
 
@@ -473,7 +474,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
         public void onStartTrackingTouch(SeekBar bar) {
             mLastSeekEventTime = 0;
             mFromTouch = true;
-            DataChangedWatcher.getInstance().update(bar.getProgress());
+//            DataChangedWatcher.getInstance().update(bar.getProgress());
 //            Log.d("TAG","bar.getProgress()==="+bar.getProgress());
         }
 
@@ -540,7 +541,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
                     mService.seek(0);
                     mService.play();
                 }
-                updateState();
+//                updateState();
             } catch (RemoteException ex) {
             }
         }
@@ -551,7 +552,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
             if (mService == null) return;
             try {
                 mService.next();
-                updateState();
+//                updateState();
             } catch (RemoteException ex) {
             }
         }
@@ -1071,7 +1072,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
                 }
                 refreshNow();
                 setPauseButtonImage();
-                updateState();
+//                updateState();
             }
         } catch (RemoteException ex) {
         }
@@ -1080,15 +1081,14 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
     /**
      * 通过观察者模式通知BaseActivity更新底部视图
      */
-    private void updateState() {
-        try {
-            int per = (int) (mService.position() * 1000F / mService.duration());
-            DataChangedWatcher.getInstance().update(per);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
+//    private void updateState() {
+//        try {
+//            int per = (int) (mService.position() * 1000F / mService.duration());
+//            DataChangedWatcher.getInstance().update(per);
+//        } catch (RemoteException e) {
+//            e.printStackTrace();
+//        }
+//    }
     private void toggleShuffle() {
         if (mService == null) {
             return;
@@ -1141,7 +1141,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
             }
             setRepeatButtonImage();
 
-            updateState();
+//            updateState();
         } catch (RemoteException ex) {
         }
     }
@@ -1192,7 +1192,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
             startPlayback();
             try {
                 // 监听当前播放状态更新BaseActivity底部View视图
-                updateState();
+//                updateState();
 
                 // Assume something is playing when the service says it is,
                 // but also if the audio ID is valid but the service is paused.
@@ -1228,18 +1228,22 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
 
     private void setRepeatButtonImage() {
         if (mService == null) return;
+        int resId = -1;
         try {
             switch (mService.getRepeatMode()) {
                 case MediaPlaybackService.REPEAT_ALL:
-                    mRepeatButton.setImageResource(R.drawable.listloop_mode_playback);
+                    resId = R.drawable.listloop_mode_playback;
                     break;
                 case MediaPlaybackService.REPEAT_CURRENT:
-                    mRepeatButton.setImageResource(R.drawable.singleloop_mode_playback);
+                    resId = R.drawable.singleloop_mode_playback;
                     break;
                 default:
-                    mRepeatButton.setImageResource(R.drawable.ic_mp_repeat_off_btn);
+                    resId = R.drawable.ic_mp_repeat_off_btn;
                     break;
             }
+            mRepeatButton.setImageResource(resId);
+            PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
+                    .putData(PreferencesUtils.PLAY_MODE_RES, resId);
             mRepeatButton.setBackground(null);
         } catch (RemoteException ex) {
         }
@@ -1351,7 +1355,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
     protected void onPause() {
         super.onPause();
         // 通知BaseActivity更新进度条
-        updateState();
+//        updateState();
     }
 
     private final Handler mHandler = new Handler() {

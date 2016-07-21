@@ -2,9 +2,6 @@ package com.android.app;
 
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.os.RemoteException;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -116,6 +113,8 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     public void onSearchSubmit(String text) {
 
     }
+
+
 
     @Override
     public void onConvertViewClicked(int position) {

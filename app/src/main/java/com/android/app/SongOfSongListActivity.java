@@ -91,6 +91,8 @@ public class SongOfSongListActivity extends BaseActivity
 
     }
 
+
+
     @Override
     public void onConvertViewClicked(int position) {
         super.playCursor(mMusicInfos, false, position);

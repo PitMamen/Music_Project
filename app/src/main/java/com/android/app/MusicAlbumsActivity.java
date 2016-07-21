@@ -3,10 +3,8 @@ package com.android.app;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.os.RemoteException;
-import android.provider.MediaStore;
-import android.view.View;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 
 import com.allenliu.sidebar.SideBar;
@@ -94,6 +92,8 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
     public void onSearchSubmit(String text) {
 
     }
+
+
 
 
     @Override
