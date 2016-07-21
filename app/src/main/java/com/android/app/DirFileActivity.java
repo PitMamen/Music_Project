@@ -69,6 +69,7 @@ public class DirFileActivity extends BaseActivity implements ContentAdapter.OnCo
 
     }
 
+
     @Override
     public void onConvertViewClicked(int position) {
         super.removeAllMsg();

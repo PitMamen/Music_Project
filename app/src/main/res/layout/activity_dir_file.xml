@@ -8,7 +8,7 @@
     >
 
     <include layout="@layout/home_title_layout" />
-
+    <include layout="@layout/listview_head_layout" />
 
     <ListView
         android:id="@+id/lv_music_dir"

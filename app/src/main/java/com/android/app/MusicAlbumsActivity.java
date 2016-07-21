@@ -3,10 +3,8 @@ package com.android.app;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.os.RemoteException;
-import android.provider.MediaStore;
-import android.view.View;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 
 import com.allenliu.sidebar.SideBar;
@@ -39,6 +37,7 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
 
     @Override
     public void onCreateView() {
+        super.setVisiblePlayMode(false);
         super.setTitleText("Album");
         mListview = (ListView) findViewById(R.id.lv_music_detail);
         mListview.setAdapter(new ContentAdapter(this, items, false));
@@ -100,6 +99,8 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
     public void onSearchSubmit(String text) {
 
     }
+
+
 
 
     @Override

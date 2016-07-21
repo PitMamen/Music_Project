@@ -23,6 +23,7 @@ public class PreferencesUtils {
     public static final String IS_PLAYING = "is_playing";
     public static final String CURR_TIME = "curr_time";
     public static final String TOTAL_TIME = "total_time";
+    public static final String PLAY_MODE_RES = "play_mode_res";
 
 
     private PreferencesUtils() {

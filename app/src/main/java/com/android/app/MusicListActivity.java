@@ -73,6 +73,8 @@ public class MusicListActivity extends BaseActivity
     }
 
 
+
+
     @Override
     public void onConvertViewClicked(int position) {
         // 当点击了listView item将在底部布局中播放音乐

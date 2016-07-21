@@ -1,13 +1,9 @@
 package com.android.app;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,15 +13,8 @@ import com.dlighttech.music.adapter.ContentAdapter;
 import com.dlighttech.music.model.ContentItem;
 import com.dlighttech.music.model.MusicInfo;
 import com.dlighttech.music.model.Song;
-import com.dlighttech.music.util.CommonUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 public class MusicSingerActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked {
 
@@ -51,23 +40,23 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
 
     @Override
     public void onCreateView() {
-
+        super.setVisiblePlayMode(true);
         super.setTitleText("Singer");
 
 
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
         mListview = (ListView) findViewById(R.id.lv_music_detail);
+        tv_song_count = (TextView) findViewById(R.id.tv_song_count);
+        tv_song_model = (TextView) findViewById(R.id.tv_play_mode);
+        playModel = (ImageView)findViewById(R.id.play_mode_icon);
 
         madapter = new ContentAdapter(this, items, true);
         madapter.setMusicInfos(arrayList);
         mListview.setAdapter(madapter);
 
-        View head = getLayoutInflater().inflate(R.layout.listview_head_layout, null);
-        playModel = (ImageView) head.findViewById(R.id.play_mode_icon);
-        tv_song_model = (TextView) head.findViewById(R.id.tv_play_mode);
-        tv_song_count = (TextView) head.findViewById(R.id.tv_song_count);
-        tv_song_count.setText(String.valueOf(madapter.getCount()));
-        mListview.addHeaderView(head);
+        int count = madapter.getCount();
+
+        tv_song_count.setText(count+"");
 
 
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);

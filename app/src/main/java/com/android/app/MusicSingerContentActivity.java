@@ -78,7 +78,7 @@ public class MusicSingerContentActivity extends BaseActivity
                 , new String[]{String.valueOf(song.getArtistId())});
 
 
-        arrayList = MusicUtils.getMusicInfo(this,false,);
+//        arrayList = MusicUtils.getMusicInfo(this,false,);
 
 
 

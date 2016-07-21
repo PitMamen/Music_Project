@@ -1,10 +1,7 @@
 package com.android.app;
 
 import android.graphics.Bitmap;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.dlighttech.music.adapter.ContentAdapter;
 import com.dlighttech.music.model.ContentItem;
@@ -13,54 +10,29 @@ import com.dlighttech.music.util.PreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 public class LastUpdatedActivity extends BaseActivity
-        implements ContentAdapter.OnConvertViewClicked
-        , Observer {
+        implements ContentAdapter.OnConvertViewClicked {
 
     private ListView mListView;
     private ContentAdapter mAdapter;
     private List<ContentItem> mItems = new ArrayList<ContentItem>();
     private ArrayList<MusicInfo> infos = new ArrayList<MusicInfo>();
-    private TextView tvPlayMode, tvCount;
-    private ImageView ivPlaymode;
+
 
     @Override
     public void onCreateView() {
+
         getWindow().setBackgroundDrawable(getDrawable(android.R.color.white));
         super.setTitleText("最近更新");
         mListView = (ListView) findViewById(R.id.lv_updated_list);
         mAdapter = new ContentAdapter(this, mItems, true);
         mAdapter.setMusicInfos(infos);
         mListView.setAdapter(mAdapter);
-
-        View headView = getLayoutInflater().inflate(R.layout.listview_head_layout, null);
-        tvPlayMode = (TextView) headView.findViewById(R.id.tv_play_mode);
-        tvCount = (TextView) headView.findViewById(R.id.tv_song_count);
-        ivPlaymode = (ImageView) headView.findViewById(R.id.play_mode_icon);
-        tvCount.setText(String.valueOf(mAdapter.getCount()));
-        ivPlaymode.setOnClickListener(mRepeatClick);
-        mListView.addHeaderView(headView);
+        super.setVisiblePlayMode(true); // 是否显示play mode 状态栏
+        super.setSongCount(mAdapter.getCount()); // 设置状态上的数字
     }
 
-    private View.OnClickListener mRepeatClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            repeatClick(v);
-        }
-    };
-
-
-    @Override
-    public void update(Observable observable, Object data) {
-        setRepeatButtonImage(ivPlaymode);
-    }
-
-    private void repeatClick(View v) {
-        super.cycleRepeat((ImageView) v);
-    }
 
     @Override
     public void onInitView() {
@@ -69,8 +41,7 @@ public class LastUpdatedActivity extends BaseActivity
 
     @Override
     public void onCreateData() {
-
-        DataChangedWatcher.getInstance().registerObserver(this);
+//        DataChangedWatcher.getInstance().registerObserver(this);
 
         PreferencesUtils.getInstance(this, PreferencesUtils.SONG_LIST)
                 .putData(PreferencesUtils.IS_SONG_LIST_DEL_KEY, false);
@@ -101,8 +72,11 @@ public class LastUpdatedActivity extends BaseActivity
 
     }
 
+
     @Override
     public void onConvertViewClicked(int position) {
         super.playCursor(infos, true, position);
     }
+
+
 }

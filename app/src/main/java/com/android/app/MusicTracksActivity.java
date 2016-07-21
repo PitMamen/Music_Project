@@ -2,10 +2,6 @@ package com.android.app;
 
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.os.RemoteException;
-import android.provider.MediaStore;
-import android.util.Log;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -43,27 +39,25 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     //初始化视图
     @Override
     public void onCreateView() {
+        super.setVisiblePlayMode(true);
         super.setTitleText("Music");
 
 
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
         lv_music_detail = (ListView) findViewById(R.id.lv_music_detail);
+        tv_music_number = (TextView) findViewById(R.id.tv_song_count);
+        tv_paly_mode = (TextView) findViewById(R.id.tv_play_mode);
+        iv_music_icon = (ImageView)findViewById(R.id.play_mode_icon);
         mAdapter = new ContentAdapter(this, mItems, true);
 
         mAdapter.setMusicInfos(arrayList);
 
         lv_music_detail.setAdapter(mAdapter);
 
+        int count = mAdapter.getCount();
 
-        View head = getLayoutInflater().inflate(R.layout.listview_head_layout, null);
+        tv_music_number.setText(count+"");
 
-        tv_music_number = (TextView) head.findViewById(R.id.tv_song_count);
-        tv_paly_mode = (TextView) head.findViewById(R.id.tv_play_mode);
-        iv_music_icon = (ImageView) head.findViewById(R.id.play_mode_icon);
-
-        tv_music_number.setText(String.valueOf(mAdapter.getCount()));
-
-        lv_music_detail.addHeaderView(head);
 
 
         sb_navigation_bar.setOnStrSelectCallBack(new ISideBarSelectCallBack() {
@@ -114,6 +108,8 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     public void onSearchSubmit(String text) {
 
     }
+
+
 
     @Override
     public void onConvertViewClicked(int position) {

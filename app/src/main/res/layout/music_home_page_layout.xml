@@ -6,6 +6,7 @@
 
 
     <include layout="@layout/home_title_layout" />
+    <include layout="@layout/listview_head_layout"/>
 
     <LinearLayout
         android:layout_width="match_parent"
