@@ -42,21 +42,17 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
         super.setVisiblePlayMode(true);
         super.setTitleText("Music");
 
-
         sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
         lv_music_detail = (ListView) findViewById(R.id.lv_music_detail);
         tv_music_number = (TextView) findViewById(R.id.tv_song_count);
         tv_paly_mode = (TextView) findViewById(R.id.tv_play_mode);
         iv_music_icon = (ImageView)findViewById(R.id.play_mode_icon);
         mAdapter = new ContentAdapter(this, mItems, true);
+        super.setSongCount(mAdapter.getCount());
 
         mAdapter.setMusicInfos(arrayList);
 
         lv_music_detail.setAdapter(mAdapter);
-
-        int count = mAdapter.getCount();
-
-        tv_music_number.setText(count+"");
 
 
 
