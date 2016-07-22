@@ -368,7 +368,7 @@
         <activity android:name=".DirFileActivity" />
         <activity
             android:name=".MusicTracksActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".MusicAlbumsActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />

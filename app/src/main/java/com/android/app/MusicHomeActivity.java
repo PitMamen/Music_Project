@@ -40,6 +40,7 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
     private View.OnClickListener middleLayoutListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            if (loading()) return;
             MusicHomeActivity.this.removeAllMsg();
             switch (v.getId()) {
                 case R.id.tv_tracks: // music
@@ -206,11 +207,7 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
         if (position == 0) {
             // 文件夹
             // 判断当前是否正在刷新中
-            if (!isRefresh) {
-                Toast.makeText(MusicHomeActivity.this
-                        , "正在刷新中请稍候！", Toast.LENGTH_SHORT).show();
-                return;
-            }
+            if (loading()) return;
             if (mMusicInfos != null && mMusicInfos.size() > 0) {
                 Intent intent = new Intent(MusicHomeActivity.this
                         , DirFileActivity.class);
@@ -229,11 +226,7 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         } else if (position == 2) {
-            if (!isRefresh) {
-                Toast.makeText(MusicHomeActivity.this
-                        , "正在刷新中请稍候！", Toast.LENGTH_SHORT).show();
-                return;
-            }
+            if (loading()) return;
             // 最近更新
             Intent intent = new Intent(MusicHomeActivity.this, LastUpdatedActivity.class);
             intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -241,16 +234,21 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
             startActivity(intent);
         } else if (position == 3) {
             // 最近播放
-            if (!isRefresh) {
-                Toast.makeText(MusicHomeActivity.this
-                        , "正在刷新中请稍候！", Toast.LENGTH_SHORT).show();
-                return;
-            }
+            if (loading()) return;
             Intent intent = new Intent(MusicHomeActivity.this, MusicRecentActivity.class);
             intent.addCategory(Intent.CATEGORY_DEFAULT);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
+    }
+
+    private boolean loading() {
+        if (!isRefresh) {
+            Toast.makeText(MusicHomeActivity.this
+                    , "正在刷新中请稍候！", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
     }
 
 }

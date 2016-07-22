@@ -67,14 +67,6 @@ public abstract class BaseActivity extends Activity
     private int mPlayModeResId = R.drawable.ic_mp_repeat_off_btn;
 
 
-    protected void setVisiblePlayMode(boolean isVisible) {
-        this.isVisible = isVisible;
-    }
-
-    protected void setSongCount(int count) {
-        this.songCount = count;
-    }
-
     private void removeAllActivity() {
         if (mActivitys == null || mActivitys.size() == 0) {
             return;
@@ -286,16 +278,16 @@ public abstract class BaseActivity extends Activity
         setupHandler();
         // 设置contentView
         onInitView();
-        // 初始化数据需要子类重写
-        onCreateData();
         // 初始化actionBar
         initActionBar();
         // 初始化bottomBar
         initBottomBar();
-        // 初始化View需要子类重写,
-        onCreateView();
         // 初始化 play mode 状态栏，如果需要则显示，否则不显示
         initPlayMode();
+        // 初始化数据需要子类重写
+        onCreateData();
+        // 初始化View需要子类重写,
+        onCreateView();
         // 将activity添加到集合中
         addActivity();
     }
@@ -610,14 +602,9 @@ public abstract class BaseActivity extends Activity
             throw new IllegalArgumentException("you must be load play mode layout!!!!!");
         }
 
-        mPlayModeLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-
         tvPlayMode = (TextView) mPlayModeLayout.findViewById(R.id.tv_play_mode);
         tvCount = (TextView) mPlayModeLayout.findViewById(R.id.tv_song_count);
         ivPlaymode = (ImageView) mPlayModeLayout.findViewById(R.id.play_mode_icon);
-
-        tvCount.setText(String.valueOf(songCount));
-
 
         int resId = PreferencesUtils.getInstance(this, PreferencesUtils.MUSIC)
                 .getInteger(PreferencesUtils.PLAY_MODE_RES);
@@ -627,6 +614,16 @@ public abstract class BaseActivity extends Activity
 
     }
 
+    protected void setVisiblePlayMode(boolean isVisible) {
+        this.isVisible = isVisible;
+        mPlayModeLayout.setVisibility(this.isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    protected void setSongCount(int count) {
+        this.songCount = count;
+        tvCount.setText(String.valueOf(count));
+        tvCount.setVisibility(View.VISIBLE);
+    }
 
     private View.OnClickListener mRepeatClick = new View.OnClickListener() {
         @Override
@@ -825,10 +822,10 @@ public abstract class BaseActivity extends Activity
         // 获取EditText
         int editTextId = mSearchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
         mSearchEditText = (EditText) mSearchView.findViewById(editTextId);
-        mSearchEditText.setTextSize(14);
-        mSearchEditText.setTextColor(getResources().getColor(R.color.text_color_white));
-        mSearchEditText.setHint("输入你的搜索内容");
-        mSearchEditText.setHintTextColor(getResources().getColor(R.color.text_color_white));
+        mSearchEditText.setTextSize(15);
+        mSearchEditText.setTextColor(getResources().getColor(R.color.text_color_black));
+        mSearchEditText.setHint("输入你要搜索的歌曲");
+        mSearchEditText.setHintTextColor(getResources().getColor(R.color.text_color_black));
     }
 
     protected void setTitleText(String text) {
@@ -866,6 +863,7 @@ public abstract class BaseActivity extends Activity
                 if (this instanceof MusicTracksActivity) {
                     openSearchView();
                 } else {
+                    removeAllMsg();
                     Intent intent = new Intent(this, MusicTracksActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -900,6 +898,7 @@ public abstract class BaseActivity extends Activity
     @Override
     public boolean onQueryTextSubmit(String query) {
         onSearchSubmit(query);
+        mSearchEditText.setText(null);
         return true;
     }
 
