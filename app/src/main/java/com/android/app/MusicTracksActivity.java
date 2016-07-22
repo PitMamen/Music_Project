@@ -2,13 +2,10 @@ package com.android.app;
 
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.allenliu.sidebar.ISideBarSelectCallBack;
-import com.allenliu.sidebar.SideBar;
 import com.dlighttech.music.adapter.ContentAdapter;
 import com.dlighttech.music.model.ContentItem;
 import com.dlighttech.music.model.MusicInfo;
@@ -17,17 +14,14 @@ import java.util.ArrayList;
 
 public class MusicTracksActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked {
 
-    private ImageButton ib_music_back;
-    private TextView tv_title, tv_paly_mode, tv_music_number;
-    private ImageView iv_music_search, iv_music_icon;
-    private ListView lv_music_detail;
-    private SideBar sb_navigation_bar;
+    private ListView mListView;
+    //    private SideBar sb_navigation_bar;
     private Cursor cursor;
     private MusicUtils.ServiceToken token;
 
     private ContentAdapter mAdapter;
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
-    private ArrayList<MusicInfo> infos;
+    private ArrayList<MusicInfo> arrayList;
 
 
     @Override
@@ -41,29 +35,17 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     public void onCreateView() {
         super.setVisiblePlayMode(true);
         super.setTitleText("Music");
+        mListView = (ListView) findViewById(R.id.lv_music_detail);
 
-        sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
-        lv_music_detail = (ListView) findViewById(R.id.lv_music_detail);
-        tv_music_number = (TextView) findViewById(R.id.tv_song_count);
-        tv_paly_mode = (TextView) findViewById(R.id.tv_play_mode);
-        iv_music_icon = (ImageView)findViewById(R.id.play_mode_icon);
         mAdapter = new ContentAdapter(this, mItems, true);
         super.setSongCount(mAdapter.getCount());
 
-        mAdapter.setMusicInfos(infos);
+        mAdapter.setMusicInfos(arrayList);
 
-        lv_music_detail.setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
 
-
-
-        sb_navigation_bar.setOnStrSelectCallBack(new ISideBarSelectCallBack() {
-            @Override
-            public void onSelectStr(int position, String selectStr) {
-
-
-            }
-        });
-
+        super.setVisiblePlayMode(true);
+        super.setSongCount(mAdapter.getCount());
 
     }
 
@@ -72,11 +54,11 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     public void onCreateData() {
 
 
-        infos = MusicUtils.getMusicInfo(this, false);
+        arrayList = MusicUtils.getMusicInfo(this, false);
 
-        for (int i = 0; i < infos.size(); i++) {
+        for (int i = 0; i < arrayList.size(); i++) {
 
-            MusicInfo info = infos.get(i);
+            MusicInfo info = arrayList.get(i);
 
             String musicName = info.getMusicName();
             String musicSinger = info.getSinger();
@@ -97,29 +79,26 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
 
     @Override
     public void onSearchTextChanged(String text) {
-
+        Log.d("TAG1", text);
+        String selection = MediaStore.Audio.Media.TITLE + " like '%" + text + "%'";
+        arrayList = MusicUtils.getMusicInfo(this,selection,null,false);
+        if(arrayList==null || arrayList.size()==0){
+            return;
+        }
+        Log.d("TAG1", ""+arrayList.size());
     }
 
     @Override
     public void onSearchSubmit(String text) {
-
+        Log.d("TAG1", text);
     }
-
 
 
     @Override
     public void onConvertViewClicked(int position) {
-
-        super.playCursor(infos, false, position);
+        super.playCursor(arrayList, false, position);
 
     }
 
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        // 解绑服务
-        MusicUtils.unbindFromService(token);
-    }
 }

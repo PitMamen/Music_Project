@@ -35,17 +35,6 @@
             android:background="@android:color/white"
             >
         </ListView>
-        <com.allenliu.sidebar.SideBar
-            android:id="@+id/navigation_bar"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/colorAccent"
-            android:textSize="15sp"
-            sidebar:scaleTime="1"
-            android:paddingRight="15dp"
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            />
     </LinearLayout>
 
 

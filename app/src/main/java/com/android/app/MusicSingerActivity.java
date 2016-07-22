@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.allenliu.sidebar.SideBar;
 import com.dlighttech.music.adapter.ContentAdapter;
@@ -101,7 +99,7 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
 
     @Override
     public void onConvertViewClicked(int position) {
-
+        super.removeAllMsg();
         Song song =songs.get(position);
         Intent intent = new Intent(MusicSingerActivity.this, MusicSingerContentActivity.class);
         intent.addCategory(Intent.CATEGORY_DEFAULT);

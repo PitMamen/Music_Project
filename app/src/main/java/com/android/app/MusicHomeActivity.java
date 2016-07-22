@@ -40,6 +40,7 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
     private View.OnClickListener middleLayoutListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            MusicHomeActivity.this.removeAllMsg();
             switch (v.getId()) {
                 case R.id.tv_tracks: // music
                     Intent intenttracks = new Intent(MusicHomeActivity.this, MusicTracksActivity.class);
