@@ -1,11 +1,9 @@
 package com.android.app;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
 import android.widget.ListView;
 
 import com.allenliu.sidebar.SideBar;
@@ -15,20 +13,17 @@ import com.dlighttech.music.model.MusicInfo;
 import com.dlighttech.music.model.Song;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
-public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked, ContentAdapter.OnOperateClicked {
+public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked {
 
     private ListView mListview;
     private ArrayList<ContentItem> items = new ArrayList<ContentItem>();
     private ContentAdapter mAdapter;
     private SideBar sb_navigation_bar;
-    private ArrayList<MusicInfo> arrayList;
 
 
     private ArrayList<Song> songs;
-    private  MusicInfo info;
+    private MusicInfo info;
 
 
     @Override
@@ -52,90 +47,40 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
 
 
         songs = MusicUtils.getAllAlbums(this);
-
+        if (songs == null || songs.size() == 0) {
+            return;
+        }
 
         for (int i = 0; i < songs.size(); i++) {
-            // 获取所有歌手的id
+
             Song song = songs.get(i);
 
-            Log.d("haha", "專輯 id ====" + song.getAlbumId());
-         //   Log.d("haha", "歌手 ====" + song.getSinger());
+            Log.d("haha", "专辑 id ====" + song.getAlbumId());
+            Log.d("haha", "专辑名==== " + song.getAlbumName());
             // 根据歌手id获取所有该歌手的音乐信息
             info = MusicUtils.getMusicInfoByArgs(this, false, MediaStore.Audio.Media.ALBUM_ID + " =?"
                     , new String[]{String.valueOf(song.getAlbumId())});
 
-          /*  Log.d("HaHa", "專輯==="+info.getMusicAlbumsName()+"歌曲==="+info.getMusicAlbumsNumber());
+//            File mFile = new File(info.getMusicPath());
+//            mFile  = new File(mFile.getParent());
+//            String name = mFile.getName();
+//            if(name.equals(song.getAlbumName())){
+//                continue;
+//            }
 
+            Bitmap bitmap = MusicUtils.getArtwork(this, info.getMusicId(), info.getAlbumId());
+            String AlbumsName = song.getAlbumName();
+            int AlbumMusicCount = MusicUtils.getSongListForAlbum(this,info.getAlbumId()).length;
+           // int count = info.getMusicAlbumsNumber();
+            ContentItem item = new ContentItem(bitmap,R.drawable.c_right,AlbumsName,AlbumMusicCount+"首");
 
-
-//            Bitmap bm = MusicUtils.getArtwork(this, info.getMusicId(), info.getAlbumId());
-
-            String singername = song.getSinger();
-            int musicCount = MusicUtils.getSongListForArtist(this,song.getAlbumId()).length;
-
-            ContentItem item = new ContentItem(R.drawable.singer, R.drawable.c_right, singername, musicCount + "首");
-
-            items.add(item);*/
-
+            items.add(item);
 
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*arrayList = MusicUtils.getMusicInfo(this, true);
-
-        String albumName = null;
-        for (int i = 0; i < arrayList.size(); i++) {
-
-            MusicInfo info = arrayList.get(i);
-            Log.d("TAG", info.toString());
-
-            Bitmap bitmap = MusicUtils.getArtwork(this, info.getMusicId(), info.getAlbumId(), true);
-            long[] songsIds = MusicUtils.getSongListForAlbum(this, info.getAlbumId());
-
-            if (info.getMusicAlbumsName().equals(albumName)) {
-                continue;
-            }
-            ContentItem item = null;
-
-            if (bitmap != null) {
-                item = new ContentItem(bitmap, R.drawable.c_right
-                        , info.getMusicAlbumsName(), songsIds.length + "首");
-            } else {
-                item = new ContentItem(R.drawable.singer, R.drawable.c_right, info.getMusicAlbumsName(), songsIds.length + "首");
-            }
-            albumName = info.getMusicAlbumsName();
-            items.add(item);
-
-
-        }*/
-
-
     }
 
 
-    @Override
-    public void onOperateClicked(int position, View v) {
-
-        Intent intent = new Intent(MusicAlbumsActivity.this, MediaPlaybackActivity.class);
-        startActivity(intent);
-
-
-    }
 
     @Override
     public void onSearchTextChanged(String text) {
@@ -148,11 +93,14 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
     }
 
 
-
-
     @Override
     public void onConvertViewClicked(int position) {
-        super.playCursor(arrayList, false, position);
+        Song song = songs.get(position);
+        Intent intent = new Intent(MusicAlbumsActivity.this, MusicAlbumsContentActivity.class);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("AlbumsId",song.getAlbumId());
+        startActivity(intent);
 
 
     }

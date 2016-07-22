@@ -3,6 +3,7 @@ package com.android.app;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -25,6 +26,7 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     private ProgressBar mLoadingProgressBar;
     private String mText;
 
+
     @Override
     public void onInitView() {
         setContentView(R.layout.music_tracks_layout);
@@ -41,11 +43,13 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
         mLoadingProgressBar.setVisibility(View.VISIBLE);
     }
 
+
     // 初始化数据
     @Override
     public void onCreateData() {
         selectAllSongs();
     }
+
 
     /**
      * 数据第一次加载的监听
@@ -111,6 +115,7 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
             MusicTracksActivity.this.setSongCount(mAdapter.getCount());
         }
 
+
         @Override
         public void onLoadDataFail(String msg) {
             mLoadingProgressBar.setVisibility(View.GONE);
@@ -128,6 +133,7 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
             Bitmap bm = MusicUtils.getArtwork(MusicTracksActivity.this
                     , info.getMusicId(), info.getAlbumId(), true);
 
+
             ContentItem item = new ContentItem(bm, R.drawable.more_title_selected
                     , info.getMusicName(), info.getSinger());
 
@@ -138,6 +144,7 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     /**
      * 查询获取所有歌曲
      */
+
     private void selectAllSongs() {
         LoadingDataTask<MusicInfo> mTask = new LoadingDataTask<MusicInfo>(mLoadDataListener);
         mTask.doInBackGround();
@@ -148,6 +155,7 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     public void onSearchTextChanged(String text) {
         mText = text;
         searchSong(text);
+
     }
 
 
@@ -163,7 +171,7 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
      * @param text
      */
     private void searchSong(String text) {
-        if (mLoadingProgressBar != null){
+        if (mLoadingProgressBar != null) {
             mLoadingProgressBar.setVisibility(View.VISIBLE);
             mListView.setVisibility(View.GONE);
         }

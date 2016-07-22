@@ -1989,9 +1989,10 @@ public class MusicUtils {
                     , null, null, null);
 
             while (c.moveToNext()) {
-                long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
-                Log.d(TAG, "专辑Id==== " + id);
-                String album = c.getString(c.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
+                long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Audio.Albums._ID));
+
+                Log.i(TAG, "专辑Id==== "+id);
+                String album = c.getString(c.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM));
                 Song song = new Song();
                 song.setAlbumId(id);
                 song.setAlbumName(album);

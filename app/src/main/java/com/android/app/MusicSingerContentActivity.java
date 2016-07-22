@@ -54,6 +54,7 @@ public class MusicSingerContentActivity extends BaseActivity
     public void onCreateData() {
         Intent intent = getIntent();
         long artistId = intent.getLongExtra("artistId", 0L);
+        //根据歌手id 查询歌曲信息
         infos = MusicUtils.getMusicInfo(this, MediaStore.Audio.Media.ARTIST_ID + " =?"
                 , new String[]{String.valueOf(artistId)}, false);
         for (int i = 0; i < infos.size(); i++) {

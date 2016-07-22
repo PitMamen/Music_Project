@@ -595,12 +595,16 @@ public abstract class BaseActivity extends Activity
         });
     }
 
+
+    //初始化播放模式
     private void initPlayMode() {
         mPlayModeLayout = (RelativeLayout) findViewById(R.id.head_layout);
 
         if (mPlayModeLayout == null) {
             throw new IllegalArgumentException("you must be load play mode layout!!!!!");
         }
+
+        mPlayModeLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
 
         tvPlayMode = (TextView) mPlayModeLayout.findViewById(R.id.tv_play_mode);
         tvCount = (TextView) mPlayModeLayout.findViewById(R.id.tv_song_count);

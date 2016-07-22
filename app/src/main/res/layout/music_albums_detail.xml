@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <include layout="@layout/home_title_layout"/>
+    <include layout="@layout/listview_head_layout"/>
+
+    <ListView
+        android:id="@+id/lv_albums_datail"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+    </ListView>
+
+    <include layout="@layout/bottom_title_player_layout"/>
+
+
+
+
+
+</LinearLayout>
