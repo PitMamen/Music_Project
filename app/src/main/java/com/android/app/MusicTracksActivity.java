@@ -21,7 +21,7 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
 
     private ContentAdapter mAdapter;
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
-    private ArrayList<MusicInfo> arrayList;
+    private ArrayList<MusicInfo> infos;
 
 
     @Override
@@ -40,7 +40,7 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
         mAdapter = new ContentAdapter(this, mItems, true);
         super.setSongCount(mAdapter.getCount());
 
-        mAdapter.setMusicInfos(arrayList);
+        mAdapter.setMusicInfos(infos);
 
         mListView.setAdapter(mAdapter);
 
@@ -54,11 +54,11 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     public void onCreateData() {
 
 
-        arrayList = MusicUtils.getMusicInfo(this, false);
+        infos = MusicUtils.getMusicInfo(this, false);
 
-        for (int i = 0; i < arrayList.size(); i++) {
+        for (int i = 0; i < infos.size(); i++) {
 
-            MusicInfo info = arrayList.get(i);
+            MusicInfo info = infos.get(i);
 
             String musicName = info.getMusicName();
             String musicSinger = info.getSinger();
@@ -81,11 +81,11 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     public void onSearchTextChanged(String text) {
         Log.d("TAG1", text);
         String selection = MediaStore.Audio.Media.TITLE + " like '%" + text + "%'";
-        arrayList = MusicUtils.getMusicInfo(this,selection,null,false);
-        if(arrayList==null || arrayList.size()==0){
+        infos = MusicUtils.getMusicInfo(this,selection,null,false);
+        if(infos==null || infos.size()==0){
             return;
         }
-        Log.d("TAG1", ""+arrayList.size());
+        Log.d("TAG1", ""+infos.size());
     }
 
     @Override
@@ -96,7 +96,7 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
 
     @Override
     public void onConvertViewClicked(int position) {
-        super.playCursor(arrayList, false, position);
+        super.playCursor(infos, false, position);
 
     }
 
