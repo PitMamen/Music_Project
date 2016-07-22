@@ -54,7 +54,7 @@ public class MusicAlbumsContentActivity extends  BaseActivity implements Content
         Intent intent = getIntent();
         long albumsId = intent.getLongExtra("AlbumsId",0L);
 
-        //根据条件查询歌曲信息
+        //根据专辑Id查询歌曲信息
         infos = MusicUtils.getMusicInfo(this, MediaStore.Audio.Media.ALBUM_ID+" =?",new String[]{String.valueOf(albumsId)},false);
 
         for (int i = 0; i <infos.size() ; i++) {

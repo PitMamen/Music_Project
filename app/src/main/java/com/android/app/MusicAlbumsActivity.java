@@ -71,7 +71,7 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
             Bitmap bitmap = MusicUtils.getArtwork(this, info.getMusicId(), info.getAlbumId());
             String AlbumsName = song.getAlbumName();
             int AlbumMusicCount = MusicUtils.getSongListForAlbum(this,info.getAlbumId()).length;
-
+           // int count = info.getMusicAlbumsNumber();
             ContentItem item = new ContentItem(bitmap,R.drawable.c_right,AlbumsName,AlbumMusicCount+"首");
 
             items.add(item);
