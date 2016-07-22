@@ -3,28 +3,74 @@ package com.android.app;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
-import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
-import com.allenliu.sidebar.SideBar;
 import com.dlighttech.music.adapter.ContentAdapter;
+import com.dlighttech.music.handler.LoadingDataTask;
 import com.dlighttech.music.model.ContentItem;
 import com.dlighttech.music.model.MusicInfo;
 import com.dlighttech.music.model.Song;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.OnConvertViewClicked {
 
     private ListView mListview;
-    private ArrayList<ContentItem> items = new ArrayList<ContentItem>();
+    private List<ContentItem> items = new ArrayList<ContentItem>();
     private ContentAdapter mAdapter;
-    private SideBar sb_navigation_bar;
+    private List<Song> songs;
+    private ProgressBar mProgressBar;
 
 
-    private ArrayList<Song> songs;
-    private MusicInfo info;
+    private LoadingDataTask.OnLoadDataListener<ContentItem> mListener =
+            new LoadingDataTask.OnLoadDataListener<ContentItem>() {
+                @Override
+                public List<ContentItem> onLoadingData() {
+                    List<Song> songs = MusicUtils.getAllAlbums(MusicAlbumsActivity.this);
+                    ArrayList<ContentItem> items = new ArrayList<ContentItem>();
+                    for (int i = 0; i < songs.size(); i++) {
+                        Song song = songs.get(i);
+                        // 根据歌手id获取所有该歌手的音乐信息
+                        MusicInfo info = MusicUtils.getMusicInfoByArgs(MusicAlbumsActivity.this
+                                , false, MediaStore.Audio.Media.ALBUM_ID + " =?"
+                                , new String[]{String.valueOf(song.getAlbumId())});
 
+                        Bitmap bitmap = MusicUtils.getArtwork(MusicAlbumsActivity.this
+                                , info.getMusicId(), info.getAlbumId());
+                        String AlbumsName = song.getAlbumName();
+                        int AlbumMusicCount = MusicUtils.getSongListForAlbum(MusicAlbumsActivity.this
+                                , info.getAlbumId()).length;
+                        ContentItem item = new ContentItem(bitmap, R.drawable.c_right, AlbumsName, AlbumMusicCount + "首");
+                        items.add(item);
+                    }
+
+                    return items;
+                }
+
+                @Override
+                public void onLoadDataSuccess(List<ContentItem> mParams) {
+                    mProgressBar.setVisibility(View.GONE);
+                    if (mParams == null || mParams.size() == 0) {
+                        Toast.makeText(MusicAlbumsActivity.this
+                                , "没有发现任何专辑", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    items = mParams;
+                    mAdapter = new ContentAdapter(MusicAlbumsActivity.this, items, false);
+                    mListview.setAdapter(mAdapter);
+                }
+
+                @Override
+                public void onLoadDataFail(String msg) {
+                    mProgressBar.setVisibility(View.GONE);
+                    Toast.makeText(MusicAlbumsActivity.this
+                            , msg, Toast.LENGTH_SHORT).show();
+                }
+            };
 
     @Override
     public void onInitView() {
@@ -36,50 +82,18 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
     public void onCreateView() {
         super.setVisiblePlayMode(false);
         super.setTitleText("Album");
-        mListview = (ListView) findViewById(R.id.lv_music_detail);
-        mListview.setAdapter(new ContentAdapter(this, items, false));
-        sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
+        mListview = (ListView) findViewById(R.id.lv_music);
+        mProgressBar = (ProgressBar) findViewById(R.id.loading);
+        mProgressBar.setVisibility(View.VISIBLE);
     }
 
 
     @Override
     public void onCreateData() {
-
-
-        songs = MusicUtils.getAllAlbums(this);
-        if (songs == null || songs.size() == 0) {
-            return;
-        }
-
-        for (int i = 0; i < songs.size(); i++) {
-
-            Song song = songs.get(i);
-
-            Log.d("haha", "专辑 id ====" + song.getAlbumId());
-            Log.d("haha", "专辑名==== " + song.getAlbumName());
-            // 根据歌手id获取所有该歌手的音乐信息
-            info = MusicUtils.getMusicInfoByArgs(this, false, MediaStore.Audio.Media.ALBUM_ID + " =?"
-                    , new String[]{String.valueOf(song.getAlbumId())});
-
-//            File mFile = new File(info.getMusicPath());
-//            mFile  = new File(mFile.getParent());
-//            String name = mFile.getName();
-//            if(name.equals(song.getAlbumName())){
-//                continue;
-//            }
-
-            Bitmap bitmap = MusicUtils.getArtwork(this, info.getMusicId(), info.getAlbumId());
-            String AlbumsName = song.getAlbumName();
-            int AlbumMusicCount = MusicUtils.getSongListForAlbum(this,info.getAlbumId()).length;
-           // int count = info.getMusicAlbumsNumber();
-            ContentItem item = new ContentItem(bitmap,R.drawable.c_right,AlbumsName,AlbumMusicCount+"首");
-
-            items.add(item);
-
-        }
-
+        songs = MusicUtils.getAllAlbums(MusicAlbumsActivity.this);
+        LoadingDataTask<ContentItem> mTask = new LoadingDataTask<ContentItem>(mListener);
+        mTask.doInBackGround();
     }
-
 
 
     @Override
@@ -99,10 +113,8 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
         Intent intent = new Intent(MusicAlbumsActivity.this, MusicAlbumsContentActivity.class);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("AlbumsId",song.getAlbumId());
+        intent.putExtra("AlbumsId", song.getAlbumId());
         startActivity(intent);
-
-
     }
 
 }

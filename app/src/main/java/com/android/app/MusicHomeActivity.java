@@ -144,9 +144,10 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
                     isRefresh = true;
                     break;
             }
+            MusicHomeActivity.this.setRefresh(isRefresh);
         }
-
     };
+
 
     @Override
     public void onInitView() {
@@ -198,7 +199,6 @@ public class MusicHomeActivity extends BaseActivity implements AdapterView.OnIte
     public void onSearchSubmit(String text) {
         Log.d("TAG", text);
     }
-
 
 
     @Override

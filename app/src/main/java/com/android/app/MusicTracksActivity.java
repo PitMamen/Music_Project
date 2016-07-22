@@ -3,7 +3,6 @@ package com.android.app;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -23,8 +22,8 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     private ContentAdapter mAdapter;
     private ArrayList<ContentItem> mItems = new ArrayList<ContentItem>();
     private List<MusicInfo> arrayList = new ArrayList<MusicInfo>();
-    private ProgressBar mLoadingProgressBar;
     private String mText;
+    private ProgressBar mLoadingProgressBar;
 
 
     @Override
@@ -38,11 +37,10 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     public void onCreateView() {
         super.setVisiblePlayMode(true);
         super.setTitleText("Music");
-        mListView = (ListView) findViewById(R.id.lv_music_detail);
+        mListView = (ListView) findViewById(R.id.lv_music);
         mLoadingProgressBar = (ProgressBar) findViewById(R.id.loading);
         mLoadingProgressBar.setVisibility(View.VISIBLE);
     }
-
 
     // 初始化数据
     @Override
