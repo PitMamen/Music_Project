@@ -44,7 +44,6 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
         super.setTitleText("Singer");
 
 
-        sb_navigation_bar = (SideBar) findViewById(R.id.navigation_bar);
         mListview = (ListView) findViewById(R.id.lv_music_detail);
 
         madapter = new ContentAdapter(this, items, false);

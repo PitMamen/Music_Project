@@ -601,6 +601,8 @@ public abstract class BaseActivity extends Activity
         });
     }
 
+
+    //初始化播放模式
     private void initPlayMode() {
         mPlayModeLayout = (RelativeLayout) findViewById(R.id.head_layout);
 
@@ -608,6 +610,7 @@ public abstract class BaseActivity extends Activity
             throw new IllegalArgumentException("you must be load play mode layout!!!!!");
         }
 
+        //试图是否可见
         mPlayModeLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
 
         tvPlayMode = (TextView) mPlayModeLayout.findViewById(R.id.tv_play_mode);
