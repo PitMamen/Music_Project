@@ -69,8 +69,8 @@ public class MusicSingerActivity extends BaseActivity implements ContentAdapter.
             items = mParams;
             madapter = new ContentAdapter(MusicSingerActivity.this, items, false);
             mListview.setAdapter(madapter);
-            MusicSingerActivity.this.setVisiblePlayMode(true);
-            MusicSingerActivity.this.setSongCount(madapter.getCount());
+//            MusicSingerActivity.this.setVisiblePlayMode(true);
+//            MusicSingerActivity.this.setSongCount(madapter.getCount());
         }
 
         @Override

@@ -8,13 +8,14 @@
     <include layout="@layout/home_title_layout"/>
     <include layout="@layout/listview_head_layout"/>
 
-    <ListView
-        android:id="@+id/lv_singer_datail"
-        android:layout_weight="1"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    </ListView>
+        <include layout="@layout/progress_listview_layout" />
+
+    </LinearLayout>
 
     <include layout="@layout/bottom_title_player_layout"/>
 

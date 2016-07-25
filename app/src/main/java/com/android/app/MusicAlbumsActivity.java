@@ -38,7 +38,6 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
                         MusicInfo info = MusicUtils.getMusicInfoByArgs(MusicAlbumsActivity.this
                                 , false, MediaStore.Audio.Media.ALBUM_ID + " =?"
                                 , new String[]{String.valueOf(song.getAlbumId())});
-
                         Bitmap bitmap = MusicUtils.getArtwork(MusicAlbumsActivity.this
                                 , info.getMusicId(), info.getAlbumId());
                         String AlbumsName = song.getAlbumName();
@@ -109,6 +108,7 @@ public class MusicAlbumsActivity extends BaseActivity implements ContentAdapter.
 
     @Override
     public void onConvertViewClicked(int position) {
+        super.removeAllMsg();
         Song song = songs.get(position);
         Intent intent = new Intent(MusicAlbumsActivity.this, MusicAlbumsContentActivity.class);
         intent.addCategory(Intent.CATEGORY_DEFAULT);

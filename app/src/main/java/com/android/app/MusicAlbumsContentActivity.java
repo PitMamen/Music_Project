@@ -29,7 +29,6 @@ public class MusicAlbumsContentActivity extends BaseActivity implements ContentA
     private ArrayList<ContentItem> items = new ArrayList<ContentItem>();
     private List<MusicInfo> infos;
     private ProgressBar mProgressBar;
-    private long mAlbumsId = 0;
 
 
     private LoadingDataTask.OnLoadDataListener<MusicInfo> mListener =
@@ -37,6 +36,8 @@ public class MusicAlbumsContentActivity extends BaseActivity implements ContentA
 
                 @Override
                 public List<MusicInfo> onLoadingData() {
+                    Intent intent = getIntent();
+                    long mAlbumsId = intent.getLongExtra("AlbumsId", 0L);
                     return MusicUtils.getMusicInfo(MusicAlbumsContentActivity.this
                             , MediaStore.Audio.Media.ALBUM_ID + " =?"
                             , new String[]{String.valueOf(mAlbumsId)}, false);
@@ -65,6 +66,7 @@ public class MusicAlbumsContentActivity extends BaseActivity implements ContentA
 
                     adapter = new ContentAdapter(MusicAlbumsContentActivity.this, items, true);
                     mlistview.setAdapter(adapter);
+                    adapter.setMusicInfos(infos);
                     MusicAlbumsContentActivity.this.setVisiblePlayMode(true);
                     MusicAlbumsContentActivity.this.setSongCount(adapter.getCount());
 
@@ -93,8 +95,6 @@ public class MusicAlbumsContentActivity extends BaseActivity implements ContentA
 
     @Override
     public void onCreateData() {
-        Intent intent = getIntent();
-        mAlbumsId = intent.getLongExtra("AlbumsId", 0L);
         new LoadingDataTask<MusicInfo>(mListener).doInBackGround();
     }
 
@@ -108,12 +108,8 @@ public class MusicAlbumsContentActivity extends BaseActivity implements ContentA
 
     }
 
-
     @Override
     public void onConvertViewClicked(int position) {
-
         super.playCursor(infos, false, position);
-
-
     }
 }
