@@ -35,7 +35,6 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
     //初始化视图
     @Override
     public void onCreateView() {
-        super.setVisiblePlayMode(true);
         super.setTitleText("Music");
         mListView = (ListView) findViewById(R.id.lv_music);
         mLoadingProgressBar = (ProgressBar) findViewById(R.id.loading);

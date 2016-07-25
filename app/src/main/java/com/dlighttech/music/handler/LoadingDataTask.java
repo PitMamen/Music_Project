@@ -30,8 +30,6 @@ public class LoadingDataTask<Param> {
     }
 
 
-
-
     public void doInBackGround() {
         mThread = new Thread(new Runnable() {
             @Override
