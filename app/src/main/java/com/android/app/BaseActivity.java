@@ -876,10 +876,6 @@ public abstract class BaseActivity extends Activity
                 if (this instanceof MusicTracksActivity) {
                     openSearchView();
                 } else {
-//                    if (!isRefresh) {
-//                        Toast.makeText(this, "正在刷新中请稍候！", Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
                     removeAllMsg();
                     Intent intent = new Intent(this, MusicTracksActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
