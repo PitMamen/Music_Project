@@ -44,6 +44,8 @@ public class MusicSingerContentActivity extends BaseActivity
 
         mlistview.setAdapter(madapter);
 
+        madapter.setMusicInfos(infos);
+
         super.setVisiblePlayMode(true);
         super.setSongCount(madapter.getCount());
 

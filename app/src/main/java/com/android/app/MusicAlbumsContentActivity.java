@@ -42,6 +42,8 @@ public class MusicAlbumsContentActivity extends  BaseActivity implements Content
 
         adapter = new ContentAdapter(this,items,true);
 
+        adapter.setMusicInfos(infos);
+
         super.setVisiblePlayMode(true);
         super.setSongCount(adapter.getCount());
         mlistview.setAdapter(adapter);
