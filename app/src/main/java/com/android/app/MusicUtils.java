@@ -339,7 +339,7 @@ public class MusicUtils {
         return list;
     }
 
-    //当前歌曲数
+    //当前歌手下的歌曲
     public static long[] getSongListForArtist(Context context, long id) {
         final String[] ccols = new String[]{MediaStore.Audio.Media._ID};
         String where = MediaStore.Audio.Media.ARTIST_ID + "=" + id + " AND " +
