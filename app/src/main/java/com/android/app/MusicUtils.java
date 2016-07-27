@@ -355,7 +355,7 @@ public class MusicUtils {
         }
         return sEmptyList;
     }
-
+    //当前专辑下的歌曲
     public static long[] getSongListForAlbum(Context context, long id) {
         final String[] ccols = new String[]{MediaStore.Audio.Media._ID};
         String where = MediaStore.Audio.Media.ALBUM_ID + "=" + id + " AND " +
