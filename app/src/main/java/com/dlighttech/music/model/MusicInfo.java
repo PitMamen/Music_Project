@@ -103,6 +103,25 @@ public class MusicInfo implements Serializable, Parcelable {
         this.artistId = artistId;
     }
 
+
+    public MusicInfo(int id, String singer, int singermusicCount, String musicName
+            , long currTime, long totalTime, MusicState state
+            , String musicAlbumsName, int musicAlbumsNumber
+            , String musicPath, long musicSize,long artistId) {
+        this.musicId = id;
+        this.singer = singer;
+        this.singermusicCount = singermusicCount;
+        this.musicName = musicName;
+        this.currTime = currTime;
+        this.totalTime = totalTime;
+        this.state = state;
+        this.musicAlbumsName = musicAlbumsName;
+        this.musicAlbumsNumber = musicAlbumsNumber;
+        this.musicPath = musicPath;
+        this.musicSize = musicSize;
+        this.artistId = artistId;
+    }
+
     protected MusicInfo(Parcel in) {
         musicId = in.readInt();
         singer = in.readString();

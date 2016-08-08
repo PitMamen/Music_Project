@@ -1,6 +1,7 @@
 package com.android.app;
 
 import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.dlighttech.music.adapter.ContentAdapter;
 import com.dlighttech.music.handler.LoadingDataTask;
 import com.dlighttech.music.model.ContentItem;
 import com.dlighttech.music.model.MusicInfo;
+import com.dlighttech.music.util.DisplayUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,6 +133,7 @@ public class MusicTracksActivity extends BaseActivity implements ContentAdapter.
                     , info.getMusicId(), info.getAlbumId(), true);
 
 
+            bm=ThumbnailUtils.extractThumbnail(bm, DisplayUtils.dip2px(this,30),DisplayUtils.dip2px(this,30));
             ContentItem item = new ContentItem(bm, R.drawable.more_title_selected
                     , info.getMusicName(), info.getSinger());
 

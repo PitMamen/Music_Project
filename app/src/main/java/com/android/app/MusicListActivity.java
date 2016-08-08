@@ -1,5 +1,6 @@
 package com.android.app;
 
+import android.graphics.Bitmap;
 import android.widget.ListView;
 
 import com.dlighttech.music.adapter.ContentAdapter;
@@ -52,7 +53,10 @@ public class MusicListActivity extends BaseActivity
             MusicInfo info = musicInfos.get(i);
             String newPath = info.getMusicPath().substring(0, info.getMusicPath().lastIndexOf("/"));
             if (newPath.equals(item.getContent())) {
-                ContentItem newItem = new ContentItem(info.getMusicAlbumsImage()
+
+                Bitmap b = MusicUtils.getArtwork(this,info.getMusicId(),info.getAlbumId(),true);
+
+                ContentItem newItem = new ContentItem(b
                         , R.drawable.more_title_selected
                         , info.getMusicName()
                         , info.getSinger());

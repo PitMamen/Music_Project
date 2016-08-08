@@ -1677,11 +1677,15 @@ public class MusicUtils {
                         // 歌曲专辑图片
                         int albumId = c.getInt(c
                                 .getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
-                        Bitmap albumImage = getArtwork(ctx, id, albumId);
 
-                        albumImage = ThumbnailUtils.extractThumbnail(albumImage
-                                , DisplayUtils.dip2px(ctx, 20)
-                                , DisplayUtils.dip2px(ctx, 20));
+
+//                        Bitmap albumImage = MusicUtils.getArtwork(ctx,id,albumId,true);
+
+//                        Bitmap albumImage = getArtwork(ctx, id, albumId);
+//
+//                        albumImage = ThumbnailUtils.extractThumbnail(albumImage
+//                                , DisplayUtils.dip2px(ctx, 20)
+//                                , DisplayUtils.dip2px(ctx, 20));
 
                         // 歌曲专辑名
                         String albumName = c.getString(c
@@ -1703,7 +1707,7 @@ public class MusicUtils {
 
                         MusicInfo info = new MusicInfo(id, artist, singermusicCount, musicName, currTime
                                 , totalTime, MusicInfo.MusicState.NORMAL
-                                , albumImage, albumName, albumMusicNumber, path, size, artistId);
+                                , albumName, albumMusicNumber, path, size, artistId);
                         info.setArtistId(artistId);
                         info.setAlbumId(albumId);
 
